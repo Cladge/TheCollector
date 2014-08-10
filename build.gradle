@@ -1,0 +1,84 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'thecollector.model.TheCollector'
+
+def javaFxHome = System.getenv('JAVA_HOME')
+def antJavaFxJar = 'build/classes/ant-javafx'
+
+def vendor = 'I J Claridge'
+def version = 'v0.1 (beta)'
+def title = 'TheCollector'
+
+configurations {
+	// We do not want to have jfxrt.jar in the classpath when creating the jar,
+	// therefore a seperate configuration is required
+	providedCompile
+}
+
+// This one works with file dependencies. If you prefer Maven, feel free to change.
+def libFolder = 'lib'
+def includePattern = '*.jar'
+
+dependencies {
+	providedCompile files("$javaFxHome/jre/lib/jfxrt.jar")
+	compile fileTree(dir: libFolder, include: includePattern)
+}
+
+compileJava {
+	// Add required JavaFX libs to compile classpath
+	sourceSets.main.compileClasspath += configurations.providedCompile
+}
+
+run {
+	// Add required JavaFX libs to runtime classpath
+	classpath += configurations.providedCompile
+}
+
+// Ant configuration for creating double-clickable, self-contained JAR.
+ant.importBuild 'javafx.xml'
+ant.antJavaFxJar = antJavaFxJar
+ant.mainClassName = mainClassName
+ant.fallbackClassName = 'com.javafx.main.NoJavaFXFallback'
+ant.distDir = libsDir
+ant.distName = jar.archiveName;
+ant.resourceDir = libFolder
+ant.resourceIncludePattern = includePattern
+ant.applicationTitle = title
+ant.applicationVendor = vendor
+ant.applicationVersion = version
+ant.applicationClasses = sourceSets.main.output.classesDir
+ant.applicationResources = sourceSets.main.output.resourcesDir
+
+task unjarAntJavaFxJar << {
+	if(!new File(antJavaFxJar).exists())
+		ant.unjar(src:"$javaFxHome/lib/ant-javafx.jar", dest:antJavaFxJar)
+}
+
+// Clear existing task actions and call ant task.
+jar {
+	// Reset actions
+	actions = []
+    doLast {
+		javafxjar.execute(); // <-- The task described in javafx.xml
+	}
+}
+
+jar.dependsOn unjarAntJavaFxJar
+
+// Create some smarter looking start scripts.
+startScripts {
+	doLast {
+		unixScript.text = "java -jar ../lib/$jar.archiveName"
+		windowsScript.text = "java -jar ..\\lib\\$jar.archiveName"
+    }
+}
+
+// Do the default build (Task "build") and then copy the required library (*.jar) files to the deployment folder.
+// This is an alternative to the given installApp task that is part of the "application" plugin (above).
+task customBuild(type: Copy, dependsOn: build) {
+	description = 'Do the build and then copy the required library files to the deployment folder. (An alternative to the application plugin "installApp" task.)'
+	from('lib')
+	into('build/libs')
+	include('*.jar')
+}

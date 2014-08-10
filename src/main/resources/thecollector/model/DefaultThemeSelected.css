@@ -1,0 +1,32 @@
+.background {
+    -fx-background-color: #2A75A9;
+}
+
+.vbox {
+    -fx-border-color: #274257;
+    -fx-border-width: 3px;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 0;
+    -fx-spacing: 1;
+}
+
+.separator:horizontal .line {
+    -fx-background-color: #274257;
+    -fx-padding: 2px 0 0 0;
+    -fx-border-color: null;
+}
+
+.label {
+    -fx-font-size: 12pt;
+    -fx-font: 12pt "Arial";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}
+
+.label-header {
+    -fx-font-size: 14pt;
+    -fx-font: bold 14pt "Arial";
+    -fx-text-fill: white;
+    -fx-opacity: 1;
+}

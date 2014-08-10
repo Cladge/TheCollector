@@ -1,0 +1,39 @@
+<project name="JavaFXApplication" xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<target name="javafxjar">
+
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"
+				 uri="javafx:com.sun.javafx.tools.ant"
+				 classpath="${antJavaFxJar}"/>
+
+		<fx:application id="application"
+						name="${applicationTitle}"
+						mainClass="${mainClassName}"
+						fallbackClass="${fallbackClassName}"/>
+
+		<!-- Show some info in gradle's output -->
+		<echo message="creating package: ${distName}"/>
+
+		<fx:jar destfile="${distDir}/${distName}">
+			<fx:application refid="application"/>
+
+			<!-- Define the classpath to be placed in the manifest -->
+			<fx:resources>
+				<fx:fileset dir="${resourceDir}"
+							includes="${resourceIncludePattern}"/>
+				</fx:resources>
+
+			<manifest>
+				<attribute name="Implementation-Vendor"
+						   value="${applicationVendor}"/>
+				<attribute name="Implementation-Title"
+						   value="${applicationTitle}"/>
+				<attribute name="Implementation-Version"
+						   value="${applicationVersion}"/>
+			</manifest>
+
+			<!-- Describe the content to be packed -->
+			<fileset dir="${applicationClasses}"/>
+			<fileset dir="${applicationResources}"/>
+		</fx:jar>
+	</target>
+</project>

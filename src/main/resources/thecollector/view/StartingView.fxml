@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<VBox fx:id="vboxStartingView" minHeight="502.0" minWidth="535.0" prefHeight="502.0" prefWidth="810.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="thecollector.controller.StartingView">
+  <children>
+    <MenuBar fx:id="menubarStartingView" VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem mnemonicParsing="false" text="New" />
+            <MenuItem mnemonicParsing="false" text="Open…" />
+            <Menu mnemonicParsing="false" text="Open Recent" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Close" />
+            <MenuItem mnemonicParsing="false" text="Save" />
+            <MenuItem mnemonicParsing="false" text="Save As…" />
+            <MenuItem mnemonicParsing="false" text="Revert" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Preferences…" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Quit" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Edit">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Undo" />
+            <MenuItem mnemonicParsing="false" text="Redo" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Cut" />
+            <MenuItem mnemonicParsing="false" text="Copy" />
+            <MenuItem mnemonicParsing="false" text="Paste" />
+            <MenuItem mnemonicParsing="false" text="Delete" />
+            <SeparatorMenuItem mnemonicParsing="false" />
+            <MenuItem mnemonicParsing="false" text="Select All" />
+            <MenuItem mnemonicParsing="false" text="Unselect All" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About TheCollector" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <AnchorPane fx:id="anchorpaneStartingView" maxHeight="-1.0" maxWidth="-1.0" minHeight="476.0" prefHeight="476.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label id="sdfsfsdfsf" fx:id="labelAppTitle" alignment="TOP_CENTER" layoutX="0.0" layoutY="0.0" prefHeight="100.0" prefWidth="810.0" text="TheCollector" textAlignment="CENTER" textFill="#003d99" underline="false">
+          <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000080" height="25.0" offsetX="5.0" offsetY="5.0" radius="12.0" width="25.0">
+              <input>
+                <Reflection bottomOpacity="0.03968253968253968" fraction="0.9404761904761905" topOffset="-108.0" />
+              </input>
+            </DropShadow>
+          </effect>
+          <font>
+            <Font name="Courier New Bold" size="48.0" />
+          </font>
+        </Label>
+        <Rectangle fx:id="rectGroup1" arcHeight="32.0" arcWidth="32.0" disable="false" fill="WHITE" height="245.0" layoutX="14.0" layoutY="100.0" smooth="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.0" visible="true" width="782.0">
+          <effect>
+            <DropShadow blurType="ONE_PASS_BOX" offsetX="2.0" offsetY="2.0" />
+          </effect>
+        </Rectangle>
+        <VBox fx:id="vboxClientVersionLabels" minHeight="62.0" prefHeight="62.0" prefWidth="136.0" AnchorPane.bottomAnchor="300.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="646.0" AnchorPane.topAnchor="114.0">
+          <children>
+            <Label fx:id="labelClient" text="Client:">
+              <font>
+                <Font name="Courier New Bold" size="16.0" fx:id="x1" />
+              </font>
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x2_x0" />
+              </VBox.margin>
+            </Label>
+            <Label fx:id="labelVersion" font="$x1" text="Version:" VBox.margin="$x2_x0" />
+          </children>
+        </VBox>
+        <VBox fx:id="vboxClientVersionChoices" layoutX="164.0" layoutY="114.0" minHeight="62.0" prefHeight="62.0" prefWidth="610.0">
+          <children>
+            <ComboBox fx:id="comboboxClient" prefWidth="200.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+              <VBox.margin>
+                <Insets bottom="8.0" top="4.0" fx:id="x3" />
+              </VBox.margin>
+            </ComboBox>
+            <HBox fx:id="hboxVersionChoices" alignment="CENTER_LEFT" spacing="5.0">
+              <children>
+                <ComboBox fx:id="comboboxVersionMajor" prefWidth="50.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <Label fx:id="labelPoint1" text=".">
+                  <font>
+                    <Font name="Courier New" size="24.0" fx:id="x4" />
+                  </font>
+                </Label>
+                <ComboBox fx:id="comboboxVersionMinor" prefWidth="50.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <Label fx:id="labelPoint2" font="$x4" text="." />
+                <ComboBox fx:id="comboboxVersionSubMinor" prefWidth="50.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+                <Label fx:id="labelPoint3" font="$x4" text="." />
+                <ComboBox fx:id="comboboxVersionMaintenance" prefWidth="95.0">
+                  <items>
+                    <FXCollections fx:factory="observableArrayList">
+                      <String fx:value="Item 1" />
+                      <String fx:value="Item 2" />
+                      <String fx:value="Item 3" />
+                    </FXCollections>
+                  </items>
+                </ComboBox>
+              </children>
+            </HBox>
+          </children>
+        </VBox>
+        <HBox fx:id="hboxBuildType" layoutX="28.0" layoutY="193.0" prefHeight="23.0" prefWidth="754.0">
+          <children>
+            <RadioButton fx:id="radiobuttonDevBuild" mnemonicParsing="false" selected="true" text="Dev Build">
+              <font>
+                <Font name="Courier New" size="16.0" fx:id="x5" />
+              </font>
+              <toggleGroup>
+                <ToggleGroup fx:id="releaseType" />
+              </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="radiobuttonUATBuild" font="$x5" mnemonicParsing="false" text="UAT Build" toggleGroup="$releaseType">
+              <HBox.margin>
+                <Insets left="24.0" />
+              </HBox.margin>
+            </RadioButton>
+            <RadioButton fx:id="radiobuttonProdBuild" font="$x5" mnemonicParsing="false" selected="false" text="Production Build" toggleGroup="$releaseType">
+              <HBox.margin>
+                <Insets left="38.0" />
+              </HBox.margin>
+            </RadioButton>
+          </children>
+        </HBox>
+        <VBox fx:id="vboxCycleTypeLabels" layoutX="28.0" layoutY="225.0" minHeight="62.0" prefHeight="62.0" prefWidth="136.0">
+          <children>
+            <Label fx:id="labelBuildCycle" font="$x1" text="Build Cycle:">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x6" />
+              </VBox.margin>
+            </Label>
+            <Label fx:id="labelBuildType" font="$x1" text="Build Type:">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x7" />
+              </VBox.margin>
+            </Label>
+          </children>
+        </VBox>
+        <VBox fx:id="vboxCycleTypeChoices" layoutX="164.0" layoutY="225.0" minHeight="62.0" prefHeight="62.0" prefWidth="610.0">
+          <children>
+            <ComboBox fx:id="comboboxCycle" prefWidth="50.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+              <VBox.margin>
+                <Insets bottom="8.0" top="4.0" fx:id="x8" />
+              </VBox.margin>
+            </ComboBox>
+            <ComboBox fx:id="comboboxType" prefWidth="200.0">
+              <items>
+                <FXCollections fx:factory="observableArrayList">
+                  <String fx:value="Item 1" />
+                  <String fx:value="Item 2" />
+                  <String fx:value="Item 3" />
+                </FXCollections>
+              </items>
+              <VBox.margin>
+                <Insets bottom="8.0" top="4.0" fx:id="x9" />
+              </VBox.margin>
+            </ComboBox>
+          </children>
+        </VBox>
+        <HBox fx:id="hboxCreateFor" layoutX="28.0" layoutY="305.0" prefHeight="23.0" prefWidth="754.0">
+          <children>
+            <Label fx:id="labelCreateFor" font="$x1" text="Create for:" />
+            <CheckBox fx:id="checkboxClient" font="$x5" mnemonicParsing="false" text="Client">
+              <HBox.margin>
+                <Insets left="30.0" fx:id="x2" />
+              </HBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="checkboxClientDV" font="$x5" mnemonicParsing="false" text="Client (DV)">
+              <HBox.margin>
+                <Insets left="16.0" fx:id="x10" />
+              </HBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="checkboxInternal" font="$x5" mnemonicParsing="false" text="Internal">
+              <HBox.margin>
+                <Insets left="16.0" fx:id="x11" />
+              </HBox.margin>
+            </CheckBox>
+            <CheckBox fx:id="checkboxInternalDV" font="$x5" mnemonicParsing="false" text="Internal (DV)">
+              <HBox.margin>
+                <Insets left="16.0" fx:id="x10" />
+              </HBox.margin>
+            </CheckBox>
+          </children>
+        </HBox>
+        <Rectangle fx:id="rectGroup2" arcHeight="32.0" arcWidth="32.0" disable="false" fill="WHITE" height="100.0" layoutX="14.0" layoutY="360.0" smooth="true" stroke="BLACK" strokeType="INSIDE" strokeWidth="1.0" visible="true" width="782.0">
+          <effect>
+            <DropShadow blurType="ONE_PASS_BOX" offsetX="2.0" offsetY="2.0" />
+          </effect>
+        </Rectangle>
+        <VBox fx:id="vboxTargetBuildFileLables" layoutX="28.0" layoutY="370.0" minHeight="62.0" prefHeight="62.0" prefWidth="136.0">
+          <children>
+            <Label fx:id="labelTargetBuild" font="$x1" text="Target Build:">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x12" />
+              </VBox.margin>
+            </Label>
+            <Label fx:id="labelBuildFile" font="$x1" text="Build File:">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x13" />
+              </VBox.margin>
+            </Label>
+          </children>
+        </VBox>
+        <VBox fx:id="vboxTargetBuildFileActual" layoutX="164.0" layoutY="370.0" minHeight="62.0" prefHeight="62.0" prefWidth="610.0">
+          <children>
+            <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" />
+            <Label fx:id="labelTargetBuildActual" font="$x5" prefWidth="604.0" text="&lt;Target Build&gt;">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x2_x0" />
+              </VBox.margin>
+            </Label>
+            <Label fx:id="labelBuildFileActual" font="$x5" text="&lt;Build File&gt;">
+              <VBox.margin>
+                <Insets bottom="8.0" top="8.0" fx:id="x2_x0" />
+              </VBox.margin>
+            </Label>
+          </children>
+        </VBox>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>
