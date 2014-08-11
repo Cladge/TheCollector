@@ -109,14 +109,14 @@ public class TheCollector extends Application {
 		String path = this.getClass().getResource("").toString();
 		System.out.println("App path = " + path);
 		
-    	File f = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
-        System.out.println(f.getAbsolutePath()); //  
-        System.out.println(f.getCanonicalPath());  
-        System.out.println(f.isAbsolute());  
-        System.out.println(f.canRead());  
-        System.out.println(f.isFile());  
-        System.out.println(f.exists());  
-        System.out.println(f.getAbsoluteFile().exists()); 
+		this.iniFilePath = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
+        System.out.println(this.iniFilePath.getAbsolutePath());
+        System.out.println(this.iniFilePath.getCanonicalPath());
+        System.out.println(this.iniFilePath.isAbsolute());
+        System.out.println(this.iniFilePath.canRead());
+        System.out.println(this.iniFilePath.isFile());
+        System.out.println(this.iniFilePath.exists());
+        System.out.println(this.iniFilePath.getAbsoluteFile().exists());
 		// DEBUG
 		
 		try {
@@ -125,7 +125,6 @@ public class TheCollector extends Application {
 			mainLayout = (VBox) loader.load();
 			scene = new Scene(mainLayout);
 			this.stage.setScene(scene);
-			this.stage.setResizable(false);
 
 			// Give the controller access to the main app.
 			controller = loader.getController();
