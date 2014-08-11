@@ -26,13 +26,13 @@ public class BaseView implements BaseController {
 	public void initialise() {
 	}
 	
-	/*
+	/**
 	 * Opens an about dialog.
 	 */
 	public void handleAbout() {
 	}
 
-	/*
+	/**
 	 * Closes the application.
 	 */
 	public void handleExit() {

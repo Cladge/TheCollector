@@ -9,7 +9,6 @@ import thecollector.model.TheCollector;
 
 /**
  * The controller for the main application layout.
- * Provides the starting point for creating the SQL patch: Version, Type, Client, etc.
  * 
  * @author Ian Claridge
  */
@@ -43,7 +42,7 @@ public class StartingView extends BaseView {
 		comboboxClient.setItems(FXCollections.observableArrayList("Naples", "Seville", "Trident"));
 	}
 	
-	/*
+	/**
 	 * Opens an about dialog.
 	 */
 	public void handleAbout() {

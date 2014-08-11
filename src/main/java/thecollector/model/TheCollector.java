@@ -1,6 +1,3 @@
-/**
- * 
- */
 package thecollector.model;
 
 import java.io.File;
@@ -15,8 +12,9 @@ import javafx.stage.Stage;
 import thecollector.controller.StartingView;
 
 /**
- * @author Ian Claridge
+ * The main application.
  * 
+ * @author Ian Claridge
  */
 public class TheCollector extends Application {
 
@@ -106,17 +104,19 @@ public class TheCollector extends Application {
 
 		// DEBUG
 		// Get the INI file.
-		//this.iniFilePath = new File(this.INI_FILE_NAME);
-		this.iniFilePath = new File(TheCollector.class.getResource(INI_FILE_NAME).toString());
-		System.out.println(this.iniFilePath);
-		if(this.iniFilePath.exists()) {
-			System.out.println(INI_FILE_NAME + " exists!");
-		}
-		else {
-			System.out.println(INI_FILE_NAME + " does NOT exist!");
-		}
-		
 		System.out.println(System.getProperty("user.home"));
+		
+		String path = this.getClass().getResource("").toString();
+		System.out.println("App path = " + path);
+		
+    	File f = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
+        System.out.println(f.getAbsolutePath()); //  
+        System.out.println(f.getCanonicalPath());  
+        System.out.println(f.isAbsolute());  
+        System.out.println(f.canRead());  
+        System.out.println(f.isFile());  
+        System.out.println(f.exists());  
+        System.out.println(f.getAbsoluteFile().exists()); 
 		// DEBUG
 		
 		try {
