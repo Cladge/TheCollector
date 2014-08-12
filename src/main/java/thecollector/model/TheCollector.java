@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import thecollector.controller.StartingView;
+import thecollector.utils.FileUtil;
 
 /**
  * The main application.
@@ -41,6 +42,8 @@ public class TheCollector extends Application {
 
 	private String cssPath;
 	private String cssSelectedPath;
+
+	private static final String APPLICATION_NAME = "TheCollector";
 	
 	private static final String DEFAULT_STYLE = "DefaultTheme.css";
 	private static final String DEFAULT_SELECTED_STYLE = "DefaultThemeSelected.css";
@@ -104,19 +107,15 @@ public class TheCollector extends Application {
 
 		// DEBUG
 		// Get the INI file.
-		System.out.println(System.getProperty("user.home"));
-		
-		String path = this.getClass().getResource("").toString();
-		System.out.println("App path = " + path);
-		
 		this.iniFilePath = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
-        System.out.println(this.iniFilePath.getAbsolutePath());
-        System.out.println(this.iniFilePath.getCanonicalPath());
-        System.out.println(this.iniFilePath.isAbsolute());
-        System.out.println(this.iniFilePath.canRead());
-        System.out.println(this.iniFilePath.isFile());
-        System.out.println(this.iniFilePath.exists());
-        System.out.println(this.iniFilePath.getAbsoluteFile().exists());
+        FileUtil.checkFile(this.iniFilePath);
+        File fileDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
+        if (fileDir != null) {
+        	System.out.println("fileDir = " + fileDir);
+        }
+        else {
+        	System.out.println("fileDir is NULL!");
+        }
 		// DEBUG
 		
 		try {
