@@ -109,13 +109,18 @@ public class TheCollector extends Application {
 		// Get the INI file.
 		this.iniFilePath = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
         FileUtil.checkFile(this.iniFilePath);
-        File fileDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
-        if (fileDir != null) {
-        	System.out.println("fileDir = " + fileDir);
+        File settingsDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
+        if (settingsDir != null) {
+        	System.out.println("fileDir = " + settingsDir);
         }
         else {
         	System.out.println("fileDir is NULL!");
         }
+        
+        this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
+        System.out.println("this.iniFilePath = " + this.iniFilePath);
+        FileUtil.WritePropertiesXmlFile(this.iniFilePath);
+        FileUtil.ReadPropertiesXmlFile(this.iniFilePath);
 		// DEBUG
 		
 		try {
