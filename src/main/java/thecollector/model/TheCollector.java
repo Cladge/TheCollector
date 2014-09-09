@@ -48,7 +48,7 @@ public class TheCollector extends Application {
 	private static final String DEFAULT_STYLE = "DefaultTheme.css";
 	private static final String DEFAULT_SELECTED_STYLE = "DefaultThemeSelected.css";
 	
-	private static final String INI_FILE_NAME = "TheCollector.xml";	//TheCollector.class.getResource("/thecollector/model/TheCollector.xml").toString();	
+	private static final String INI_FILE_NAME = "TheCollector.xml";	
 	private File iniFilePath;
 
 	/**
@@ -105,7 +105,7 @@ public class TheCollector extends Application {
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
-		// DEBUG
+		// TODO: DEBUG
 		// Get the INI file.
 		this.iniFilePath = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
         FileUtil.checkFile(this.iniFilePath);
@@ -119,9 +119,13 @@ public class TheCollector extends Application {
         
         this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
         System.out.println("this.iniFilePath = " + this.iniFilePath);
-        FileUtil.WritePropertiesXmlFile(this.iniFilePath);
-        FileUtil.ReadPropertiesXmlFile(this.iniFilePath);
-		// DEBUG
+        FileUtil.writePropertiesXmlFile(this.iniFilePath);
+        FileUtil.readPropertiesXmlFile(this.iniFilePath);
+        
+        // Test JSON handling.
+        FileUtil.testEncodeJSONObject();
+        FileUtil.testEncodeJSONObjectStream();
+		// TODO: DEBUG
 		
 		try {
 			// Load the root layout from the "start" view fxml file.

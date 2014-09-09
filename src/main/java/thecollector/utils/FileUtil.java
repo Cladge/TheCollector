@@ -7,10 +7,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.Properties;
+
+import org.json.simple.JSONObject;
 
 /**
  * Helper class for reading and writing files.
@@ -71,7 +74,7 @@ public class FileUtil {
 		System.out.println("File exists: " + fileToCheck.exists());
 		//    System.out.println(fileToCheck.getAbsoluteFile().exists());  
 	}
-	
+
 	/**
 	 * Gets the system user settings directory. 
 	 * 
@@ -94,7 +97,12 @@ public class FileUtil {
 		}
 		return settingsDirectory;
 	}
-	
+
+	/**
+	 * Test method for writing out a Properties file.
+	 * 
+	 * @param
+	 */
 	public static void writePropertiesFile(File propFile) {
 		try {
 			Properties properties = new Properties();
@@ -111,7 +119,12 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Test method for reading a Properties file.
+	 * 
+	 * @param
+	 */
 	public static void readPropertiesFile(File propFile) {
 		try {
 			FileInputStream fileInput = new FileInputStream(propFile);
@@ -131,8 +144,13 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void WritePropertiesXmlFile(File propFile) {
+
+	/**
+	 * Test method for writing out an XML Properties file.
+	 * 
+	 * @param
+	 */
+	public static void writePropertiesXmlFile(File propFile) {
 		try {
 			Properties properties = new Properties();
 			properties.setProperty("favoriteAnimal", "marmot");
@@ -148,8 +166,13 @@ public class FileUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void ReadPropertiesXmlFile(File propFile) {
+
+	/**
+	 * Test method for reading an XML Properties file.
+	 * 
+	 * @param
+	 */
+	public static void readPropertiesXmlFile(File propFile) {
 		try {
 			FileInputStream fileInput = new FileInputStream(propFile);
 			Properties properties = new Properties();
@@ -167,6 +190,48 @@ public class FileUtil {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	/**
+	 * Test JSON simple encoding.
+	 * 
+	 * @param
+	 */
+	public static void testEncodeJSONObject() {
+		JSONObject obj=new JSONObject();
+		obj.put("name","foo");
+		obj.put("num",new Integer(100));
+		obj.put("balance",new Double(1000.21));
+		obj.put("is_vip",new Boolean(true));
+		obj.put("nickname",null);
+		System.out.println("");
+		System.out.print(obj);
+	}
+
+
+	/**
+	 * Test JSON simple encoding with streaming.
+	 * 
+	 * @param
+	 */
+	public static void testEncodeJSONObjectStream() {
+		JSONObject obj=new JSONObject();
+		obj.put("name","foo");
+		obj.put("num",new Integer(100));
+		obj.put("balance",new Double(1000.21));
+		obj.put("is_vip",new Boolean(true));
+		obj.put("nickname",null);
+		StringWriter out = new StringWriter();
+		try {
+			obj.writeJSONString(out);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String jsonText = out.toString();
+		System.out.println("");
+		System.out.print(jsonText);
 	}
 
 }
