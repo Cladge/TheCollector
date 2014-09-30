@@ -107,21 +107,22 @@ public class TheCollector extends Application {
 
 		// TODO: DEBUG
 		// Get the INI file.
-		this.iniFilePath = new File(this.getClass().getResource("").getPath().toString() + INI_FILE_NAME);
-        FileUtil.checkFile(this.iniFilePath);
         File settingsDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
         if (settingsDir != null) {
         	System.out.println("fileDir = " + settingsDir);
+            this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
+            System.out.println();
+            System.out.println("this.iniFilePath = " + this.iniFilePath);
+            System.out.println();
+            FileUtil.checkFile(this.iniFilePath);
+            System.out.println();
+            FileUtil.writePropertiesXmlFile(this.iniFilePath);
+            FileUtil.readPropertiesXmlFile(this.iniFilePath);
         }
         else {
         	System.out.println("fileDir is NULL!");
         }
-        
-        this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
-        System.out.println("this.iniFilePath = " + this.iniFilePath);
-        FileUtil.writePropertiesXmlFile(this.iniFilePath);
-        FileUtil.readPropertiesXmlFile(this.iniFilePath);
-        
+		
         // Test JSON handling.
         FileUtil.testEncodeJSONObject();
         FileUtil.testEncodeJSONObjectStream();
