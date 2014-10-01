@@ -2,6 +2,7 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -50,6 +51,7 @@ public class TheCollector extends Application {
 	
 	private static final String INI_FILE_NAME = "TheCollector.xml";	
 	private File iniFilePath;
+	private Properties appProperties;
 
 	/**
 	 * Return the main Stage.
@@ -105,29 +107,24 @@ public class TheCollector extends Application {
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
-		// TODO: DEBUG
 		// Get the INI file.
         File settingsDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
         if (settingsDir != null) {
-        	System.out.println("fileDir = " + settingsDir);
             this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
-            System.out.println();
-            System.out.println("this.iniFilePath = " + this.iniFilePath);
-            System.out.println();
             FileUtil.checkFile(this.iniFilePath);
-            System.out.println();
             FileUtil.writePropertiesXmlFile(this.iniFilePath);
-            FileUtil.readPropertiesXmlFile(this.iniFilePath);
+            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
         }
         else {
-        	System.out.println("fileDir is NULL!");
+        	System.out.println("Unable to locate User directory!");
         }
 		
         // Test JSON handling.
+        // TODO: DEBUG
         FileUtil.testEncodeJSONObject();
         FileUtil.testEncodeJSONObjectStream();
 		// TODO: DEBUG
-		
+        
 		try {
 			// Load the root layout from the "start" view fxml file.
 			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/StartingView.fxml"));

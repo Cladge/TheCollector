@@ -65,14 +65,19 @@ public class FileUtil {
 	 * 
 	 * @param file
 	 */
-	public static void checkFile(File fileToCheck) {
-		System.out.println("File path: " + fileToCheck.getAbsolutePath());
-		//    System.out.println(fileToCheck.getCanonicalPath());
-		System.out.println("Is absolute: " + fileToCheck.isAbsolute());
-		System.out.println("Can read: " + fileToCheck.canRead());
-		System.out.println("Is a file: " + fileToCheck.isFile());
-		System.out.println("File exists: " + fileToCheck.exists());
-		//    System.out.println(fileToCheck.getAbsoluteFile().exists());  
+	public static Boolean checkFile(File fileToCheck) {
+		// System.out.println("File path: " + fileToCheck.getAbsolutePath());
+		Boolean fileisValid = false;
+		if (fileToCheck.exists()) {
+			if (fileToCheck.isFile()) {
+				if (fileToCheck.canRead()) {
+					if (fileToCheck.isAbsolute()) {
+						fileisValid = true;
+					}
+				}
+			}
+		}
+		return fileisValid;
 	}
 
 	/**
@@ -106,12 +111,10 @@ public class FileUtil {
 	public static void writePropertiesFile(File propFile) {
 		try {
 			Properties properties = new Properties();
-			properties.setProperty("favoriteAnimal", "marmot");
-			properties.setProperty("favoriteContinent", "Antarctica");
-			properties.setProperty("favoritePerson", "Nicole");
+			properties.setProperty("key", "value");
 
 			FileOutputStream fileOut = new FileOutputStream(propFile);
-			properties.store(fileOut, "Favorite Things");
+			properties.store(fileOut, "Application Settings");
 			fileOut.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -125,24 +128,26 @@ public class FileUtil {
 	 * 
 	 * @param
 	 */
-	public static void readPropertiesFile(File propFile) {
+	public static Properties readPropertiesFile(File propFile) {
+		Properties properties = new Properties();
 		try {
 			FileInputStream fileInput = new FileInputStream(propFile);
-			Properties properties = new Properties();
 			properties.load(fileInput);
 			fileInput.close();
 
-			Enumeration enuKeys = properties.keys();
+			// Example of how to iterate the properties object:
+			/*Enumeration enuKeys = properties.keys();
 			while (enuKeys.hasMoreElements()) {
 				String key = (String) enuKeys.nextElement();
 				String value = properties.getProperty(key);
-				System.out.println(key + ": " + value);
-			}
+			}*/
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return properties;
 	}
 
 	/**
@@ -153,12 +158,10 @@ public class FileUtil {
 	public static void writePropertiesXmlFile(File propFile) {
 		try {
 			Properties properties = new Properties();
-			properties.setProperty("favoriteAnimal", "marmot");
-			properties.setProperty("favoriteContinent", "Antarctica");
-			properties.setProperty("favoritePerson", "Nicole");
+			properties.setProperty("key", "value");
 
 			FileOutputStream fileOut = new FileOutputStream(propFile);
-			properties.storeToXML(fileOut, "Favorite Things");
+			properties.storeToXML(fileOut, "Application Settings");
 			fileOut.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -172,24 +175,26 @@ public class FileUtil {
 	 * 
 	 * @param
 	 */
-	public static void readPropertiesXmlFile(File propFile) {
+	public static Properties readPropertiesXmlFile(File propFile) {
+		Properties properties = new Properties();
 		try {
 			FileInputStream fileInput = new FileInputStream(propFile);
-			Properties properties = new Properties();
 			properties.loadFromXML(fileInput);
 			fileInput.close();
 
-			Enumeration enuKeys = properties.keys();
+			// Example of how to iterate the properties object:
+			/*Enumeration enuKeys = properties.keys();
 			while (enuKeys.hasMoreElements()) {
 				String key = (String) enuKeys.nextElement();
 				String value = properties.getProperty(key);
-				System.out.println(key + ": " + value);
-			}
+			}*/
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return properties;
 	}
 
 

@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import thecollector.model.TheCollector;
 
 /**
@@ -18,9 +20,6 @@ public class StartingView extends BaseView {
 	@FXML
 	private AnchorPane anchorpaneStartingView;
 	
-	@FXML
-	private ComboBox<String> comboboxClient;
-	
 	/**
 	 * Return reference to the main AnchorPane.
 	 * 
@@ -33,12 +32,10 @@ public class StartingView extends BaseView {
 	/**
 	 * Main Initialise method.
 	 * <li>Get cast handle of main app.
-	 * <li>Populate the Client Combo Box.
 	 */
 	public void initialise() {
-		// TODO Read required values from INI file.
 		theCollector = (TheCollector) mainApp;
-		comboboxClient.setItems(FXCollections.observableArrayList("Naples", "Seville", "Trident"));
+		// rectangleBorder.widthProperty().bind(vboxBorder.widthProperty());
 	}
 	
 	/**
