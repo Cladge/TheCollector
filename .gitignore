@@ -6,3 +6,6 @@
 /*.fxbuild
 /build
 /bin
+ui/native/jna/win32-amd64/jnidispatch.dll
+ui/native/19/windows-amd64/native-platform.dll
+ui/native/19/windows-amd64/native-platform.dll.lock

@@ -10,13 +10,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.util.Enumeration;
 import java.util.Properties;
 
 import org.json.simple.JSONObject;
 
 /**
- * Helper class for reading and writing files.
+ * Helper class for reBufferedWriter writerading and writing files.
  */
 public class FileUtil {
 
@@ -55,7 +54,7 @@ public class FileUtil {
 	 * @throws IOException thrown if an I/O error occurs opening or creating the file
 	 */
 	public static void saveFile(String content, File file) throws IOException {
-		BufferedWriter writer = Files.newBufferedWriter(file.toPath(), CHARSET);
+		BufferedWriter writer = Files.newBufferedWriter(file.toPath(), CHARSET, null);
 		writer.write(content, 0, content.length());
 		writer.close();
 	}
@@ -65,9 +64,9 @@ public class FileUtil {
 	 * 
 	 * @param file
 	 */
-	public static Boolean checkFile(File fileToCheck) {
+	public static boolean checkFile(File fileToCheck) {
 		// System.out.println("File path: " + fileToCheck.getAbsolutePath());
-		Boolean fileisValid = false;
+		boolean fileisValid = false;
 		if (fileToCheck.exists()) {
 			if (fileToCheck.isFile()) {
 				if (fileToCheck.canRead()) {

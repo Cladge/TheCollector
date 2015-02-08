@@ -94,7 +94,6 @@ public class TheCollector extends Application {
 	 * 
 	 * @see javafx.application.Application#start(javafx.stage.Stage)
 	 */
-	@Override
 	public void start(Stage primaryStage) throws Exception {
 		theCollector = this;
 		this.stage = primaryStage;
@@ -133,7 +132,7 @@ public class TheCollector extends Application {
 			this.stage.setScene(scene);
 
 			// Give the controller access to the main app.
-			controller = loader.getController();
+			controller = (StartingView) loader.getController();
 			controller.setMainApp(theCollector);
 			
 			// Let the controller perform its initialisation routines.
