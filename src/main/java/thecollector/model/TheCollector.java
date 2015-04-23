@@ -2,6 +2,7 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Properties;
 
 import javafx.application.Application;
@@ -11,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import thecollector.controller.StartingView;
+import thecollector.model.mtg.CardLoader;
+import thecollector.model.mtg.card.MtgCard;
 import thecollector.utils.FileUtil;
 
 /**
@@ -31,10 +34,6 @@ public class TheCollector extends Application {
 		return theCollector;
 	}
 	
-	public static void main(String[] args) {
-		launch(args);
-	}
-	
 	private Stage stage;
 	private Scene scene;
 	private VBox mainLayout;
@@ -49,7 +48,9 @@ public class TheCollector extends Application {
 	private static final String DEFAULT_STYLE = "DefaultTheme.css";
 	private static final String DEFAULT_SELECTED_STYLE = "DefaultThemeSelected.css";
 	
-	private static final String INI_FILE_NAME = "TheCollector.xml";	
+	private static final String INI_FILE_NAME = "TheCollector.xml";
+	private static final String MTG_JSON_SET = "json/AllSets.json";	
+	
 	private File iniFilePath;
 	private Properties appProperties;
 
@@ -113,6 +114,13 @@ public class TheCollector extends Application {
             FileUtil.checkFile(this.iniFilePath);
             FileUtil.writePropertiesXmlFile(this.iniFilePath);
             this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
+
+            // Load the latest MTG collection.
+            List<MtgCard> mtgCardList = CardLoader.loadCards(settingsDir + "/" + MTG_JSON_SET);
+            
+            for (MtgCard mtgCard : mtgCardList) {
+				System.out.println("Card: " + mtgCard.getName() + ", Set: " + mtgCard.getSetName());
+			}
         }
         else {
         	System.out.println("Unable to locate User directory!");
@@ -120,8 +128,8 @@ public class TheCollector extends Application {
 		
         // Test JSON handling.
         // TODO: DEBUG
-        FileUtil.testEncodeJSONObject();
-        FileUtil.testEncodeJSONObjectStream();
+        // FileUtil.testEncodeJSONObject();
+        // FileUtil.testEncodeJSONObjectStream();
 		// TODO: DEBUG
         
 		try {
@@ -145,6 +153,10 @@ public class TheCollector extends Application {
 			// Exception gets thrown if the fxml file could not be loaded
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		launch(args);
 	}
 	
 }
