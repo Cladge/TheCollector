@@ -15,7 +15,7 @@ import java.util.Properties;
 import org.json.simple.JSONObject;
 
 /**
- * Helper class for reBufferedWriter writerading and writing files.
+ * Helper class for reading and writing BufferedWriter files.
  */
 public class FileUtil {
 

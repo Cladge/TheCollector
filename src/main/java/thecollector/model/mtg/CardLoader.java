@@ -15,6 +15,11 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * MTG Card Loader utility class for handling card sets in JSON format.
+ * 
+ * @author Ian Claridge
+ */
 public class CardLoader {
 
 	/**

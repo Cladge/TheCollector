@@ -2,6 +2,11 @@ package thecollector.model.mtg.card;
 
 import java.util.ArrayList;
 
+/**
+ * A class to represent an MTG card set.
+ * 
+ * @author Ian Claridge
+ */
 public class MtgSet {
 	private String name;
 	private String code;
