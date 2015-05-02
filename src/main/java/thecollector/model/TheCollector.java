@@ -9,7 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import thecollector.controller.StartingView;
 import thecollector.model.mtg.CardLoader;
@@ -36,7 +36,7 @@ public class TheCollector extends Application {
 	
 	private Stage stage;
 	private Scene scene;
-	private VBox mainLayout;
+	private AnchorPane mainLayout;
 
 	private StartingView controller;
 
@@ -135,16 +135,16 @@ public class TheCollector extends Application {
 		try {
 			// Load the root layout from the "start" view fxml file.
 			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/StartingView.fxml"));
-			mainLayout = (VBox) loader.load();
-			scene = new Scene(mainLayout);
+			this.mainLayout = (AnchorPane) loader.load();
+			this.scene = new Scene(mainLayout);
 			this.stage.setScene(scene);
 
 			// Give the controller access to the main app.
-			controller = (StartingView) loader.getController();
-			controller.setMainApp(theCollector);
+			this.controller = (StartingView) loader.getController();
+			this.controller.setMainApp(theCollector);
 			
 			// Let the controller perform its initialisation routines.
-			controller.initialise();
+			this.controller.initialise();
 
 			// And finally...show the Stage.
 			this.stage.show();
