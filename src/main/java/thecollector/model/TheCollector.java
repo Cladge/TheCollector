@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import thecollector.controller.StartingView;
+import thecollector.controller.MainView;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
 import thecollector.utils.FileUtil;
@@ -38,18 +38,12 @@ public class TheCollector extends Application {
 	private Scene scene;
 	private AnchorPane mainLayout;
 
-	private StartingView controller;
+	private MainView controller;
 
 	private String cssPath;
 	private String cssSelectedPath;
 
-	private static final String APPLICATION_NAME = "TheCollector";
-	
-	private static final String DEFAULT_STYLE = "DefaultTheme.css";
-	private static final String DEFAULT_SELECTED_STYLE = "DefaultThemeSelected.css";
-	
-	private static final String INI_FILE_NAME = "TheCollector.xml";
-	private static final String MTG_JSON_SET = "json/AllSets.json";	
+	private File settingsDir;
 	
 	private File iniFilePath;
 	private Properties appProperties;
@@ -90,6 +84,15 @@ public class TheCollector extends Application {
 		return this.cssSelectedPath;
 	}
 	
+	/**
+	 * Return the settings path.
+	 * 
+	 * @return File
+	 */
+	public File getSettingsDir() {
+		return this.settingsDir;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -101,31 +104,30 @@ public class TheCollector extends Application {
 		this.stage.setTitle("TheCollector");
 		// TODO: Make this configurable - allow the user to choose different themes
 		//		 and store this in preferences.
-		this.cssPath = TheCollector.class.getResource(DEFAULT_STYLE).toString();
-		this.cssSelectedPath = TheCollector.class.getResource(DEFAULT_SELECTED_STYLE).toString();
+		this.cssPath = TheCollector.class.getResource(Settings.DEFAULT_STYLE).toString();
+		this.cssSelectedPath = TheCollector.class.getResource(Settings.DEFAULT_SELECTED_STYLE).toString();
 		
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
-		// Get the INI file.
-        File settingsDir = FileUtil.getSettingsDirectory(APPLICATION_NAME);
-        if (settingsDir != null) {
-            this.iniFilePath = new File(settingsDir + "/" + INI_FILE_NAME);
-            FileUtil.checkFile(this.iniFilePath);
-            FileUtil.writePropertiesXmlFile(this.iniFilePath);
-            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
-
-            // Load the latest MTG collection.
-            List<MtgCard> mtgCardList = CardLoader.loadCards(settingsDir + "/" + MTG_JSON_SET);
-            
-            for (MtgCard mtgCard : mtgCardList) {
-				System.out.println("Card: " + mtgCard.getName() + ", Set: " + mtgCard.getSetName());
-			}
-        }
-        else {
-        	System.out.println("Unable to locate User directory!");
+		// Get the settings path and settings file.
+		boolean settingsOK = true;
+        this.settingsDir = FileUtil.getSettingsDirectory(Settings.APPLICATION_NAME);
+        if (this.settingsDir != null) {
+            this.iniFilePath = new File(this.settingsDir + "/" + Settings.INI_FILE_NAME);
+            if (FileUtil.checkFile(this.iniFilePath)) {
+                this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);	
+            } else {
+            	settingsOK = false;
+            }
+        } else {
+        	settingsOK = false;
         }
 		
+        if (!settingsOK) {
+        	System.out.println("Unable to locate settings file!");
+        }
+        
         // Test JSON handling.
         // TODO: DEBUG
         // FileUtil.testEncodeJSONObject();
@@ -134,13 +136,13 @@ public class TheCollector extends Application {
         
 		try {
 			// Load the root layout from the "start" view fxml file.
-			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/StartingView.fxml"));
+			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/MainView.fxml"));
 			this.mainLayout = (AnchorPane) loader.load();
 			this.scene = new Scene(mainLayout);
 			this.stage.setScene(scene);
 
 			// Give the controller access to the main app.
-			this.controller = (StartingView) loader.getController();
+			this.controller = (MainView) loader.getController();
 			this.controller.setMainApp(theCollector);
 			
 			// Let the controller perform its initialisation routines.

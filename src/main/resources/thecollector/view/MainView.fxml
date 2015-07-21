@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.StartingView">
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainView">
    <children>
       <VBox fx:id="vboxStartingView" minHeight="502.0" minWidth="535.0" prefHeight="502.0" prefWidth="810.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <children>
@@ -23,7 +23,7 @@
                   <Insets top="20.0" />
                </padding>
       </Label>
-            <ListView VBox.vgrow="ALWAYS" />
+            <ListView fx:id="listViewAllCards" VBox.vgrow="ALWAYS" />
         </children>
       </VBox>
    </children>
