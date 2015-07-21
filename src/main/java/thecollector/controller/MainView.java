@@ -1,14 +1,16 @@
 package thecollector.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import thecollector.model.Settings;
@@ -31,6 +33,9 @@ public class MainView extends BaseView {
 	@FXML
 	private ListView<String> listViewAllCards;
 	
+	@FXML
+	private Label labelStatus;
+	
 	/**
 	 * Return reference to the main AnchorPane.
 	 * 
@@ -46,13 +51,27 @@ public class MainView extends BaseView {
 	 */
 	public void initialise() {
 		theCollector = (TheCollector) mainApp;
+		this.labelStatus.setText("Loading card database...");
+		this.loadCards();
+		this.labelStatus.setText("Status: Ready");
+	}
+	
+	/**
+	 * Load the main card set.
+	 * 
+	 * @return int - Card Count
+	 */
+	private int loadCards() {
+		int cardCount = 0;
+
+		theCollector.getScene().setCursor(Cursor.WAIT);
 		
         // Load the latest MTG collection.
         List<MtgCard> mtgCardList;
 		try {
 			mtgCardList = CardLoader.loadCards(theCollector.getSettingsDir() + "/" + Settings.MTG_JSON_SET);
 
-			ObservableList<String> cardList = (ObservableList<String>) new ArrayList<String>();
+			ObservableList<String> cardList = FXCollections.observableArrayList();
 	        for (MtgCard mtgCard : mtgCardList) {
 	        	String lineFormatted = "Card: " + mtgCard.getName() + ", Set: " + mtgCard.getSetName();
 	        	cardList.add(lineFormatted);
@@ -71,6 +90,10 @@ public class MainView extends BaseView {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		theCollector.getScene().setCursor(Cursor.DEFAULT);
+		
+		return cardCount;
 	}
 	
 	/**

@@ -15,15 +15,19 @@
    <children>
       <VBox fx:id="vboxStartingView" minHeight="502.0" minWidth="535.0" prefHeight="502.0" prefWidth="810.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <children>
-      <Label id="" fx:id="labelAppTitle" alignment="TOP_CENTER" contentDisplay="CENTER" prefHeight="79.0" prefWidth="831.0" text="TheCollector" textAlignment="CENTER" textFill="#003d99" underline="false" VBox.vgrow="ALWAYS">
-        <font>
-          <Font name="Courier New Bold" size="48.0" />
-        </font>
-               <padding>
-                  <Insets top="20.0" />
-               </padding>
-      </Label>
             <ListView fx:id="listViewAllCards" VBox.vgrow="ALWAYS" />
+            <HBox alignment="BASELINE_LEFT" prefHeight="16.0" prefWidth="810.0">
+               <children>
+                  <Label fx:id="labelStatus" alignment="BASELINE_LEFT" text="Status: Ready">
+                     <font>
+                        <Font name="System Italic" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </HBox>
         </children>
       </VBox>
    </children>

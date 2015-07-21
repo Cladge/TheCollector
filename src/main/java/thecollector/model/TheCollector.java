@@ -2,7 +2,6 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 
 import javafx.application.Application;
@@ -12,8 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import thecollector.controller.MainView;
-import thecollector.model.mtg.CardLoader;
-import thecollector.model.mtg.card.MtgCard;
 import thecollector.utils.FileUtil;
 
 /**
@@ -128,12 +125,6 @@ public class TheCollector extends Application {
         	System.out.println("Unable to locate settings file!");
         }
         
-        // Test JSON handling.
-        // TODO: DEBUG
-        // FileUtil.testEncodeJSONObject();
-        // FileUtil.testEncodeJSONObjectStream();
-		// TODO: DEBUG
-        
 		try {
 			// Load the root layout from the "start" view fxml file.
 			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/MainView.fxml"));
@@ -144,12 +135,12 @@ public class TheCollector extends Application {
 			// Give the controller access to the main app.
 			this.controller = (MainView) loader.getController();
 			this.controller.setMainApp(theCollector);
+
+			// Show the Stage.
+			this.stage.show();
 			
 			// Let the controller perform its initialisation routines.
 			this.controller.initialise();
-
-			// And finally...show the Stage.
-			this.stage.show();
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
