@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -88,6 +89,20 @@ public class TheCollector extends Application {
 	 */
 	public File getSettingsDir() {
 		return this.settingsDir;
+	}
+	
+	/**
+	 * Set the cursor pointer.
+	 * 
+	 * @param cursorType - String
+	 */
+	public void setCursor(String cursorType) {
+		if (cursorType == "WAIT") {
+			this.scene.setCursor(Cursor.WAIT);
+		}
+		if (cursorType == "DEFAULT") {
+			this.scene.setCursor(Cursor.DEFAULT);
+		}
 	}
 	
 	/*

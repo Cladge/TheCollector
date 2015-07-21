@@ -51,9 +51,9 @@ public class MainView extends BaseView {
 	 */
 	public void initialise() {
 		theCollector = (TheCollector) mainApp;
-		this.labelStatus.setText("Loading card database...");
+		this.setStatus("Loading card database...");
 		this.loadCards();
-		this.labelStatus.setText("Status: Ready");
+		this.setStatus("Status: Ready");
 	}
 	
 	/**
@@ -64,7 +64,7 @@ public class MainView extends BaseView {
 	private int loadCards() {
 		int cardCount = 0;
 
-		theCollector.getScene().setCursor(Cursor.WAIT);
+		theCollector.setCursor("WAIT");
 		
         // Load the latest MTG collection.
         List<MtgCard> mtgCardList;
@@ -91,9 +91,18 @@ public class MainView extends BaseView {
 			e.printStackTrace();
 		}
 
-		theCollector.getScene().setCursor(Cursor.DEFAULT);
+		theCollector.setCursor("DEFAULT");
 		
 		return cardCount;
+	}
+	
+	/**
+	 * Set the status bar text.
+	 * 
+	 * @param message - String
+	 */
+	private void setStatus(String message) {
+		this.labelStatus.setText(message);
 	}
 	
 	/**
