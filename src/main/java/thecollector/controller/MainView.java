@@ -52,8 +52,7 @@ public class MainView extends BaseView {
 	public void initialise() {
 		theCollector = (TheCollector) mainApp;
 		this.setStatus("Loading card database...");
-		this.loadCards();
-		this.setStatus("Status: Ready");
+		this.setStatus(String.format("Number of cards found: %s", this.loadCards()));
 	}
 	
 	/**
@@ -81,6 +80,7 @@ public class MainView extends BaseView {
 	        // Populate the List View.
 	        if (!cardList.isEmpty()) {
 	        	this.listViewAllCards.setItems(cardList);
+	        	cardCount = cardList.size();
 	        }
 	        
 		} catch (JsonParseException e) {

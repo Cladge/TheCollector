@@ -18,7 +18,7 @@
             <ListView fx:id="listViewAllCards" VBox.vgrow="ALWAYS" />
             <HBox alignment="BASELINE_LEFT" prefHeight="16.0" prefWidth="810.0">
                <children>
-                  <Label fx:id="labelStatus" alignment="BASELINE_LEFT" prefHeight="17.0" prefWidth="101.0" text="Status:">
+                  <Label fx:id="labelStatus" alignment="BASELINE_LEFT" prefHeight="17.0" prefWidth="828.0" text="Status:">
                      <font>
                         <Font name="System Italic" size="12.0" />
                      </font>
