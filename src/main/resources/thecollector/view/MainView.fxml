@@ -11,11 +11,18 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainView">
+<AnchorPane fx:id="anchorpaneStartingView" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainViewController">
    <children>
-      <VBox fx:id="vboxStartingView" minHeight="502.0" minWidth="535.0" prefHeight="502.0" prefWidth="810.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <VBox minHeight="502.0" minWidth="535.0" prefHeight="502.0" prefWidth="810.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
         <children>
-            <ListView fx:id="listViewAllCards" VBox.vgrow="ALWAYS" />
+            <TableView fx:id="allCardsTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="cardNameColumn" prefWidth="125.0" text="Name" />
+                <TableColumn fx:id="setNameColumn" prefWidth="180.0" text="Set" />
+                  <TableColumn fx:id="cardTypeColumn" minWidth="0.0" prefWidth="226.0" text="Type" />
+                  <TableColumn fx:id="cardColourColumn" prefWidth="132.0" text="Colour" />
+              </columns>
+            </TableView>
             <HBox alignment="BASELINE_LEFT" prefHeight="16.0" prefWidth="810.0">
                <children>
                   <Label fx:id="labelStatus" alignment="BASELINE_LEFT" prefHeight="17.0" prefWidth="828.0" text="Status:">

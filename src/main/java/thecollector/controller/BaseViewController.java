@@ -7,7 +7,7 @@ import thecollector.controller.BaseController;
  * 
  * @author Ian Claridge
  */
-public class BaseView implements BaseController {
+public class BaseViewController implements BaseController {
 
 	protected Object mainApp;					// Reference to the main application
 
@@ -23,7 +23,7 @@ public class BaseView implements BaseController {
 	/**
 	 * Main Initialise method.
 	 */
-	public void initialise() {
+	public void setup() {
 	}
 	
 	/**

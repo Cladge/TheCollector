@@ -12,7 +12,7 @@ public interface BaseController {
 	/**
 	 * Main Initialise method.
 	 */
-	public void initialise();
+	public void setup();
 	
 	/**
 	 * Opens an about dialog.

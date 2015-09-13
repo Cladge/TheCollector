@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import thecollector.controller.MainView;
+import thecollector.controller.MainViewController;
 import thecollector.utils.FileUtil;
 
 /**
@@ -36,7 +36,7 @@ public class TheCollector extends Application {
 	private Scene scene;
 	private AnchorPane mainLayout;
 
-	private MainView controller;
+	private MainViewController controller;
 
 	private String cssPath;
 	private String cssSelectedPath;
@@ -148,14 +148,14 @@ public class TheCollector extends Application {
 			this.stage.setScene(scene);
 
 			// Give the controller access to the main app.
-			this.controller = (MainView) loader.getController();
+			this.controller = (MainViewController) loader.getController();
 			this.controller.setMainApp(theCollector);
 
 			// Show the Stage.
 			this.stage.show();
 			
-			// Let the controller perform its initialisation routines.
-			this.controller.initialise();
+			// Let the controller perform its setup routines.
+			this.controller.setup();
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
