@@ -21,6 +21,7 @@
                 <TableColumn fx:id="setNameColumn" prefWidth="180.0" text="Set" />
                   <TableColumn fx:id="cardTypeColumn" minWidth="0.0" prefWidth="226.0" text="Type" />
                   <TableColumn fx:id="cardColourColumn" prefWidth="132.0" text="Colour" />
+                  <TableColumn fx:id="cardRarityColumn" prefWidth="131.0" text="Rarity" />
               </columns>
             </TableView>
             <HBox alignment="BASELINE_LEFT" prefHeight="16.0" prefWidth="810.0">

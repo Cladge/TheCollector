@@ -9,11 +9,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import thecollector.model.Settings;
 import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
@@ -46,10 +48,16 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardColourColumn;
+
+	@FXML
+	private TableColumn<MtgCardDisplay, String> cardRarityColumn;
 	
 	@FXML
 	private Label labelStatus;
 
+	// A list of ALL current cards in the collection.
+	private List<MtgCard> mtgCardList;
+	
 	// An observable array list for populating the main TableView control.
 	private ObservableList<MtgCardDisplay> displayData = FXCollections.observableArrayList();
 	
@@ -60,10 +68,14 @@ public class MainViewController extends BaseViewController {
     @FXML
     private void initialize() {
 		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
-		cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-		setNameColumn.setCellValueFactory(cellData -> cellData.getValue().getSetNameProperty());
-		cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
-		cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
+		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+		this.setNameColumn.setCellValueFactory(cellData -> cellData.getValue().getSetNameProperty());
+		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
+		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
+		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
+
+		// Associate handler classes with controls.
+		this.allCardsTableView.setOnMouseClicked(new TableViewEventHandler(this.allCardsTableView));
     }
     
 	/**
@@ -83,7 +95,7 @@ public class MainViewController extends BaseViewController {
 	 */
 	public void setup() {
 		theCollector = (TheCollector) mainApp;
-
+		
 		this.setStatus("Loading card database...");
 		this.setStatus(String.format("Number of cards found: %s", this.loadCards()));
 	}
@@ -99,11 +111,10 @@ public class MainViewController extends BaseViewController {
 		theCollector.setCursor("WAIT");
 		
         // Load the latest MTG collection.
-        List<MtgCard> mtgCardList;
 		try {
-			mtgCardList = CardLoader.loadCards(theCollector.getSettingsDir() + "/" + Settings.MTG_JSON_SET);
+			this.mtgCardList = CardLoader.loadCards(theCollector.getSettingsDir() + "/" + Settings.MTG_JSON_SET);
 
-	        for (MtgCard mtgCard : mtgCardList) {
+	        for (MtgCard mtgCard : this.mtgCardList) {
 	        	MtgCardDisplay mtgCardRow = new MtgCardDisplay();
 	        	mtgCardRow.setName(mtgCard.getName());
 	        	mtgCardRow.setSetName(mtgCard.getSetName());
@@ -127,6 +138,8 @@ public class MainViewController extends BaseViewController {
 	        		mtgCardRow.setColour(colours.get(0));
 	        	}
 	        	
+	        	mtgCardRow.setRarity(mtgCard.getRarity());
+	        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
 	        		mtgCardRow.setName("-");
@@ -139,6 +152,9 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	if (mtgCardRow.getColour() == null || mtgCardRow.getColour().isEmpty()) {
 	        		mtgCardRow.setColour("-");
+	        	}
+	        	if (mtgCardRow.getRarity() == null || mtgCardRow.getRarity().isEmpty()) {
+	        		mtgCardRow.setRarity("-");
 	        	}
 	        	
 	        	// Added the displayable row to the display data list.
@@ -183,4 +199,25 @@ public class MainViewController extends BaseViewController {
 		System.out.println("\nTheCollector v0.1 (beta)");
 	}
 
+}
+
+class TableViewEventHandler implements EventHandler<MouseEvent> {
+
+	private TableView<MtgCardDisplay> cardsTableView;
+	
+	// Constructor.
+	public TableViewEventHandler(TableView<MtgCardDisplay> tableView) {
+		this.cardsTableView = tableView;
+	}
+	
+	@Override
+	public void handle(MouseEvent event) {
+    	String eventTargetType = event.getTarget().toString();
+    	if (eventTargetType.substring(0, 4).toLowerCase().equalsIgnoreCase("text") ||
+    			eventTargetType.substring(0, 12).toLowerCase().equalsIgnoreCase("TableColumn$")) {
+        	MtgCardDisplay mtgCardDisplay = cardsTableView.getSelectionModel().getSelectedItem();
+        	System.out.println(mtgCardDisplay.toString());	
+    	}		
+	}
+	
 }
