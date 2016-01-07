@@ -3,6 +3,7 @@ package thecollector.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -21,6 +22,7 @@ import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
 import thecollector.model.mtg.card.MtgCardDisplay;
+import thecollector.utils.AbstractLogger;
 
 /**
  * The controller for the main application layout.
@@ -97,7 +99,9 @@ public class MainViewController extends BaseViewController {
 		theCollector = (TheCollector) mainApp;
 		
 		this.setStatus("Loading card database...");
-		this.setStatus(String.format("Number of cards found: %s", this.loadCards()));
+		String statusMessage = String.format("Number of cards found: %s", this.loadCards());
+		this.setStatus(statusMessage);
+		logger().log(Level.INFO, statusMessage);
 	}
 	
 	/**
@@ -169,11 +173,11 @@ public class MainViewController extends BaseViewController {
 	        }
 	        
 		} catch (JsonParseException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (JsonMappingException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 
 		theCollector.setCursor("DEFAULT");
@@ -201,7 +205,7 @@ public class MainViewController extends BaseViewController {
 
 }
 
-class TableViewEventHandler implements EventHandler<MouseEvent> {
+class TableViewEventHandler extends AbstractLogger implements EventHandler<MouseEvent> {
 
 	private TableView<MtgCardDisplay> cardsTableView;
 	
@@ -216,7 +220,8 @@ class TableViewEventHandler implements EventHandler<MouseEvent> {
     	if (eventTargetType.substring(0, 4).toLowerCase().equalsIgnoreCase("text") ||
     			eventTargetType.substring(0, 12).toLowerCase().equalsIgnoreCase("TableColumn$")) {
         	MtgCardDisplay mtgCardDisplay = cardsTableView.getSelectionModel().getSelectedItem();
-        	System.out.println(mtgCardDisplay.toString());	
+        	System.out.println(mtgCardDisplay.toString());
+        	logger().log(Level.INFO, mtgCardDisplay.toString());
     	}		
 	}
 	

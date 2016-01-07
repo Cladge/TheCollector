@@ -11,13 +11,14 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import org.json.simple.JSONObject;
 
 /**
  * Helper class for reading and writing BufferedWriter files.
  */
-public class FileUtil {
+public class FileUtil extends AbstractLogger {
 
 	/**
 	 * The character set. UTF-8 works good for windows, mac and Umlaute.
@@ -116,9 +117,9 @@ public class FileUtil {
 			properties.store(fileOut, "Application Settings");
 			fileOut.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 	}
 
@@ -141,9 +142,9 @@ public class FileUtil {
 				String value = properties.getProperty(key);
 			}*/
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 		
 		return properties;
@@ -160,9 +161,9 @@ public class FileUtil {
 			properties.storeToXML(fileOut, comment);
 			fileOut.close();
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 	}
 
@@ -185,9 +186,9 @@ public class FileUtil {
 				String value = properties.getProperty(key);
 			}*/
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 		
 		return properties;
@@ -228,7 +229,7 @@ public class FileUtil {
 			obj.writeJSONString(out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 		String jsonText = out.toString();
 		System.out.println("");

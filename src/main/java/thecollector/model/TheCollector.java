@@ -3,6 +3,8 @@ package thecollector.model;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +24,9 @@ import thecollector.utils.FileUtil;
 public class TheCollector extends Application {
 
 	private static TheCollector theCollector;
+	
+	// Logging utility.
+	protected static Logger logger() { return Logger.getLogger(TheCollector.class.getName()); }
 	
 	/**
 	 * Get the singleton instance of this application.
@@ -126,31 +131,40 @@ public class TheCollector extends Application {
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
-		// Get the settings path and settings file.
-        this.settingsDir = FileUtil.getSettingsDirectory(Settings.APPLICATION_NAME);
-        if (this.settingsDir != null) {
-            this.iniFilePath = new File(this.settingsDir + "/" + Settings.INI_FILE_NAME);
-            
-            // If the settings file does not exist, create it and set default properties.
-            if (!FileUtil.checkFile(this.iniFilePath)) {
-            	try {
-                	this.iniFilePath.createNewFile();
-                	this.appProperties = new Properties();
-    				this.appProperties.setProperty("Version", "1.0");
-    				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");
-            	} catch (IOException e){
-            		e.printStackTrace();
-            		this.applicationStatus = StatusCodes.SEVERE_ERROR;
-            	}
-            }
-            
-            // Load the properties file.
-            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
-            
-        } else {
-        	this.applicationStatus = StatusCodes.SETTINGS_ERROR;
-        	System.out.println("Unable to locate settings directory!");
-        }
+		// Get the settings path.
+		try {
+	        this.settingsDir = FileUtil.getSettingsDirectory(Settings.APPLICATION_NAME);	
+		} catch (IllegalStateException e) {
+			logger().log(Level.SEVERE, "Exception occured", e);
+			this.applicationStatus = StatusCodes.SETTINGS_ERROR;
+		}
+		
+		// Get the settings file.
+		if (this.applicationStatus == StatusCodes.OK) {
+	        if (this.settingsDir != null) {
+	            this.iniFilePath = new File(this.settingsDir + "/" + Settings.INI_FILE_NAME);
+	            
+	            // If the settings file does not exist, create it and set default properties.
+	            if (!FileUtil.checkFile(this.iniFilePath)) {
+	            	try {
+	                	this.iniFilePath.createNewFile();
+	                	this.appProperties = new Properties();
+	    				this.appProperties.setProperty("Version", "1.0");
+	    				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");
+	            	} catch (IOException e){
+	            		logger().log(Level.SEVERE, "Exception occured", e);
+	            		this.applicationStatus = StatusCodes.SEVERE_ERROR;
+	            	}
+	            }
+	            
+	            // Load the properties file.
+	            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
+	            
+	        } else {
+	        	this.applicationStatus = StatusCodes.SETTINGS_ERROR;
+	        	logger().log(Level.SEVERE, "Unable to locate settings directory!");
+	        }
+		}
 		
         // Check application status before proceeding.
         if (this.applicationStatus != StatusCodes.OK) {
@@ -176,7 +190,7 @@ public class TheCollector extends Application {
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
-			e.printStackTrace();
+    		logger().log(Level.SEVERE, "Exception occured", e);
 		}
 	}
 	
@@ -188,10 +202,10 @@ public class TheCollector extends Application {
 	            if (!FileUtil.checkFile(this.iniFilePath)) {
 	            	this.iniFilePath.createNewFile();
 	            }
-				this.appProperties.setProperty("Version", "1.0");
+				this.appProperties.setProperty("Version", "0.1a");
 				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");	
 			} catch (Exception e) {
-				e.printStackTrace();
+        		logger().log(Level.SEVERE, "Exception occured", e);
 			}	
 		}
     }
