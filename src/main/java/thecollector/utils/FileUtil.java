@@ -103,7 +103,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * Test method for writing out a Properties file.
+	 * Method for writing out a Properties file.
 	 * 
 	 * @param
 	 */
@@ -123,7 +123,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * Test method for reading a Properties file.
+	 * Method for reading a Properties file.
 	 * 
 	 * @param
 	 */
@@ -150,17 +150,14 @@ public class FileUtil {
 	}
 
 	/**
-	 * Test method for writing out an XML Properties file.
+	 * Method for writing out an XML Properties file.
 	 * 
 	 * @param
 	 */
-	public static void writePropertiesXmlFile(File propFile) {
+	public static void writePropertiesXmlFile(File propFile, Properties properties, String comment) {
 		try {
-			Properties properties = new Properties();
-			properties.setProperty("key", "value");
-
 			FileOutputStream fileOut = new FileOutputStream(propFile);
-			properties.storeToXML(fileOut, "Application Settings");
+			properties.storeToXML(fileOut, comment);
 			fileOut.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -170,7 +167,7 @@ public class FileUtil {
 	}
 
 	/**
-	 * Test method for reading an XML Properties file.
+	 * Method for reading an XML Properties file.
 	 * 
 	 * @param
 	 */

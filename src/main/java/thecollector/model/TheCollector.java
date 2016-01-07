@@ -45,6 +45,8 @@ public class TheCollector extends Application {
 	
 	private File iniFilePath;
 	private Properties appProperties;
+	
+	private StatusCodes applicationStatus;
 
 	/**
 	 * Return the main Stage.
@@ -119,25 +121,40 @@ public class TheCollector extends Application {
 		this.cssPath = TheCollector.class.getResource(Settings.DEFAULT_STYLE).toString();
 		this.cssSelectedPath = TheCollector.class.getResource(Settings.DEFAULT_SELECTED_STYLE).toString();
 		
+		this.applicationStatus = StatusCodes.OK;
+		
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
 		// Get the settings path and settings file.
-		boolean settingsOK = true;
         this.settingsDir = FileUtil.getSettingsDirectory(Settings.APPLICATION_NAME);
         if (this.settingsDir != null) {
             this.iniFilePath = new File(this.settingsDir + "/" + Settings.INI_FILE_NAME);
-            if (FileUtil.checkFile(this.iniFilePath)) {
-                this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);	
-            } else {
-            	settingsOK = false;
+            
+            // If the settings file does not exist, create it and set default properties.
+            if (!FileUtil.checkFile(this.iniFilePath)) {
+            	try {
+                	this.iniFilePath.createNewFile();
+                	this.appProperties = new Properties();
+    				this.appProperties.setProperty("Version", "1.0");
+    				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");
+            	} catch (IOException e){
+            		e.printStackTrace();
+            		this.applicationStatus = StatusCodes.SEVERE_ERROR;
+            	}
             }
+            
+            // Load the properties file.
+            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
+            
         } else {
-        	settingsOK = false;
+        	this.applicationStatus = StatusCodes.SETTINGS_ERROR;
+        	System.out.println("Unable to locate settings directory!");
         }
 		
-        if (!settingsOK) {
-        	System.out.println("Unable to locate settings file!");
+        // Check application status before proceeding.
+        if (this.applicationStatus != StatusCodes.OK) {
+        	stop();
         }
         
 		try {
@@ -162,6 +179,22 @@ public class TheCollector extends Application {
 			e.printStackTrace();
 		}
 	}
+	
+	public void stop() throws Exception {
+		// Write out the properties file.
+		if (this.applicationStatus != StatusCodes.SETTINGS_ERROR) {
+			try {
+				// Create the properties file if it does not exist.
+	            if (!FileUtil.checkFile(this.iniFilePath)) {
+	            	this.iniFilePath.createNewFile();
+	            }
+				this.appProperties.setProperty("Version", "1.0");
+				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");	
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+    }
 
 	public static void main(String[] args) {
 		launch(args);
