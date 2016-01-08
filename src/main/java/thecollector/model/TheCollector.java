@@ -149,7 +149,7 @@ public class TheCollector extends Application {
 	            	try {
 	                	this.iniFilePath.createNewFile();
 	                	this.appProperties = new Properties();
-	    				this.appProperties.setProperty("Version", "1.0");
+	    				this.appProperties.setProperty("Version", Settings.APPLICATION_VERSION);
 	    				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");
 	            	} catch (IOException e){
 	            		logger().log(Level.SEVERE, "Exception occured", e);
@@ -198,11 +198,7 @@ public class TheCollector extends Application {
 		// Write out the properties file.
 		if (this.applicationStatus != StatusCodes.SETTINGS_ERROR) {
 			try {
-				// Create the properties file if it does not exist.
-	            if (!FileUtil.checkFile(this.iniFilePath)) {
-	            	this.iniFilePath.createNewFile();
-	            }
-				this.appProperties.setProperty("Version", "0.1a");
+				this.appProperties.setProperty("Version", Settings.APPLICATION_VERSION);
 				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");	
 			} catch (Exception e) {
         		logger().log(Level.SEVERE, "Exception occured", e);

@@ -9,6 +9,7 @@ package thecollector.model;
 public final class Settings {
 
 	public static final String APPLICATION_NAME = "TheCollector";
+	public static final String APPLICATION_VERSION = "0.1a";
 
 	public static final String INI_FILE_NAME = "TheCollector.xml";
 	public static final String MTG_JSON_SET = "json/AllSets.json";	
