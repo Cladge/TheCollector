@@ -12,8 +12,7 @@ import thecollector.utils.AbstractLogger;
  */
 public class SettingsFile extends AbstractLogger {
 	private String settingsPath;
-	private File settingsPathFile;
-	private File settingsFile;
+	private File settingsFilePath;
 	
 	/**
 	 * Constructor.
@@ -23,7 +22,7 @@ public class SettingsFile extends AbstractLogger {
 	public SettingsFile(String settingsPath) {
 		this.settingsPath = settingsPath;
 		try {
-			this.settingsPathFile = new File(this.settingsPath);
+			this.settingsFilePath = new File(this.settingsPath);
 		} catch (NullPointerException e) {
 			logger().log(Level.SEVERE, "Exception occured", e);
 		}
@@ -44,24 +43,24 @@ public class SettingsFile extends AbstractLogger {
 	 * @return boolean - file exists/does not exist
 	 */
 	public boolean pathExists() {
-		return this.settingsPathFile.exists();
+		return this.settingsFilePath.exists();
 	}
 		
-	/**
-	 * Shows if the settings file exists.
-	 * 
-	 * @return boolean - file exists/does not exist
-	 */
-	public boolean fileExists() {
-		return this.settingsFile.exists();
-	}
-
 	/**
 	 * Creates the directory for the given pathname.
 	 * 
 	 * @return boolean - true if and only if the directory was created; false otherwise
 	 */
 	public boolean mkdir() {
-		return this.settingsPathFile.mkdir();
+		return this.settingsFilePath.mkdir();
+	}
+
+	/**
+	 * Delete the directory for the given pathname.
+	 * 
+	 * @return boolean - true if and only if the directory was deleted; false otherwise
+	 */
+	public boolean deldir() {
+		return this.settingsFilePath.delete();
 	}
 }

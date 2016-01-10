@@ -2,6 +2,12 @@ package unittests;
 
 import thecollector.model.SettingsFile;
 
+/**
+ * A virtual settings file, which overrides any io operations (that is,
+ * does not actually create any files or directories).
+ * 
+ * @author Ian
+ */
 public class FakeSettingsFile extends SettingsFile {
 
 	/**
@@ -14,6 +20,10 @@ public class FakeSettingsFile extends SettingsFile {
 	}
 	
 	public boolean mkdir() {
+		return true;
+	}
+	
+	public boolean deldir() {
 		return true;
 	}
 }

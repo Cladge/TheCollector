@@ -2,7 +2,7 @@ package thecollector.model;
 
 public class SettingsManager {
 	
-	private SettingsFile settingsFile;
+	private SettingsFile settingsFilePath;
 	
 	public SettingsManager() {
 		this.setSettingsDirectory();
@@ -19,21 +19,21 @@ public class SettingsManager {
 		if(userHome == null) {
 			throw new IllegalStateException("user.home==null");
 		}
-		this.settingsFile = new SettingsFile(userHome + System.getProperty("file.separator") + "." + Settings.APPLICATION_NAME);
-		if(!this.settingsFile.fileExists()) {
-			if(!settingsFile.mkdir()) {
-				throw new IllegalStateException(this.settingsFile.toString());
+		this.settingsFilePath = new SettingsFile(userHome + System.getProperty("file.separator") + "." + Settings.APPLICATION_NAME);
+		if(!this.settingsFilePath.fileExists()) {
+			if(!settingsFilePath.mkdir()) {
+				throw new IllegalStateException(this.settingsFilePath.toString());
 			}
 		}
 	}
 
 	/**
-	 * Return the settings file.
+	 * Return the settings file path.
 	 * 
 	 * @return SettingsFile - the settings file path.
 	 */
 	public SettingsFile getSettingsFile() {
-		return this.settingsFile;
+		return this.settingsFilePath;
 	}
 
 	/**
@@ -43,5 +43,14 @@ public class SettingsManager {
 	 */
 	public boolean settingsFileExists() {
 		return this.getSettingsFile().fileExists();
+	}
+
+	/**
+	 * Shows if the settings file path exists.
+	 * 
+	 * @return boolean - true, the file path exists; or false, it does not.
+	 */
+	public boolean settingsFilePathExists() {
+		return this.getSettingsFile().pathExists();
 	}
 }

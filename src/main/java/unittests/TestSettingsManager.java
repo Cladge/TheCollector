@@ -7,9 +7,17 @@ import org.junit.Test;
 
 import thecollector.model.SettingsManager;
 
+/**
+ * Test Settings Manager.
+ * 
+ * Expectations:
+ * 1. On instantiation, the Settings Manager sets the application settings path.
+ * 
+ * @author Ian Claridge
+ */
 public class TestSettingsManager {
 	
-	SettingsManager settingsManager = new SettingsManager();
+	private SettingsManager settingsManager = new SettingsManager();
 
 	@Before
 	public void setUp() throws Exception {
@@ -17,7 +25,7 @@ public class TestSettingsManager {
 
 	@Test
 	public void testSettingsPath() {
-		assertTrue(settingsManager.settingsFileExists());
+		assertTrue(settingsManager.settingsFilePathExists());
 	}
 
 }
