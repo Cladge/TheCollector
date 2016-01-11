@@ -1,6 +1,7 @@
 package thecollector.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 
 import thecollector.utils.AbstractLogger;
@@ -12,55 +13,57 @@ import thecollector.utils.AbstractLogger;
  */
 public class SettingsFile extends AbstractLogger {
 	private String settingsPath;
-	private File settingsFilePath;
+	private String settingsName;
+	private File settingsPropertyFile;
 	
 	/**
 	 * Constructor.
 	 * 
 	 * @param settingsPath - String
 	 */
-	public SettingsFile(String settingsPath) {
+	public SettingsFile(String settingsPath, String settingsName) {
 		this.settingsPath = settingsPath;
+		this.settingsName = settingsName;
 		try {
-			this.settingsFilePath = new File(this.settingsPath);
-		} catch (NullPointerException e) {
+			this.settingsPropertyFile = new File(this.settingsPath + System.getProperty("file.separator") + this.settingsName);
+			if (!this.settingsPropertyFile.exists()) {
+				// Create the directory and file if not exist.
+				File settingsPathFile = new File(this.settingsPath);
+				if (!settingsPathFile.exists()) {
+					settingsPathFile.mkdir();
+				}
+				this.settingsPropertyFile.createNewFile();
+			}
+		} catch (NullPointerException | IOException e) {
 			logger().log(Level.SEVERE, "Exception occured", e);
 		}
 	}
 	
-	/**
-	 * Get the current settings path.
-	 * 
-	 * @return String - settings path
-	 */
-	public String getSettingsPath() {
-		return this.settingsPath;
+	public File getFile() {
+		return this.settingsPropertyFile;
 	}
-
+	
 	/**
-	 * Shows if the settings path exists.
-	 * 
-	 * @return boolean - file exists/does not exist
-	 */
-	public boolean pathExists() {
-		return this.settingsFilePath.exists();
-	}
-		
-	/**
-	 * Creates the directory for the given pathname.
-	 * 
-	 * @return boolean - true if and only if the directory was created; false otherwise
-	 */
-	public boolean mkdir() {
-		return this.settingsFilePath.mkdir();
-	}
-
-	/**
-	 * Delete the directory for the given pathname.
+	 * Delete the properties file.
 	 * 
 	 * @return boolean - true if and only if the directory was deleted; false otherwise
 	 */
-	public boolean deldir() {
-		return this.settingsFilePath.delete();
+	public boolean delete() {
+		return this.settingsPropertyFile.delete();
+	}
+
+	/**
+	 * Delete the properties file path.
+	 * 
+	 * @return boolean - true if and only if the directory was deleted; false otherwise
+	 */
+	public boolean deletePath() {
+		boolean deleteSuccess = false;
+		File settingsPathFile = new File(this.settingsPath);
+		if (settingsPathFile.exists()) {
+			deleteSuccess = settingsPathFile.delete();
+		}
+		
+		return deleteSuccess;
 	}
 }

@@ -23,7 +23,7 @@ public class FakeSettingsFile extends SettingsFile {
 		return true;
 	}
 	
-	public boolean deldir() {
+	public boolean delete() {
 		return true;
 	}
 }
