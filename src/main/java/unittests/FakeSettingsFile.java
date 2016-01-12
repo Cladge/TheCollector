@@ -26,4 +26,8 @@ public class FakeSettingsFile extends SettingsFile {
 	public boolean deletePath() {
 		return true;
 	}
+
+	public boolean save(String comment) {
+		return true;
+	}
 }

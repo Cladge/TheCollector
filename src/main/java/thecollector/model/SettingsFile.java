@@ -2,7 +2,9 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -101,6 +103,21 @@ public class SettingsFile extends AbstractLogger {
 	public String getProperty(String key) {
 		String defaultValue = "Not Found";
 		return this.properties.getProperty(key, defaultValue);
+	}
+	
+	/**
+	 * Return a list of the properies keys.
+	 * 
+	 * @return List<String> - keys list
+	 */
+	public List<String> getProperties() {
+		List<String> keysList = new ArrayList<String>();
+		Enumeration<?> enumKeys = this.properties.propertyNames();
+		while (enumKeys.hasMoreElements()) {
+			keysList.add((String) enumKeys.nextElement());
+		}
+		
+		return keysList;
 	}
 	
 	/**

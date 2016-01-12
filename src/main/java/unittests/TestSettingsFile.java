@@ -3,13 +3,12 @@ package unittests;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.util.Hashtable;
-import java.util.Properties;
+import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import thecollector.model.Settings;
 import thecollector.model.SettingsFile;
 
 /**
@@ -39,6 +38,12 @@ public class TestSettingsFile {
 		this.settingsPath = "C:" + System.getProperty("file.separator") + "testSettingsFilePath";
 		this.settingsName = "TestSettings.xml";
 	}
+	
+	@After
+	public void cleanUp() throws Exception {
+		this.settingsFile.delete();
+		this.settingsFile.deletePath();
+	}
 
 	@Test
 	public void testSettingsFileCanCreate() {
@@ -55,8 +60,6 @@ public class TestSettingsFile {
 		assertNull(this.settingsFile.setProperty("key1", "value1"));
 		String newValue = (String) this.settingsFile.setProperty("key1", "value2");
 		assertEquals("value1", newValue);
-		this.settingsFile.delete();
-		this.settingsFile.deletePath();
 	}
 
 	@Test
@@ -69,25 +72,16 @@ public class TestSettingsFile {
 		String value3 = this.settingsFile.getProperty("key3");
 		assertEquals("value1", value1);
 		assertEquals("value2", value2);
-		assertEquals("Not Found", value3);
-		this.settingsFile.delete();
-		this.settingsFile.deletePath();
+		assertEquals("Not Found", value3);	
 	}
 
-	/**
 	@Test
 	public void testSettingsFileGetProperties() {
 		this.settingsFile = new SettingsFile(this.settingsPath, this.settingsName);
 		this.settingsFile.setProperty("key1", "value1");
 		this.settingsFile.setProperty("key2", "value2");
-		Hashtable properties = this.settingsFile.getProperties();
-		assertEquals(2, properties.size());
-		String value1 = properties.get("key1");
-		String value2 = properties.get("key2");
-		assertEquals("value1", value1);
-		assertEquals("value2", value2);
-		this.settingsFile.delete();
-		this.settingsFile.deletePath();
+		List<String> keysList = this.settingsFile.getProperties();
+		assertEquals(3, keysList.size());	// The 1st entry in the properties is the default key, hence 3 entries.
 	}
 
 	@Test
@@ -96,9 +90,5 @@ public class TestSettingsFile {
 		this.settingsFile.setProperty("key1", "value1");
 		this.settingsFile.setProperty("key2", "value2");
 		assertTrue(this.settingsFile.save("Test comment"));
-		this.settingsFile.delete();
-		this.settingsFile.deletePath();
 	}
-	
-	**/
 }
