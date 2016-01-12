@@ -59,7 +59,6 @@ public class TestSettingsFile {
 		this.settingsFile.deletePath();
 	}
 
-	/**
 	@Test
 	public void testSettingsFileGetProperty() {
 		this.settingsFile = new SettingsFile(this.settingsPath, this.settingsName);
@@ -67,12 +66,15 @@ public class TestSettingsFile {
 		this.settingsFile.setProperty("key2", "value2");
 		String value1 = this.settingsFile.getProperty("key1");
 		String value2 = this.settingsFile.getProperty("key2");
+		String value3 = this.settingsFile.getProperty("key3");
 		assertEquals("value1", value1);
 		assertEquals("value2", value2);
+		assertEquals("Not Found", value3);
 		this.settingsFile.delete();
 		this.settingsFile.deletePath();
 	}
 
+	/**
 	@Test
 	public void testSettingsFileGetProperties() {
 		this.settingsFile = new SettingsFile(this.settingsPath, this.settingsName);

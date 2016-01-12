@@ -2,6 +2,7 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -39,7 +40,7 @@ public class SettingsFile extends AbstractLogger {
 				this.settingsPropertyFile.createNewFile();
 				this.properties = new Properties();
 				this.setProperty("Version", Settings.APPLICATION_VERSION);
-				this.save("");
+				this.save("Default settings");
 			}
 			
 			// Read the settings into member properties object.
@@ -88,6 +89,18 @@ public class SettingsFile extends AbstractLogger {
 		}
 		
 		return deleteSuccess;
+	}
+	
+	/**
+	 * Get the value from the properties object associated with the passed key.
+	 * 
+	 * @param key - String
+	 * 
+	 * @return String - the value associated with the key, or "Not Found".
+	 */
+	public String getProperty(String key) {
+		String defaultValue = "Not Found";
+		return this.properties.getProperty(key, defaultValue);
 	}
 	
 	/**
