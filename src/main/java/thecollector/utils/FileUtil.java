@@ -155,16 +155,18 @@ public class FileUtil extends AbstractLogger {
 	 * 
 	 * @param
 	 */
-	public static void writePropertiesXmlFile(File propFile, Properties properties, String comment) {
+	public static boolean writePropertiesXmlFile(File propFile, Properties properties, String comment) {
+		boolean writeSuccess = true;
 		try {
 			FileOutputStream fileOut = new FileOutputStream(propFile);
 			properties.storeToXML(fileOut, comment);
 			fileOut.close();
-		} catch (FileNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
 			logger().log(Level.SEVERE, "Exception occured", e);
+			writeSuccess = false;
 		}
+		
+		return writeSuccess;
 	}
 
 	/**
