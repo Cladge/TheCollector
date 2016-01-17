@@ -10,6 +10,7 @@ public enum StatusCodes {
 	WARNING			(100),
 	SETTINGS_ERROR	(200),
 	MISC_ERROR		(300),
+	DATABASE_ERROR	(400),
 	SEVERE_ERROR	(1000);
 
 	private final int returnCode;

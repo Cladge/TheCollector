@@ -116,7 +116,7 @@ public class MainViewController extends BaseViewController {
 		
         // Load the latest MTG collection.
 		try {
-			this.mtgCardList = CardLoader.loadCards(theCollector.getSettingsDir() + "/" + Settings.MTG_JSON_SET);
+			this.mtgCardList = CardLoader.loadCards(theCollector.getDatabasePath());
 
 	        for (MtgCard mtgCard : this.mtgCardList) {
 	        	MtgCardDisplay mtgCardRow = new MtgCardDisplay();

@@ -21,6 +21,7 @@ public class SettingsFile extends AbstractLogger {
 	private String settingsName;
 	private File settingsPropertyFile;
 	private Properties properties;
+	private boolean settingsOK;
 	
 	/**
 	 * Constructor.
@@ -30,6 +31,8 @@ public class SettingsFile extends AbstractLogger {
 	public SettingsFile(String settingsPath, String settingsName) {
 		this.settingsPath = settingsPath;
 		this.settingsName = settingsName;
+		this.settingsOK = true;
+		
 		try {
 			this.settingsPropertyFile = new File(this.settingsPath + System.getProperty("file.separator") + this.settingsName);
 			
@@ -42,7 +45,7 @@ public class SettingsFile extends AbstractLogger {
 				this.settingsPropertyFile.createNewFile();
 				this.properties = new Properties();
 				this.setProperty("Version", Settings.APPLICATION_VERSION);
-				this.save("Default settings");
+				this.save(Settings.SETTINGS_COMMENT);
 			}
 			
 			// Read the settings into member properties object.
@@ -50,6 +53,7 @@ public class SettingsFile extends AbstractLogger {
 			
 		} catch (NullPointerException | IOException e) {
 			logger().log(Level.SEVERE, "Exception occured", e);
+			this.settingsOK = false;
 		}
 	}
 	
@@ -58,6 +62,15 @@ public class SettingsFile extends AbstractLogger {
 	 */
 	private void readProperties() {
 		this.properties = FileUtil.readPropertiesXmlFile(this.settingsPropertyFile);
+	}
+	
+	/**
+	 * Is the settings file OK?
+	 * 
+	 * @return boolean - true, the file is OK; false, there was a problem
+	 */
+	public boolean settingsOK() {
+		return this.settingsOK;
 	}
 	
 	/**

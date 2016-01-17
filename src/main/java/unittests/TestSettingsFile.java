@@ -50,6 +50,7 @@ public class TestSettingsFile {
 		this.settingsFile = new SettingsFile(this.settingsPath, this.settingsName);
 		File settingsFilePath = this.settingsFile.getFile();
 		assertTrue(settingsFilePath.exists());
+		assertTrue(this.settingsFile.settingsOK());
 		assertTrue(this.settingsFile.delete());
 		assertTrue(this.settingsFile.deletePath());
 	}

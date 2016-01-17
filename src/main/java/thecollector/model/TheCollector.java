@@ -46,11 +46,8 @@ public class TheCollector extends Application {
 	private String cssPath;
 	private String cssSelectedPath;
 
-	private File settingsDir;
-	
-	private File iniFilePath;
-	private Properties appProperties;
-	
+	private SettingsFile settingsFile;
+	private String databasePath;
 	private StatusCodes applicationStatus;
 
 	/**
@@ -90,15 +87,6 @@ public class TheCollector extends Application {
 	}
 	
 	/**
-	 * Return the settings path.
-	 * 
-	 * @return File
-	 */
-	public File getSettingsDir() {
-		return this.settingsDir;
-	}
-	
-	/**
 	 * Set the cursor pointer.
 	 * 
 	 * @param cursorType - String
@@ -110,6 +98,15 @@ public class TheCollector extends Application {
 		if (cursorType == "DEFAULT") {
 			this.scene.setCursor(Cursor.DEFAULT);
 		}
+	}
+	
+	/**
+	 * Return the path to the card database.
+	 * 
+	 * @return String
+	 */
+	public String getDatabasePath() {
+		return this.databasePath;
 	}
 	
 	/*
@@ -131,39 +128,34 @@ public class TheCollector extends Application {
 		// TODO: Get application icon.
 		this.stage.getIcons().add(new Image("file:resources/images/book.png"));
 
-		// Get the settings path.
-		try {
-	        this.settingsDir = FileUtil.getSettingsDirectory(Settings.APPLICATION_NAME);	
-		} catch (IllegalStateException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+		// Set up the settings handler.
+		this.settingsFile = new SettingsFile(FileUtil.getUserAppDirectory(Settings.APPLICATION_NAME), Settings.INI_FILE_NAME);
+		
+		// Check for settings error.
+		if (!this.settingsFile.settingsOK()) {
 			this.applicationStatus = StatusCodes.SETTINGS_ERROR;
 		}
 		
-		// Get the settings file.
+		// Create the logs folder if necessary.
 		if (this.applicationStatus == StatusCodes.OK) {
-	        if (this.settingsDir != null) {
-	            this.iniFilePath = new File(this.settingsDir + "/" + Settings.INI_FILE_NAME);
-	            
-	            // If the settings file does not exist, create it and set default properties.
-	            if (!FileUtil.checkFile(this.iniFilePath)) {
-	            	try {
-	                	this.iniFilePath.createNewFile();
-	                	this.appProperties = new Properties();
-	    				this.appProperties.setProperty("Version", Settings.APPLICATION_VERSION);
-	    				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");
-	            	} catch (IOException e){
-	            		logger().log(Level.SEVERE, "Exception occured", e);
-	            		this.applicationStatus = StatusCodes.SEVERE_ERROR;
-	            	}
-	            }
-	            
-	            // Load the properties file.
-	            this.appProperties = FileUtil.readPropertiesXmlFile(this.iniFilePath);
-	            
-	        } else {
-	        	this.applicationStatus = StatusCodes.SETTINGS_ERROR;
-	        	logger().log(Level.SEVERE, "Unable to locate settings directory!");
-	        }
+			String logsFolder = FileUtil.getUserAppDirectory(Settings.APPLICATION_NAME) + System.getProperty("file.separator") + Settings.LOGGING_FOLDER;
+			if (!FileUtil.createDirectory(logsFolder)) {
+				this.applicationStatus = StatusCodes.SEVERE_ERROR;
+				logger().log(Level.SEVERE, "Unable to create logging directory!");
+			}
+		}
+		
+		// Get the database file location.
+		this.databasePath = FileUtil.getResourcePath("thecollector.model.TheCollector", Settings.MTG_JSON_SET);
+		File databaseFilePath = new File(this.databasePath);
+		if (!databaseFilePath.exists()) {
+			this.applicationStatus = StatusCodes.DATABASE_ERROR;
+			logger().log(Level.SEVERE, "Unable to locate the main card database!");
+			if (databaseFilePath.getPath() == null | databaseFilePath.getPath() == "") {
+				logger().log(Level.SEVERE, "Could not resolve path to main card database");
+			} else {
+				logger().log(Level.SEVERE, "Attempted to find database at location: " + databaseFilePath.getPath());
+			}
 		}
 		
         // Check application status before proceeding.
@@ -195,14 +187,9 @@ public class TheCollector extends Application {
 	}
 	
 	public void stop() throws Exception {
-		// Write out the properties file.
+		// Save the settings, unless there was a problem with the settings file in the first place.
 		if (this.applicationStatus != StatusCodes.SETTINGS_ERROR) {
-			try {
-				this.appProperties.setProperty("Version", Settings.APPLICATION_VERSION);
-				FileUtil.writePropertiesXmlFile(this.iniFilePath, this.appProperties, "Application Settings");	
-			} catch (Exception e) {
-        		logger().log(Level.SEVERE, "Exception occured", e);
-			}	
+			this.settingsFile.save(Settings.SETTINGS_COMMENT);
 		}
     }
 

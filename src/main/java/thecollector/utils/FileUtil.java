@@ -8,10 +8,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
+
+import jdk.nashorn.internal.ir.ForNode;
 
 import org.json.simple.JSONObject;
 
@@ -81,26 +84,64 @@ public class FileUtil extends AbstractLogger {
 	}
 
 	/**
-	 * Gets the system user settings directory. 
+	 * Gets the application directory in relation to the user home path.
 	 * 
-	 * @param
-	 * @return File
-	 * @throws IllegalStateException thrown if the user directory property cannot be found,
-	 * or the directory cannot be created.
+	 * @param String
+	 * 
+	 * @return String - the application name
 	 */
-	public static File getSettingsDirectory(String appName) {
+	public static String getUserAppDirectory(String appName) {
 		String userHome = System.getProperty("user.home");
 		if(userHome == null) {
 			throw new IllegalStateException("user.home==null");
 		}
-		File home = new File(userHome);
-		File settingsDirectory = new File(home, "." + appName);
-		if(!settingsDirectory.exists()) {
-			if(!settingsDirectory.mkdir()) {
-				throw new IllegalStateException(settingsDirectory.toString());
+		String settingsPath = userHome + System.getProperty("file.separator") + "." + appName;
+		
+		return settingsPath;
+	}
+	
+	/**
+	 * Get the file path of a given file relative to the supplied class.
+	 * 
+	 * @param className - String
+	 * @param filename - String
+	 * 
+	 * @return String - the file's path.
+	 */
+	public static String getResourcePath(String className, String filename) {
+		String filePath = "";
+		
+		try {
+			Class<?> classPathToCheck = Class.forName(className);
+			ClassLoader loader = classPathToCheck.getClassLoader();
+			URL pathURL = loader.getResource(filename);
+			if (pathURL != null) {
+				filePath = pathURL.getPath();	
 			}
+			
+		} catch (ClassNotFoundException e) {
+			logger().log(Level.SEVERE, "Exception occured", e);
 		}
-		return settingsDirectory;
+		
+		return filePath;
+	}
+	
+	/**
+	 * Create the given directory if it does not exist.
+	 * 
+	 * @param path - String
+	 * 
+	 * @return boolean - true, directory exists/was created OK; false, error occurred creating directory.
+	 */
+	public static boolean createDirectory(String path) {
+		File dirPath = new File(path);
+		boolean createSuccess = true;
+		
+		if (!dirPath.exists()) {
+			createSuccess = dirPath.mkdir();
+		}
+		
+		return createSuccess;
 	}
 
 	/**
