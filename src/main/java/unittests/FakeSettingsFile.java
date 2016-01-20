@@ -19,6 +19,10 @@ public class FakeSettingsFile extends SettingsFile {
 		super(settingsPath, settingsName);
 	}
 	
+	protected void readProperties() {
+		return;
+	}
+	
 	public boolean delete() {
 		return true;
 	}

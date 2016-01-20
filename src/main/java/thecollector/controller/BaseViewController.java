@@ -1,14 +1,13 @@
 package thecollector.controller;
 
 import thecollector.controller.BaseController;
-import thecollector.utils.AbstractLogger;
 
 /**
  * Abstract controller class.
  * 
  * @author Ian Claridge
  */
-public class BaseViewController extends AbstractLogger implements BaseController {
+public class BaseViewController implements BaseController {
 
 	protected Object mainApp;					// Reference to the main application
 

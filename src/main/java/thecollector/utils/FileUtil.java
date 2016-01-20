@@ -14,15 +14,13 @@ import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import jdk.nashorn.internal.ir.ForNode;
-
 import org.json.simple.JSONObject;
 
 /**
  * Helper class for reading and writing BufferedWriter files.
  */
 public class FileUtil extends AbstractLogger {
-
+	
 	/**
 	 * The character set. UTF-8 works good for windows, mac and Umlaute.
 	 */

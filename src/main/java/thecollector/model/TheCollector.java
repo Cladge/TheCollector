@@ -2,9 +2,7 @@ package thecollector.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import thecollector.controller.MainViewController;
 import thecollector.utils.FileUtil;
+import thecollector.utils.LoggerInterface;
 
 /**
  * The main application.
@@ -24,9 +23,6 @@ import thecollector.utils.FileUtil;
 public class TheCollector extends Application {
 
 	private static TheCollector theCollector;
-	
-	// Logging utility.
-	protected static Logger logger() { return Logger.getLogger(TheCollector.class.getName()); }
 	
 	/**
 	 * Get the singleton instance of this application.
@@ -108,7 +104,13 @@ public class TheCollector extends Application {
 	public String getDatabasePath() {
 		return this.databasePath;
 	}
-	
+
+    // TODO: IJC - DEBUG
+	public void testLogging(String message) {
+	    LoggerInterface.logger(this).log(Level.SEVERE, "DEBUG: " + message);
+	}
+    // TODO: IJC - DEBUG
+    	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -141,7 +143,7 @@ public class TheCollector extends Application {
 			String logsFolder = FileUtil.getUserAppDirectory(Settings.APPLICATION_NAME) + System.getProperty("file.separator") + Settings.LOGGING_FOLDER;
 			if (!FileUtil.createDirectory(logsFolder)) {
 				this.applicationStatus = StatusCodes.SEVERE_ERROR;
-				logger().log(Level.SEVERE, "Unable to create logging directory!");
+				LoggerInterface.logger(this).log(Level.SEVERE, "Unable to create logging directory!");
 			}
 		}
 		
@@ -150,11 +152,11 @@ public class TheCollector extends Application {
 		File databaseFilePath = new File(this.databasePath);
 		if (!databaseFilePath.exists()) {
 			this.applicationStatus = StatusCodes.DATABASE_ERROR;
-			logger().log(Level.SEVERE, "Unable to locate the main card database!");
+			LoggerInterface.logger(this).log(Level.SEVERE, "Unable to locate the main card database!");
 			if (databaseFilePath.getPath() == null | databaseFilePath.getPath() == "") {
-				logger().log(Level.SEVERE, "Could not resolve path to main card database");
+				LoggerInterface.logger(this).log(Level.SEVERE, "Could not resolve path to main card database");
 			} else {
-				logger().log(Level.SEVERE, "Attempted to find database at location: " + databaseFilePath.getPath());
+				LoggerInterface.logger(this).log(Level.SEVERE, "Attempted to find database at location: " + databaseFilePath.getPath());
 			}
 		}
 		
@@ -162,6 +164,10 @@ public class TheCollector extends Application {
         if (this.applicationStatus != StatusCodes.OK) {
         	stop();
         }
+        
+        // TODO: IJC - DEBUG
+        LoggerInterface.logger(this).log(Level.SEVERE, "DEBUG: Test message!");
+        // TODO: IJC - DEBUG
         
 		try {
 			// Load the root layout from the "start" view fxml file.
@@ -182,7 +188,7 @@ public class TheCollector extends Application {
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
-    		logger().log(Level.SEVERE, "Exception occured", e);
+			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
 		}
 	}
 	

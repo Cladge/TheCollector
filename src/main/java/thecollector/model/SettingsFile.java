@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import thecollector.utils.AbstractLogger;
 import thecollector.utils.FileUtil;
+import thecollector.utils.LoggerInterface;
 
 /**
  * A class to represent a settings file.
  * 
  * @author Ian Claridge
  */
-public class SettingsFile extends AbstractLogger {
+public class SettingsFile {
 	private String settingsPath;
 	private String settingsName;
 	private File settingsPropertyFile;
@@ -52,7 +52,7 @@ public class SettingsFile extends AbstractLogger {
 			this.readProperties();
 			
 		} catch (NullPointerException | IOException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
 			this.settingsOK = false;
 		}
 	}
@@ -60,7 +60,7 @@ public class SettingsFile extends AbstractLogger {
 	/**
 	 * Read in the properties from the settings file.
 	 */
-	private void readProperties() {
+	protected void readProperties() {
 		this.properties = FileUtil.readPropertiesXmlFile(this.settingsPropertyFile);
 	}
 	
