@@ -21,7 +21,7 @@ import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
 import thecollector.model.mtg.card.MtgCardDisplay;
-import thecollector.utils.LoggerInterface;
+import thecollector.utils.LoggerUtil;
 
 /**
  * The controller for the main application layout.
@@ -76,7 +76,7 @@ public class MainViewController extends BaseViewController {
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
 
 		// Associate handler classes with controls.
-		this.allCardsTableView.setOnMouseClicked(new TableViewEventHandler(this.allCardsTableView, this));
+		this.allCardsTableView.setOnMouseClicked(new TableViewEventHandler(this.allCardsTableView));
     }
     
 	/**
@@ -100,7 +100,7 @@ public class MainViewController extends BaseViewController {
 		this.setStatus("Loading card database...");
 		String statusMessage = String.format("Number of cards found: %s", this.loadCards());
 		this.setStatus(statusMessage);
-		LoggerInterface.logger(this).log(Level.INFO, statusMessage);
+		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 	}
 	
 	/**
@@ -172,11 +172,11 @@ public class MainViewController extends BaseViewController {
 	        }
 	        
 		} catch (JsonParseException e) {
-			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
 		} catch (JsonMappingException e) {
-			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
 		} catch (IOException e) {
-			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
 		}
 
 		theCollector.setCursor("DEFAULT");
@@ -202,23 +202,15 @@ public class MainViewController extends BaseViewController {
 		System.out.println("\nTheCollector v0.1 (beta)");
 	}
 	
-	// TODO: IJC - DEBUG
-	public void testLogging(String message) {
-		theCollector.testLogging(message);
-	}
-	// TODO: IJC - DEBUG
-
 }
 
 class TableViewEventHandler implements EventHandler<MouseEvent> {
 
 	private TableView<MtgCardDisplay> cardsTableView;
-	private MainViewController myController;
 	
 	// Constructor.
-	public TableViewEventHandler(TableView<MtgCardDisplay> tableView, MainViewController myController) {
+	public TableViewEventHandler(TableView<MtgCardDisplay> tableView) {
 		this.cardsTableView = tableView;
-		this.myController = myController;
 	}
 	
 	@Override
@@ -228,10 +220,7 @@ class TableViewEventHandler implements EventHandler<MouseEvent> {
     			eventTargetType.substring(0, 12).toLowerCase().equalsIgnoreCase("TableColumn$")) {
         	MtgCardDisplay mtgCardDisplay = cardsTableView.getSelectionModel().getSelectedItem();
         	System.out.println(mtgCardDisplay.toString());
-        	LoggerInterface.logger(this).log(Level.INFO, mtgCardDisplay.toString());
-        	// TODO: IJC - DEBUG
-        	this.myController.testLogging("In table event handler!!");
-        	// TODO: IJC - DEBUG
+        	LoggerUtil.logger(this).log(Level.INFO, mtgCardDisplay.toString());
     	}		
 	}
 	

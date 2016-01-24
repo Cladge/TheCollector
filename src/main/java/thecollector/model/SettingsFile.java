@@ -9,7 +9,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 import thecollector.utils.FileUtil;
-import thecollector.utils.LoggerInterface;
+import thecollector.utils.LoggerUtil;
 
 /**
  * A class to represent a settings file.
@@ -52,7 +52,7 @@ public class SettingsFile {
 			this.readProperties();
 			
 		} catch (NullPointerException | IOException e) {
-			LoggerInterface.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
 			this.settingsOK = false;
 		}
 	}

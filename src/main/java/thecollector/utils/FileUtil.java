@@ -13,13 +13,16 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.Properties;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 
 /**
  * Helper class for reading and writing BufferedWriter files.
  */
-public class FileUtil extends AbstractLogger {
+public class FileUtil {
+	
+	private static Logger logger() { return Logger.getLogger(FileUtil.class.getName()); }
 	
 	/**
 	 * The character set. UTF-8 works good for windows, mac and Umlaute.
