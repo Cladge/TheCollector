@@ -13,9 +13,12 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
@@ -33,7 +36,10 @@ public class MainViewController extends BaseViewController {
 	private static TheCollector theCollector;
 
 	@FXML
-	private AnchorPane anchorpaneStartingView;
+	private VBox mainView;
+	
+	@FXML
+	private SplitPane mainSplitView;
 
 	@FXML
 	private TableView<MtgCardDisplay> allCardsTableView;
@@ -55,6 +61,9 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private Label labelStatus;
+	
+	@FXML
+	private ImageView cardImage;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -84,8 +93,8 @@ public class MainViewController extends BaseViewController {
 	 * 
 	 * @return Entity AnchorPane.
 	 */
-	public AnchorPane getEntityPane () {
-		return this.anchorpaneStartingView;
+	public VBox getEntityPane () {
+		return this.mainView;
 	}
 	
 	/**
@@ -101,6 +110,13 @@ public class MainViewController extends BaseViewController {
 		String statusMessage = String.format("Number of cards found: %s", this.loadCards());
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
+		
+		// TODO: DEBUG
+		// Load a test image.
+		this.mainSplitView.setDividerPosition(0, 0.85);
+		Image image = new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card");
+		this.cardImage.setImage(image);
+		// TODO: DEBUG
 	}
 	
 	/**
