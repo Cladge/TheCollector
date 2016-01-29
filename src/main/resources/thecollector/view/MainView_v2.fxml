@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -53,24 +54,38 @@
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
          <children>
-            <SplitPane fx:id="mainSplitView" dividerPositions="0.688034188034188" prefHeight="581.0" prefWidth="893.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <SplitPane fx:id="mainSplitView" dividerPositions="0.7897435897435897" prefHeight="581.0" prefWidth="893.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
                         <TableView fx:id="allCardsTableView" prefHeight="579.0" prefWidth="634.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
-                            <TableColumn fx:id="cardNameColumn" prefWidth="138.0" text="Name" />
-                            <TableColumn fx:id="setNameColumn" minWidth="0.0" prefWidth="113.0" text="Set" />
-                              <TableColumn fx:id="cardTypeColumn" prefWidth="110.0" text="Type" />
-                              <TableColumn fx:id="cardColourColumn" prefWidth="129.0" text="Colour" />
-                              <TableColumn fx:id="cardRarityColumn" prefWidth="143.0" text="Rarity" />
+                            <TableColumn fx:id="cardNameColumn" prefWidth="221.0" text="Name" />
+                            <TableColumn fx:id="setNameColumn" minWidth="0.0" prefWidth="245.0" text="Set" />
+                              <TableColumn fx:id="cardTypeColumn" prefWidth="162.0" text="Type" />
+                              <TableColumn fx:id="cardColourColumn" prefWidth="124.0" text="Colour" />
+                              <TableColumn fx:id="cardRarityColumn" prefWidth="146.0" text="Rarity" />
+                              <TableColumn fx:id="cardMultiverseIdColumn" prefWidth="75.0" text="MultiverseId" visible="false" />
                           </columns>
                         </TableView>
                      </children>
                   </AnchorPane>
-                <AnchorPane minHeight="0.0" prefHeight="160.0" prefWidth="100.0" SplitPane.resizableWithParent="false">
+                <AnchorPane minHeight="0.0" prefHeight="160.0" prefWidth="100.0">
                      <children>
-                        <ImageView fx:id="cardImage" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="671.0" prefWidth="361.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="333.0" minWidth="240.0" prefHeight="100.0" prefWidth="160.0" SplitPane.resizableWithParent="false">
+                                 <children>
+                                    <ImageView fx:id="cardImage" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                                 <children>
+                                    <Label alignment="CENTER" prefHeight="328.0" prefWidth="359.0" text="Filter Control will go here" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
                      </children>
                   </AnchorPane>
               </items>

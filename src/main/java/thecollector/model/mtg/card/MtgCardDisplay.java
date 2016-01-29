@@ -15,6 +15,7 @@ public class MtgCardDisplay {
 	private final StringProperty type;
 	private final StringProperty colour;
 	private final StringProperty rarity;
+	private final StringProperty multiverseId;
 	
 	// Constructor.
 	// Initialise the member properties.
@@ -24,6 +25,7 @@ public class MtgCardDisplay {
 		this.type = new SimpleStringProperty("");
 		this.colour = new SimpleStringProperty("");
 		this.rarity = new SimpleStringProperty("");
+		this.multiverseId = new SimpleStringProperty("");
 	}
 
 	// Getter and setter methods.
@@ -89,10 +91,22 @@ public class MtgCardDisplay {
 	public void setRarity(String rarity) {
 		this.rarity.set(rarity);
 	}
+
+	public String getMultiverseId() {
+		return this.multiverseId.get();
+	}
+	
+	public StringProperty getMultiverseIdProperty() {
+		return this.multiverseId;
+	}
+
+	public void setMultiverseId(String multiverseId) {
+		this.multiverseId.set(multiverseId);
+	}
 	
 	// Overrides
 	public String toString() {
-		return this.getName() + ", " + this.getSetName() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity();
+		return this.getName() + ", " + this.getSetName() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
 	}
 
 }

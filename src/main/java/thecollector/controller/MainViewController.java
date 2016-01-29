@@ -60,6 +60,9 @@ public class MainViewController extends BaseViewController {
 	private TableColumn<MtgCardDisplay, String> cardRarityColumn;
 	
 	@FXML
+	private TableColumn<MtgCardDisplay, String> cardMultiverseIdColumn;
+	
+	@FXML
 	private Label labelStatus;
 	
 	@FXML
@@ -83,6 +86,7 @@ public class MainViewController extends BaseViewController {
 		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
 		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
+		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
 
 		// Associate handler classes with controls.
 		this.allCardsTableView.setOnMouseClicked(new TableViewEventHandler(this.allCardsTableView));
@@ -113,7 +117,7 @@ public class MainViewController extends BaseViewController {
 		
 		// TODO: DEBUG
 		// Load a test image.
-		this.mainSplitView.setDividerPosition(0, 0.85);
+		this.mainSplitView.setDividerPosition(0, 0.8);
 		Image image = new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card");
 		this.cardImage.setImage(image);
 		// TODO: DEBUG
@@ -159,6 +163,12 @@ public class MainViewController extends BaseViewController {
 	        	
 	        	mtgCardRow.setRarity(mtgCard.getRarity());
 	        	
+	        	if (mtgCard.getMultiverseid() == null) {
+		        	mtgCardRow.setMultiverseId("0");
+	        	} else {
+		        	mtgCardRow.setMultiverseId(mtgCard.getMultiverseid().toString());
+	        	}
+	        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
 	        		mtgCardRow.setName("-");
@@ -175,8 +185,11 @@ public class MainViewController extends BaseViewController {
 	        	if (mtgCardRow.getRarity() == null || mtgCardRow.getRarity().isEmpty()) {
 	        		mtgCardRow.setRarity("-");
 	        	}
+	        	if (mtgCardRow.getMultiverseId() == null || mtgCardRow.getMultiverseId().isEmpty()) {
+	        		mtgCardRow.setMultiverseId("0");
+	        	}
 	        	
-	        	// Added the displayable row to the display data list.
+	        	// Added the display row to the display data list.
 	        	this.displayData.add(mtgCardRow);
 			}
 	        
