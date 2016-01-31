@@ -59,7 +59,7 @@ public class CardLoader {
 		for (MtgSet set : sets.values()) {
 			for (MtgCard card : set.getCards()) {
 				card.setSetCode(set.getCode());
-				card.setSetName(set.getName());
+				card.setExpansion(set.getName());
 
 				allCards.add(card);
 			}

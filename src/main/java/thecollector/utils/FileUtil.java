@@ -100,6 +100,29 @@ public class FileUtil {
 		
 		return settingsPath;
 	}
+
+	/**
+	 * Get the URL of a given file relative to the supplied class.
+	 * 
+	 * @param className - String
+	 * @param filename - String
+	 * 
+	 * @return URL - the file's URL.
+	 */
+	public static URL getResourceUrl(String className, String filename) {
+		URL resourceUrl = null;
+		
+		try {
+			Class<?> classPathToCheck = Class.forName(className);
+			ClassLoader loader = classPathToCheck.getClassLoader();
+			resourceUrl = loader.getResource(filename);
+			
+		} catch (ClassNotFoundException e) {
+			logger().log(Level.SEVERE, "Exception occured", e);
+		}
+
+		return resourceUrl;
+	}
 	
 	/**
 	 * Get the file path of a given file relative to the supplied class.
@@ -111,19 +134,13 @@ public class FileUtil {
 	 */
 	public static String getResourcePath(String className, String filename) {
 		String filePath = "";
-		
-		try {
-			Class<?> classPathToCheck = Class.forName(className);
-			ClassLoader loader = classPathToCheck.getClassLoader();
-			URL pathURL = loader.getResource(filename);
-			if (pathURL != null) {
-				filePath = pathURL.getPath();	
-			}
-			
-		} catch (ClassNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+
+		URL pathURL = FileUtil.getResourceUrl(className, filename);
+
+		if (pathURL != null) {
+			filePath = pathURL.getPath();	
 		}
-		
+
 		return filePath;
 	}
 	

@@ -9,6 +9,7 @@ package thecollector.model;
 public final class Settings {
 
 	public static final String APPLICATION_NAME = "TheCollector";
+	public static final String APPLICATION_TITLE = "The Collector";
 	public static final String APPLICATION_VERSION = "0.1a";
 
 	public static final String INI_FILE_NAME = "TheCollector.xml";
@@ -16,6 +17,7 @@ public final class Settings {
 
 	public static final String LOGGING_FOLDER = "logs";
 	
+	public static final String MAIN_VIEW = "thecollector/view/MainView_v2.fxml";
 	public static final String MTG_JSON_SET = "database/AllSets.json";
 	
 	public static final String DEFAULT_STYLE = "DefaultTheme.css";

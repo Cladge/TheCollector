@@ -48,7 +48,7 @@ public class MainViewController extends BaseViewController {
 	private TableColumn<MtgCardDisplay, String> cardNameColumn;
 	
 	@FXML
-	private TableColumn<MtgCardDisplay, String> setNameColumn;
+	private TableColumn<MtgCardDisplay, String> expansionColumn;
 	
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardTypeColumn;
@@ -66,7 +66,7 @@ public class MainViewController extends BaseViewController {
 	private Label labelStatus;
 	
 	@FXML
-	private ImageView cardImage;
+	private ImageView cardImageView;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -82,7 +82,7 @@ public class MainViewController extends BaseViewController {
     private void initialize() {
 		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
 		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-		this.setNameColumn.setCellValueFactory(cellData -> cellData.getValue().getSetNameProperty());
+		this.expansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
 		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
 		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
@@ -119,7 +119,7 @@ public class MainViewController extends BaseViewController {
 		// Load a test image.
 		this.mainSplitView.setDividerPosition(0, 0.8);
 		Image image = new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card");
-		this.cardImage.setImage(image);
+		this.cardImageView.setImage(image);
 		// TODO: DEBUG
 	}
 	
@@ -140,7 +140,7 @@ public class MainViewController extends BaseViewController {
 	        for (MtgCard mtgCard : this.mtgCardList) {
 	        	MtgCardDisplay mtgCardRow = new MtgCardDisplay();
 	        	mtgCardRow.setName(mtgCard.getName());
-	        	mtgCardRow.setSetName(mtgCard.getSetName());
+	        	mtgCardRow.setExpansion(mtgCard.getExpansion());
 	        	
 	        	ArrayList<String> types = mtgCard.getTypes();
 	        	if (types == null || types.isEmpty()) {
@@ -173,8 +173,8 @@ public class MainViewController extends BaseViewController {
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
 	        		mtgCardRow.setName("-");
 	        	}
-	        	if (mtgCardRow.getSetName() == null || mtgCardRow.getSetName().isEmpty()) {
-	        		mtgCardRow.setSetName("-");
+	        	if (mtgCardRow.getExpansion() == null || mtgCardRow.getExpansion().isEmpty()) {
+	        		mtgCardRow.setExpansion("-");
 	        	}
 	        	if (mtgCardRow.getType() == null || mtgCardRow.getType().isEmpty()) {
 	        		mtgCardRow.setType("-");

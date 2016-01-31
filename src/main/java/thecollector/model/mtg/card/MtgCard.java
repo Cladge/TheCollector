@@ -34,7 +34,7 @@ public class MtgCard {
 
 	// Not part of JSON, will be set later
 	private String setCode;
-	private String setName;
+	private String expansion;
 
 	public String getLayout() {
 		return layout;
@@ -220,12 +220,12 @@ public class MtgCard {
 		this.watermark = watermark;
 	}
 
-	public String getSetName() {
-		return setName;
+	public String getExpansion() {
+		return expansion;
 	}
 
-	public void setSetName(String setName) {
-		this.setName = setName;
+	public void setExpansion(String expansion) {
+		this.expansion = expansion;
 	}
 
 	public String getSetCode() {

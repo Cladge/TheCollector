@@ -12,7 +12,7 @@ import org.junit.Test;
 import thecollector.model.SettingsFile;
 
 /**
- * Test Settings file.
+ * Test class for SettingsFile.
  * 
  * Expectations:
  * o The settings (properties) file requires a name and path.

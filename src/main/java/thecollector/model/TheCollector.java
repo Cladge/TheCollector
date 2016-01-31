@@ -113,7 +113,7 @@ public class TheCollector extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		theCollector = this;
 		this.stage = primaryStage;
-		this.stage.setTitle("TheCollector");
+		this.stage.setTitle(Settings.APPLICATION_TITLE);
 		// TODO: Make this configurable - allow the user to choose different themes
 		//		 and store this in preferences.
 		this.cssPath = TheCollector.class.getResource(Settings.DEFAULT_STYLE).toString();
@@ -163,7 +163,7 @@ public class TheCollector extends Application {
         
 		try {
 			// Load the root layout from the "start" view fxml file.
-			FXMLLoader loader = new FXMLLoader(TheCollector.class.getResource("/thecollector/view/MainView_v2.fxml"));
+			FXMLLoader loader = new FXMLLoader(FileUtil.getResourceUrl("thecollector.model.TheCollector", Settings.MAIN_VIEW));
 			this.mainLayout = (VBox)loader.load();
 			this.scene = new Scene(mainLayout);
 			this.stage.setScene(scene);

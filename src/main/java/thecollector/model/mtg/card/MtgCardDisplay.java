@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
  */
 public class MtgCardDisplay {
 	private final StringProperty name;
-	private final StringProperty setName;
+	private final StringProperty expansion;
 	private final StringProperty type;
 	private final StringProperty colour;
 	private final StringProperty rarity;
@@ -21,7 +21,7 @@ public class MtgCardDisplay {
 	// Initialise the member properties.
 	public MtgCardDisplay() {
 		this.name = new SimpleStringProperty("");
-		this.setName = new SimpleStringProperty("");
+		this.expansion = new SimpleStringProperty("");
 		this.type = new SimpleStringProperty("");
 		this.colour = new SimpleStringProperty("");
 		this.rarity = new SimpleStringProperty("");
@@ -44,16 +44,16 @@ public class MtgCardDisplay {
 		this.name.set(name);
 	}
 
-	public String getSetName() {
-		return this.setName.get();
+	public String getExpansion() {
+		return this.expansion.get();
 	}
 	
-	public StringProperty getSetNameProperty() {
-		return this.setName;
+	public StringProperty getExpansionProperty() {
+		return this.expansion;
 	}
 
-	public void setSetName(String setName) {
-		this.setName.set(setName);
+	public void setExpansion(String expansion) {
+		this.expansion.set(expansion);
 	}
 
 	public String getType() {
@@ -106,7 +106,7 @@ public class MtgCardDisplay {
 	
 	// Overrides
 	public String toString() {
-		return this.getName() + ", " + this.getSetName() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
+		return this.getName() + ", " + this.getExpansion() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
 	}
 
 }
