@@ -8,7 +8,7 @@ import org.junit.Test;
 import thecollector.model.mtg.card.MtgCardDisplay;
 
 /**
- * Test class for MtgCardDisplay.
+ * Test class for {@code MtgCardDisplay}.
  * 
  * @author Ian Claridge
  */

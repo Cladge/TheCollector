@@ -12,18 +12,20 @@ import org.junit.Test;
 import thecollector.model.SettingsFile;
 
 /**
- * Test class for SettingsFile.
- * 
+ * Test class for {@code SettingsFile}.
+ * <p>
  * Expectations:
- * o The settings (properties) file requires a name and path.
- * o The settings (properties) file points to a valid properties file.
- * o The file is created if it does not exist.
- * o A single property can be retrieved.
- * o All properties can be retrieved.
- * o A single property can be set.
- * o The settings (properties) file can be written.
- * o The settings (properties) file can be deleted.
- * o The settings (properties) path can be deleted.
+ * <ul>
+ * <li>The settings (properties) file requires a name and path.</li>
+ * <li>The settings (properties) file points to a valid properties file.</li>
+ * <li>The file is created if it does not exist.</li>
+ * <li>A single property can be retrieved.</li>
+ * <li>All properties can be retrieved.</li>
+ * <li>A single property can be set.</li>
+ * <li>The settings (properties) file can be written.</li>
+ * <li>The settings (properties) file can be deleted.</li>
+ * <li>The settings (properties) path can be deleted.</li>
+ * </ul>
  * 
  * @author Ian Claridge
  */

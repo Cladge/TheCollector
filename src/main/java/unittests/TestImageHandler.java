@@ -6,12 +6,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for ImageHandler.
- * 
+ * Test class for {@code ImageHandler}.
+ * <p>
  * Expectations:
- * o The Image Handler requires a MultiVerse ID.
- * o The Image Handler returns an Image.
- * o The URL formulated for the image is valid.
+ * <ul>
+ * <li>The Image Handler requires a MultiVerse ID.</li>
+ * <li>The Image Handler returns an Image.</li>
+ * <li>The URL formulated for the image is valid.</li>
+ * </ul>
  * 
  * @author Ian Claridge
  *
