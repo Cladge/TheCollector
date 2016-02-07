@@ -201,11 +201,11 @@ public class MainViewController extends BaseViewController {
 	        }
 	        
 		} catch (JsonParseException e) {
-			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occurred", e);
 		} catch (JsonMappingException e) {
-			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occurred", e);
 		} catch (IOException e) {
-			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occurred", e);
 		}
 
 		theCollector.setCursor("DEFAULT");

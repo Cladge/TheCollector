@@ -118,7 +118,7 @@ public class FileUtil {
 			resourceUrl = loader.getResource(filename);
 			
 		} catch (ClassNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 
 		return resourceUrl;
@@ -176,9 +176,9 @@ public class FileUtil {
 			properties.store(fileOut, "Application Settings");
 			fileOut.close();
 		} catch (FileNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		} catch (IOException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 	}
 
@@ -201,9 +201,9 @@ public class FileUtil {
 				String value = properties.getProperty(key);
 			}*/
 		} catch (FileNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		} catch (IOException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 		
 		return properties;
@@ -221,7 +221,7 @@ public class FileUtil {
 			properties.storeToXML(fileOut, comment);
 			fileOut.close();
 		} catch (IOException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 			writeSuccess = false;
 		}
 		
@@ -247,9 +247,9 @@ public class FileUtil {
 				String value = properties.getProperty(key);
 			}*/
 		} catch (FileNotFoundException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		} catch (IOException e) {
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 		
 		return properties;
@@ -290,7 +290,7 @@ public class FileUtil {
 			obj.writeJSONString(out);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger().log(Level.SEVERE, "Exception occured", e);
+			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 		String jsonText = out.toString();
 		System.out.println("");

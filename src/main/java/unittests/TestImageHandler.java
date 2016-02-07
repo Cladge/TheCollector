@@ -11,6 +11,7 @@ import org.junit.Test;
  * Expectations:
  * <ul>
  * <li>The Image Handler requires a MultiVerse ID.</li>
+ * <li>The Image Handler can accept a "Background Loading" boolean.</li>
  * <li>The Image Handler returns an Image.</li>
  * <li>The URL formulated for the image is valid.</li>
  * </ul>
@@ -32,8 +33,14 @@ public class TestImageHandler {
 	}
 
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testImageLoadsSuccessfully() {
+		assertFalse(this.imageHandler01.isError());
+		assertFalse(this.imageHandler02.isError());
+	}
+	
+	@Test
+	public void testImageUrlIsValid() {
+		
 	}
 
 }

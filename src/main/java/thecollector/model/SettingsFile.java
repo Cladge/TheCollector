@@ -52,7 +52,7 @@ public class SettingsFile {
 			this.readProperties();
 			
 		} catch (NullPointerException | IOException e) {
-			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occurred", e);
 			this.settingsOK = false;
 		}
 	}

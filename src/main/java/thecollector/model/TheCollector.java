@@ -180,7 +180,7 @@ public class TheCollector extends Application {
 
 		} catch (IOException e) {
 			// Exception gets thrown if the fxml file could not be loaded
-			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occured", e);
+			LoggerUtil.logger(this).log(Level.SEVERE, "Exception occurred", e);
 		}
 	}
 	
