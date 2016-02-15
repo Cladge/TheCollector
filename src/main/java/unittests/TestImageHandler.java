@@ -1,9 +1,13 @@
 package unittests;
 
 import static org.junit.Assert.*;
+import javafx.scene.image.Image;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import thecollector.model.ImageHandler;
+import thecollector.utils.NetUtil;
 
 /**
  * Test class for {@code ImageHandler}.
@@ -21,26 +25,37 @@ import org.junit.Test;
  */
 public class TestImageHandler {
 
-	private int multiVerseId01 = 0;
-	private int multiVerseId02 = 370812;
+	private int multiverseId01 = 0;
+	private int multiverseId02 = 370812;
 	private ImageHandler imageHandler01;
 	private ImageHandler imageHandler02;
 	
 	@Before
 	public void setUp() throws Exception {
-		this.imageHandler01 = new ImageHandler(this.multiVerseId01);
-		this.imageHandler02 = new ImageHandler(this.multiVerseId02, true);
+		this.imageHandler01 = new ImageHandler(this.multiverseId01);
+		this.imageHandler02 = new ImageHandler(this.multiverseId02, true);
+	}
+	
+	@Test
+	public void testCanCreateImages() {
+		Image image01 = this.imageHandler01.createImage();
+		assertNotNull(image01);
+		Image image02 = this.imageHandler02.createImage();
+		assertNotNull(image02);
 	}
 
 	@Test
 	public void testImageLoadsSuccessfully() {
-		assertFalse(this.imageHandler01.isError());
-		assertFalse(this.imageHandler02.isError());
+		Image image01 = this.imageHandler01.createImage();
+		assertFalse(image01.isError());
+		Image image02 = this.imageHandler02.createImage();
+		assertFalse(image02.isError());
 	}
 	
 	@Test
 	public void testImageUrlIsValid() {
-		
+		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler01.getUrl())));
+		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler02.getUrl())));
 	}
 
 }

@@ -289,7 +289,6 @@ public class FileUtil {
 		try {
 			obj.writeJSONString(out);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			logger().log(Level.SEVERE, "Exception occurred", e);
 		}
 		String jsonText = out.toString();
