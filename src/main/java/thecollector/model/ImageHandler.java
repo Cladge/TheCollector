@@ -35,7 +35,7 @@ public class ImageHandler {
 	}
 	
 	/**
-	 * Create an image based on the Multiverse ID passed in the constructor.
+	 * Create an image based on a URL that uses the Multiverse ID passed in the constructor as query data.
 	 * 
 	 * @return Image
 	 */

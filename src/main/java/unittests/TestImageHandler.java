@@ -54,6 +54,7 @@ public class TestImageHandler {
 	
 	@Test
 	public void testImageUrlIsValid() {
+		
 		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler01.getUrl())));
 		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler02.getUrl())));
 	}
