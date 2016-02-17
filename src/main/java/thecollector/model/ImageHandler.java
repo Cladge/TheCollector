@@ -9,10 +9,16 @@ import javafx.scene.image.Image;
  */
 public class ImageHandler {
 	
+	/**
+	 * Example of image link with known multiverse ID (click image to see URL):
+	 * (http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card)
+	 */
+	public static final String QUERY_DATA = "?multiverseid=%s&type=card";
+	
 	private int multiverseId;
 	private boolean backgroundLoading;
 	private Image image;
-	private String url;
+	private String imageUrl;
 	
 	/**
 	 * Constructor. Set if background loading should be set for the image.
@@ -40,7 +46,8 @@ public class ImageHandler {
 	 * @return Image
 	 */
 	public Image createImage() {
-		// TODO: To be finished....
+		this.imageUrl = String.format(Settings.GATHERER_URL + ImageHandler.QUERY_DATA, this.multiverseId);
+		this.image = new Image(this.imageUrl, this.backgroundLoading);
 		return this.image;
 	}
 	
@@ -50,8 +57,7 @@ public class ImageHandler {
 	 * @return String
 	 */
 	public String getUrl() {
-		// TODO: To be finished....
-		return this.url;
+		return this.imageUrl;
 	}
 
 }

@@ -23,4 +23,6 @@ public final class Settings {
 	public static final String DEFAULT_STYLE = "DefaultTheme.css";
 	public static final String DEFAULT_SELECTED_STYLE = "DefaultThemeSelected.css";
 	
+	public static final String GATHERER_URL = "http://gatherer.wizards.com/Handlers/Image.ashx";
+	
 }
