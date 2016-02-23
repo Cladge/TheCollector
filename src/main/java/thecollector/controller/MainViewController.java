@@ -19,7 +19,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import thecollector.model.ImageHandler;
 import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
@@ -74,6 +76,9 @@ public class MainViewController extends BaseViewController {
 	// An observable array list for populating the main TableView control.
 	private ObservableList<MtgCardDisplay> displayData = FXCollections.observableArrayList();
 	
+	// The currently selected row data.
+	private MtgCardDisplay currentCardData;
+	
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -89,7 +94,8 @@ public class MainViewController extends BaseViewController {
 		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
 
 		// Associate handler classes with controls.
-		this.allCardsTableView.setOnMouseClicked(new TableViewEventHandler(this.allCardsTableView));
+		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
+		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
     }
     
 	/**
@@ -231,15 +237,43 @@ public class MainViewController extends BaseViewController {
 		System.out.println("\nTheCollector v0.1 (beta)");
 	}
 	
+	/**
+	 * From a TableView event (e.g. mouse event, key event, etc.) set the currently selected card
+	 * and display the relevant image.
+	 * 
+	 * @param currentCardData - MtgCardDisplay
+	 */
+	public void setCurrentCard(MtgCardDisplay currentCardData) {
+		this.currentCardData = currentCardData;
+		
+		if (this.currentCardData != null) {
+			String multiverseIdData = this.currentCardData.getMultiverseId();
+			if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
+				int multiverseId = Integer.valueOf(multiverseIdData);
+				ImageHandler imageHandler = new ImageHandler(multiverseId, true);
+				Image cardImage = imageHandler.createImage();
+				this.cardImageView.setImage(cardImage);
+			}
+		}
+		
+		// TODO: Show card info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+	}
+	
 }
 
-class TableViewEventHandler implements EventHandler<MouseEvent> {
+/**
+ * A TableView handler class for mouse events.
+ */
+class TableViewMouseEventHandler implements EventHandler<MouseEvent> {
 
 	private TableView<MtgCardDisplay> cardsTableView;
+	private MainViewController controller;
 	
 	// Constructor.
-	public TableViewEventHandler(TableView<MtgCardDisplay> tableView) {
+	public TableViewMouseEventHandler(TableView<MtgCardDisplay> tableView, MainViewController controller) {
 		this.cardsTableView = tableView;
+		this.controller = controller;
 	}
 	
 	@Override
@@ -247,10 +281,30 @@ class TableViewEventHandler implements EventHandler<MouseEvent> {
     	String eventTargetType = event.getTarget().toString();
     	if (eventTargetType.substring(0, 4).toLowerCase().equalsIgnoreCase("text") ||
     			eventTargetType.substring(0, 12).toLowerCase().equalsIgnoreCase("TableColumn$")) {
-        	MtgCardDisplay mtgCardDisplay = cardsTableView.getSelectionModel().getSelectedItem();
-        	System.out.println(mtgCardDisplay.toString());
-        	LoggerUtil.logger(this).log(Level.INFO, mtgCardDisplay.toString());
+        	this.controller.setCurrentCard(cardsTableView.getSelectionModel().getSelectedItem());
     	}		
+	}
+	
+}
+
+/**
+ * A TableView handler class for key (input) events.
+ */
+class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
+
+	private TableView<MtgCardDisplay> cardsTableView;
+	private MainViewController controller;
+	
+	// Constructor.
+	public TableViewKeyEventHandler(TableView<MtgCardDisplay> tableview, MainViewController controller) {
+		this.cardsTableView = tableview;
+		this.controller = controller;
+	}
+	
+	@Override
+	public void handle(KeyEvent event) {
+		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down"))
+		this.controller.setCurrentCard(cardsTableView.getSelectionModel().getSelectedItem());
 	}
 	
 }
