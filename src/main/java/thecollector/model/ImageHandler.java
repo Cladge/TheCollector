@@ -23,11 +23,11 @@ public class ImageHandler {
 	/**
 	 * Constructor. Set if background loading should be set for the image.
 	 * 
-	 * @param multiVerseId - int
+	 * @param multiverseId - int
 	 * @param backgroundLoading - boolean
 	 */
-	public ImageHandler(int multiVerseId, boolean backgroundLoading) {
-		this.multiverseId = multiVerseId;
+	public ImageHandler(int multiverseId, boolean backgroundLoading) {
+		this.multiverseId = multiverseId;
 		this.backgroundLoading = backgroundLoading;
 	}
 	

@@ -124,8 +124,7 @@ public class MainViewController extends BaseViewController {
 		// TODO: DEBUG
 		// Load a test image.
 		this.mainSplitView.setDividerPosition(0, 0.8);
-		Image image = new Image("http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card");
-		this.cardImageView.setImage(image);
+		this.setCurrentImage(370812);
 		// TODO: DEBUG
 	}
 	
@@ -250,14 +249,23 @@ public class MainViewController extends BaseViewController {
 			String multiverseIdData = this.currentCardData.getMultiverseId();
 			if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
 				int multiverseId = Integer.valueOf(multiverseIdData);
-				ImageHandler imageHandler = new ImageHandler(multiverseId, true);
-				Image cardImage = imageHandler.createImage();
-				this.cardImageView.setImage(cardImage);
+				this.setCurrentImage(multiverseId);
 			}
 		}
 		
 		// TODO: Show card info for debug purposes.
 		LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+	}
+	
+	/**
+	 * Use the passed Multiverse ID to set the relevant card image for the currently selected table row.
+	 * 
+	 * @param multiverseId - int
+	 */
+	private void setCurrentImage(int multiverseId) {
+		ImageHandler imageHandler = new ImageHandler(multiverseId, true);
+		Image cardImage = imageHandler.createImage();
+		this.cardImageView.setImage(cardImage);
 	}
 	
 }
