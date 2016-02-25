@@ -1,5 +1,6 @@
 package thecollector.model;
 
+import thecollector.utils.FileUtil;
 import javafx.scene.image.Image;
 
 /**
@@ -13,7 +14,8 @@ public class ImageHandler {
 	 * Example of image link with known multiverse ID (click image to see URL):
 	 * (http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card)
 	 */
-	public static final String QUERY_DATA = "?multiverseid=%s&type=card";
+	private static final String QUERY_DATA = "?multiverseid=%s&type=card";
+	private static final String loadingImageUrl = FileUtil.getResourceUrl("thecollector.model.ImageHandler", Settings.LOADING_IMAGE).toString();
 	
 	private int multiverseId;
 	private boolean backgroundLoading;
@@ -49,6 +51,17 @@ public class ImageHandler {
 		this.imageUrl = String.format(Settings.GATHERER_URL + ImageHandler.QUERY_DATA, this.multiverseId);
 		this.image = new Image(this.imageUrl, this.backgroundLoading);
 		return this.image;
+	}
+	
+	/**
+	 * Return a "place holder" image, which can be used while a main image is being loaded.
+	 * 
+	 * @return Image
+	 */
+	public Image createPlaceholderImage() {
+		Image placeholderImage = new Image(ImageHandler.loadingImageUrl);
+		
+		return placeholderImage;
 	}
 	
 	/**
