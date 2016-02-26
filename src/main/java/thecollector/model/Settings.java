@@ -26,4 +26,5 @@ public final class Settings {
 	public static final String GATHERER_URL = "http://gatherer.wizards.com/Handlers/Image.ashx";
 	
 	public static final String LOADING_IMAGE = "thecollector/view/loading.jpg";
+	public static final String ERROR_IMAGE = "thecollector/view/error.jpg";
 }

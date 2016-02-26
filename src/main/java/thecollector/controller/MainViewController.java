@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -120,12 +122,14 @@ public class MainViewController extends BaseViewController {
 		String statusMessage = String.format("Number of cards found: %s", this.loadCards());
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
-		
-		// TODO: DEBUG
-		// Load a test image.
+
 		this.mainSplitView.setDividerPosition(0, 0.8);
-		this.setCurrentImage(370812);
-		// TODO: DEBUG
+		
+		// Load image for first row.
+		if (this.mtgCardList.size() > 0) {
+			MtgCard mtgCard = this.mtgCardList.get(0);
+			this.setCurrentImage(mtgCard.getMultiverseid());
+		}
 	}
 	
 	/**
@@ -253,8 +257,9 @@ public class MainViewController extends BaseViewController {
 			}
 		}
 		
-		// TODO: Show card info for debug purposes.
+		// TODO: DEBUG - Show card info for debug purposes.
 		LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+		// TODO: DEBUG - Show card info for debug purposes.
 	}
 	
 	/**
@@ -264,8 +269,33 @@ public class MainViewController extends BaseViewController {
 	 */
 	private void setCurrentImage(int multiverseId) {
 		ImageHandler imageHandler = new ImageHandler(multiverseId, true);
+		
+		// Use placeholder image first. 
+		this.cardImageView.setImage(imageHandler.createPlaceholderImage());
+		
+		// Now create the required image.
 		Image cardImage = imageHandler.createImage();
-		this.cardImageView.setImage(cardImage);
+		
+		// This listener on the image's progress is used to set the Image View when the image has finally loaded. In the meantime,
+		// the Image View will continue to display the "placeholder" image.
+		cardImage.progressProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				// TODO: DEBUG
+				LoggerUtil.logger(this).log(Level.INFO, "Image progress: " + newValue);
+				LoggerUtil.logger(this).log(Level.INFO, "Image error: " + cardImage.isError());
+				// TODO: DEBUG
+				
+				double cardProgress = (double) newValue;
+				if (cardProgress == 1.0) {
+					if (cardImage.isError()) {
+						cardImageView.setImage(imageHandler.createErrorImage());
+					} else {
+						cardImageView.setImage(cardImage);	
+					}
+				}
+			}
+		});
 	}
 	
 }

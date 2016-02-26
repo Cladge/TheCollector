@@ -15,11 +15,14 @@ public class ImageHandler {
 	 * (http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=370812&type=card)
 	 */
 	private static final String QUERY_DATA = "?multiverseid=%s&type=card";
-	private static final String loadingImageUrl = FileUtil.getResourceUrl("thecollector.model.ImageHandler", Settings.LOADING_IMAGE).toString();
+	private static final String LOADING_IMAGE_URL = FileUtil.getResourceUrl("thecollector.model.ImageHandler", Settings.LOADING_IMAGE).toString();
+	private static final String ERROR_IMAGE_URL = FileUtil.getResourceUrl("thecollector.model.ImageHandler", Settings.ERROR_IMAGE).toString();
 	
 	private int multiverseId;
 	private boolean backgroundLoading;
 	private Image image;
+	private Image placeholderImage;
+	private Image errorImage;
 	private String imageUrl;
 	
 	/**
@@ -59,9 +62,24 @@ public class ImageHandler {
 	 * @return Image
 	 */
 	public Image createPlaceholderImage() {
-		Image placeholderImage = new Image(ImageHandler.loadingImageUrl);
+		if (this.placeholderImage == null) {
+			this.placeholderImage = new Image(ImageHandler.LOADING_IMAGE_URL);	
+		}
 		
-		return placeholderImage;
+		return this.placeholderImage;
+	}
+
+	/**
+	 * Return an "error" image, which can be used if an image failed to load.
+	 * 
+	 * @return Image
+	 */
+	public Image createErrorImage() {
+		if (this.errorImage == null) {
+			this.errorImage = new Image(ImageHandler.ERROR_IMAGE_URL);
+		}
+		
+		return this.errorImage;
 	}
 	
 	/**
