@@ -282,8 +282,8 @@ public class MainViewController extends BaseViewController {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				// TODO: DEBUG
-				LoggerUtil.logger(this).log(Level.INFO, "Image progress: " + newValue);
-				LoggerUtil.logger(this).log(Level.INFO, "Image error: " + cardImage.isError());
+				// LoggerUtil.logger(this).log(Level.INFO, "Image progress: " + newValue);
+				// LoggerUtil.logger(this).log(Level.INFO, "Image error: " + cardImage.isError());
 				// TODO: DEBUG
 				
 				double cardProgress = (double) newValue;

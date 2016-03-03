@@ -62,7 +62,7 @@ public class TestImageHandler {
 	    // Allow the JavaFX thread time to start up (half a second seems OK)
 	    // before starting the unit tests.
 	    try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			logger().log(Level.SEVERE, "Exception occurred!", e);
 		}
