@@ -125,6 +125,7 @@ public class MainViewController extends BaseViewController {
 
 		this.mainSplitView.setDividerPosition(0, 0.8);
 		
+		// If there is at least one card to display, select it and set the image.
 		if (this.mtgCardList.size() > 0) {
 			MtgCard mtgCard = this.mtgCardList.get(0);
 			this.allCardsTableView.getSelectionModel().selectFirst();
@@ -249,6 +250,7 @@ public class MainViewController extends BaseViewController {
 	 */
 	public void setCurrentCard(MtgCardDisplay currentCardData) {
 		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
+		// In this case, assuming there is a current row (card data), scroll to that current row.
 		if (currentCardData == null) {
 			if (this.currentCardData != null) {
 				this.allCardsTableView.scrollTo(this.currentCardData);	
