@@ -125,9 +125,10 @@ public class MainViewController extends BaseViewController {
 
 		this.mainSplitView.setDividerPosition(0, 0.8);
 		
-		// Load image for first row.
 		if (this.mtgCardList.size() > 0) {
 			MtgCard mtgCard = this.mtgCardList.get(0);
+			this.allCardsTableView.getSelectionModel().selectFirst();
+			this.currentCardData = this.allCardsTableView.getSelectionModel().getSelectedItem();
 			this.setCurrentImage(mtgCard.getMultiverseid());
 		}
 	}
@@ -247,19 +248,28 @@ public class MainViewController extends BaseViewController {
 	 * @param currentCardData - MtgCardDisplay
 	 */
 	public void setCurrentCard(MtgCardDisplay currentCardData) {
-		this.currentCardData = currentCardData;
-		
-		if (this.currentCardData != null) {
-			String multiverseIdData = this.currentCardData.getMultiverseId();
-			if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
-				int multiverseId = Integer.valueOf(multiverseIdData);
-				this.setCurrentImage(multiverseId);
+		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
+		if (currentCardData == null) {
+			if (this.currentCardData != null) {
+				this.allCardsTableView.scrollTo(this.currentCardData);	
 			}
+			
+		} else {
+			this.currentCardData = currentCardData;
+			
+			if (this.currentCardData != null) {
+				String multiverseIdData = this.currentCardData.getMultiverseId();
+				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
+					int multiverseId = Integer.valueOf(multiverseIdData);
+					this.setCurrentImage(multiverseId);
+				}
+			}
+			
+			// TODO: DEBUG - Show card info for debug purposes.
+			LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+			// TODO: DEBUG - Show card info for debug purposes.	
 		}
 		
-		// TODO: DEBUG - Show card info for debug purposes.
-		LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
-		// TODO: DEBUG - Show card info for debug purposes.
 	}
 	
 	/**
@@ -319,8 +329,10 @@ class TableViewMouseEventHandler implements EventHandler<MouseEvent> {
     	String eventTargetType = event.getTarget().toString();
     	if (eventTargetType.substring(0, 4).toLowerCase().equalsIgnoreCase("text") ||
     			eventTargetType.substring(0, 12).toLowerCase().equalsIgnoreCase("TableColumn$")) {
-        	this.controller.setCurrentCard(cardsTableView.getSelectionModel().getSelectedItem());
-    	}		
+        	this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
+    	} else {
+    		this.controller.setCurrentCard(null);
+    	}
 	}
 	
 }
@@ -342,7 +354,7 @@ class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
 	@Override
 	public void handle(KeyEvent event) {
 		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down"))
-		this.controller.setCurrentCard(cardsTableView.getSelectionModel().getSelectedItem());
+		this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
 	}
 	
 }
