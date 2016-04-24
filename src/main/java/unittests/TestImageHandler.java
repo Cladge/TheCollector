@@ -81,25 +81,25 @@ public class TestImageHandler {
 	
 	@Test
 	public void testCanCreateImages() {
-		Image image01 = this.imageHandler01.createImage();
+		Image image01 = this.imageHandler01.getImage();
 		assertNotNull(image01);
-		Image image02 = this.imageHandler02.createImage();
+		Image image02 = this.imageHandler02.getImage();
 		assertNotNull(image02);
 	}
 
 	@Test
 	public void testImageLoadsSuccessfully() {
-		Image image01 = this.imageHandler01.createImage();
+		Image image01 = this.imageHandler01.getImage();
 		assertFalse(image01.isError());
-		Image image02 = this.imageHandler02.createImage();
+		Image image02 = this.imageHandler02.getImage();
 		assertFalse(image02.isError());
 	}
 	
 	@Test
 	public void testImageUrlIsValid() {
-		this.imageHandler01.createImage();
+		this.imageHandler01.getImage();
 		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler01.getUrl())));
-		this.imageHandler02.createImage();
+		this.imageHandler02.getImage();
 		assertEquals(200, NetUtil.getResponseCode(NetUtil.getConnection(this.imageHandler02.getUrl())));
 	}
 

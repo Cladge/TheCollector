@@ -2,7 +2,9 @@ package thecollector.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -81,6 +83,10 @@ public class MainViewController extends BaseViewController {
 	// The currently selected row data.
 	private MtgCardDisplay currentCardData;
 	
+	// A collection of viewed images. Can be used to "cache" image objects for rows that
+	// have been previously selected.
+	private Map<Integer, ImageHandler> imageMap = new HashMap<Integer, ImageHandler>();
+	
     /**
      * Initializes the controller class. This method is automatically called
      * after the fxml file has been loaded.
@@ -129,7 +135,7 @@ public class MainViewController extends BaseViewController {
 		if (this.mtgCardList.size() > 0) {
 			MtgCard mtgCard = this.mtgCardList.get(0);
 			this.allCardsTableView.getSelectionModel().selectFirst();
-			this.currentCardData = this.allCardsTableView.getSelectionModel().getSelectedItem();
+			this.setCurrentCard(this.allCardsTableView.getSelectionModel().getSelectedItem());
 			this.setCurrentImage(mtgCard.getMultiverseid());
 		}
 	}
@@ -257,21 +263,19 @@ public class MainViewController extends BaseViewController {
 			}
 			
 		} else {
-			this.currentCardData = currentCardData;
-			
-			if (this.currentCardData != null) {
-				String multiverseIdData = this.currentCardData.getMultiverseId();
+			if (currentCardData != null && (!currentCardData.equals(this.currentCardData))) {
+				String multiverseIdData = currentCardData.getMultiverseId();
 				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
 					int multiverseId = Integer.valueOf(multiverseIdData);
 					this.setCurrentImage(multiverseId);
+					this.currentCardData = currentCardData;
+
+					// TODO: DEBUG - Show card info for debug purposes.
+					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+					// TODO: DEBUG - Show card info for debug purposes.	
 				}
 			}
-			
-			// TODO: DEBUG - Show card info for debug purposes.
-			LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
-			// TODO: DEBUG - Show card info for debug purposes.	
 		}
-		
 	}
 	
 	/**
@@ -280,34 +284,60 @@ public class MainViewController extends BaseViewController {
 	 * @param multiverseId - int
 	 */
 	private void setCurrentImage(int multiverseId) {
-		ImageHandler imageHandler = new ImageHandler(multiverseId, true);
+		ImageHandler imageHandler;
 		
-		// Use placeholder image first. 
-		this.cardImageView.setImage(imageHandler.createPlaceholderImage());
+		// See if the image handler has already been created for this Multiverse ID. If not,
+		// create it and add an entry to the image map.
+		if (this.imageMap.containsKey(multiverseId)){
+			imageHandler = this.imageMap.get(multiverseId);
+		} else {
+			imageHandler = new ImageHandler(multiverseId, true);
+			this.imageMap.put(multiverseId, imageHandler);
+		}
+		
+		// Use placeholder image first.
+		this.cardImageView.setImage(imageHandler.getPlaceholderImage());
 		
 		// Now create the required image.
-		Image cardImage = imageHandler.createImage();
+		Image cardImage = imageHandler.getImage();
 		
-		// This listener on the image's progress is used to set the Image View when the image has finally loaded. In the meantime,
-		// the Image View will continue to display the "placeholder" image.
-		cardImage.progressProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				// TODO: DEBUG
-				// LoggerUtil.logger(this).log(Level.INFO, "Image progress: " + newValue);
-				// LoggerUtil.logger(this).log(Level.INFO, "Image error: " + cardImage.isError());
-				// TODO: DEBUG
-				
-				double cardProgress = (double) newValue;
-				if (cardProgress == 1.0) {
-					if (cardImage.isError()) {
-						cardImageView.setImage(imageHandler.createErrorImage());
-					} else {
-						cardImageView.setImage(cardImage);	
+		// If the image was previously loaded (successfully), just set the image.
+		// Otherwise, use a listener to monitor the loading of the image which
+		// eventually sets the image once it has successfully loaded.
+		if (imageHandler.imageHasLoaded()) {
+			this.cardImageView.setImage(cardImage);
+			// TODO: DEBUG
+			LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image cached....getting image....", multiverseId));
+			// TODO: DEBUG
+		} else {
+			// This listener on the image's progress is used to set the Image View when the image has finally loaded. In the meantime,
+			// the Image View will continue to display the "placeholder" image.
+			cardImage.progressProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					// TODO: DEBUG
+					//LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image progress: %s", multiverseId, String.valueOf(newValue)));
+					//LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image error: %b", multiverseId, cardImage.isError()));
+					// TODO: DEBUG
+					
+					double cardProgress = (double) newValue;
+					if (cardProgress == 1.0) {
+						if (cardImage.isError()) {
+							cardImageView.setImage(imageHandler.getErrorImage());
+							// TODO: DEBUG
+							LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Error loading image.", multiverseId));
+							// TODO: DEBUG
+						} else {
+							cardImageView.setImage(cardImage);
+							imageHandler.setImageLoaded(true);
+							// TODO: DEBUG
+							LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image loaded successfully!", multiverseId));
+							// TODO: DEBUG
+						}
 					}
 				}
-			}
-		});
+			});	
+		}
 	}
 	
 }

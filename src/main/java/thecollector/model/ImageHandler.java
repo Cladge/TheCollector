@@ -24,6 +24,8 @@ public class ImageHandler {
 	private Image placeholderImage;
 	private Image errorImage;
 	private String imageUrl;
+	private boolean imageLoaded;
+	private boolean imageLoadingError;
 	
 	/**
 	 * Constructor. Set if background loading should be set for the image.
@@ -34,6 +36,8 @@ public class ImageHandler {
 	public ImageHandler(int multiverseId, boolean backgroundLoading) {
 		this.multiverseId = multiverseId;
 		this.backgroundLoading = backgroundLoading;
+		this.setImageLoaded(false);
+		this.setImageError(false);
 	}
 	
 	/**
@@ -47,12 +51,18 @@ public class ImageHandler {
 	
 	/**
 	 * Create an image based on a URL that uses the Multiverse ID passed in the constructor as query data.
+	 * If there was a prior loading error, re-create the image object.
 	 * 
 	 * @return Image
 	 */
-	public Image createImage() {
-		this.imageUrl = String.format(Settings.GATHERER_URL + ImageHandler.QUERY_DATA, this.multiverseId);
-		this.image = new Image(this.imageUrl, this.backgroundLoading);
+	public Image getImage() {
+		// If image not created (or there was an error in the last loading attempt), create the image.
+		if (this.image == null || this.imageHadErrorLoading()) {
+			this.imageUrl = String.format(Settings.GATHERER_URL + ImageHandler.QUERY_DATA, this.multiverseId);
+			this.image = new Image(this.imageUrl, this.backgroundLoading);
+			this.setImageError(false);
+		}
+		
 		return this.image;
 	}
 	
@@ -61,7 +71,7 @@ public class ImageHandler {
 	 * 
 	 * @return Image
 	 */
-	public Image createPlaceholderImage() {
+	public Image getPlaceholderImage() {
 		if (this.placeholderImage == null) {
 			this.placeholderImage = new Image(ImageHandler.LOADING_IMAGE_URL);	
 		}
@@ -74,10 +84,13 @@ public class ImageHandler {
 	 * 
 	 * @return Image
 	 */
-	public Image createErrorImage() {
+	public Image getErrorImage() {
 		if (this.errorImage == null) {
 			this.errorImage = new Image(ImageHandler.ERROR_IMAGE_URL);
 		}
+		
+		// Getting the error image means an error occurred. Set the flag accordingly.
+		this.setImageError(true);
 		
 		return this.errorImage;
 	}
@@ -89,6 +102,42 @@ public class ImageHandler {
 	 */
 	public String getUrl() {
 		return this.imageUrl;
+	}
+	
+	/**
+	 * Public setter to show that an image has loaded successfully.
+	 * 
+	 * @param imageLoaded - boolean
+	 */
+	public void setImageLoaded(boolean imageLoaded) {
+		this.imageLoaded = imageLoaded;
+	}
+	
+	/**
+	 * Return if the image has been successfully loaded or not.
+	 * 
+	 * @return boolean
+	 */
+	public boolean imageHasLoaded() {
+		return this.imageLoaded;
+	}
+
+	/**
+	 * Private setter to show that an image had an error when loading.
+	 * 
+	 * @param imageError - boolean
+	 */
+	private void setImageError(boolean imageError) {
+		this.imageLoadingError = imageError;
+	}
+
+	/**
+	 * Return if the image had a loading error or not.
+	 * 
+	 * @return boolean
+	 */
+	private boolean imageHadErrorLoading() {
+		return this.imageLoadingError;
 	}
 
 }

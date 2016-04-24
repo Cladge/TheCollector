@@ -108,5 +108,39 @@ public class MtgCardDisplay {
 	public String toString() {
 		return this.getName() + ", " + this.getExpansion() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
 	}
+	
+	/**
+	 * Implement an equality method. This overrides the standard equals() method.
+	 * <p>
+	 * Two MtgCardDisplay objects are considered equal if their Multiverse ID values are the same.
+	 */
+	public boolean equals(Object compareObject) {
+		boolean returnValue = true;
+		
+		if (compareObject == null) {
+			returnValue = false;
+		} else if (!(compareObject instanceof MtgCardDisplay)) {
+			returnValue = false;
+		} else {
+			// MtgCardDisplay objects are considered equal if they have the same Multiverse ID.
+			MtgCardDisplay compareMtgCardDisplay = (MtgCardDisplay) compareObject;
+			if (!this.getMultiverseId().equals(compareMtgCardDisplay.getMultiverseId())) {
+				returnValue = false;
+			}
+		}
+		
+		return returnValue;
+	}
+	
+	/**
+	 * Implement a hashcode method. This overrides the standard hashCode() method.
+	 * <p>
+	 * An MtgCardDisplay objects is uniquely identified by its Multiverse ID.
+	 */
+	public int hashCode() {
+		int multiverseId = Integer.valueOf(this.getMultiverseId());
+		
+		return multiverseId;
+	}
 
 }
