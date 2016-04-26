@@ -17,7 +17,7 @@ public final class Settings {
 
 	public static final String LOGGING_FOLDER = "logs";
 	
-	public static final String MAIN_VIEW = "thecollector/view/MainView_v2.fxml";
+	public static final String MAIN_VIEW = "thecollector/view/MainView_v3.fxml";
 	public static final String MTG_JSON_SET = "database/AllSets.json";
 	
 	public static final String DEFAULT_STYLE = "DefaultTheme.css";

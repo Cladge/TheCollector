@@ -129,7 +129,7 @@ public class MainViewController extends BaseViewController {
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 
-		this.mainSplitView.setDividerPosition(0, 0.8);
+		//this.mainSplitView.setDividerPosition(0, 0.8);
 		
 		// If there is at least one card to display, select it and set the image.
 		if (this.mtgCardList.size() > 0) {
