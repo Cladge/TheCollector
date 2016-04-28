@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainView" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainViewController">
+   <children>
+      <VBox layoutY="163.0" prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar fx:id="topMenu" prefHeight="32.0" prefWidth="1200.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Close" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Delete" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="About" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox fillHeight="false" prefHeight="772.0" prefWidth="1200.0">
+               <children>
+                  <TableView fx:id="allCardsTableView" prefHeight="758.0" prefWidth="897.0" HBox.hgrow="ALWAYS">
+                    <columns>
+                      <TableColumn fx:id="cardNameColumn" prefWidth="221.0" text="Name" />
+                      <TableColumn fx:id="expansionColumn" prefWidth="240.0" text="Expansion" />
+                        <TableColumn fx:id="cardTypeColumn" prefWidth="160.0" text="Type" />
+                        <TableColumn fx:id="cardColourColumn" prefWidth="120.0" text="Colour" />
+                        <TableColumn fx:id="cardRarityColumn" prefWidth="150.0" text="Rarity" />
+                        <TableColumn fx:id="cardMultiverseIdColumn" prefWidth="75.0" text="MultiverseId" visible="false" />
+                    </columns>
+                  </TableView>
+                  <AnchorPane prefWidth="223.0" HBox.hgrow="NEVER">
+                     <children>
+                        <ImageView fx:id="cardImageView" fitWidth="223.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children></HBox>
+            <TextField fx:id="textStatus" disable="true" editable="false" minHeight="-Infinity" prefHeight="20.0" prefWidth="1200.0" text="Status:">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </TextField>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
