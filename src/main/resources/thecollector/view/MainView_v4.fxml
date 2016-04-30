@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="mainView" prefHeight="600.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainViewController">
+<AnchorPane fx:id="mainView" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="thecollector.controller.MainViewController">
    <children>
       <VBox layoutY="163.0" prefHeight="600.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -45,11 +45,11 @@
                         <TableColumn fx:id="cardMultiverseIdColumn" prefWidth="75.0" text="MultiverseId" visible="false" />
                     </columns>
                   </TableView>
-                  <AnchorPane prefWidth="223.0" HBox.hgrow="NEVER">
+                  <VBox>
                      <children>
-                        <ImageView fx:id="cardImageView" fitWidth="223.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <ImageView fx:id="cardImageView" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" VBox.vgrow="NEVER" />
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </children></HBox>
             <TextField fx:id="textStatus" disable="true" editable="false" minHeight="-Infinity" prefHeight="20.0" prefWidth="1200.0" text="Status:">
                <font>

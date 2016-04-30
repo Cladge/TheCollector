@@ -26,6 +26,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import thecollector.model.ImageHandler;
+import thecollector.model.Settings;
 import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
@@ -105,6 +106,7 @@ public class MainViewController extends BaseViewController {
 		// Associate handler classes with controls.
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
 		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
+		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
     }
     
 	/**
@@ -130,7 +132,7 @@ public class MainViewController extends BaseViewController {
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 
-		//this.mainSplitView.setDividerPosition(0, 0.8);
+		this.setImageSize(Settings.IMAGE_SIZE_NORMAL);
 		
 		// If there is at least one card to display, select it and set the image.
 		if (this.mtgCardList.size() > 0) {
@@ -341,6 +343,31 @@ public class MainViewController extends BaseViewController {
 		}
 	}
 	
+	/**
+	 * Resize the card image, either by passing a new width value, or letting the method
+	 * determine the new size based on the image view's current size (i.e. switching between "normal"
+	 * and "double" size).
+	 * 
+	 * @param newWidth - double
+	 */
+	public void setImageSize(double newWidth) {
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's current FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
+		if (newWidth > 0) {
+			this.cardImageView.setFitWidth(newWidth);
+		} else {
+			if (this.cardImageView.getFitWidth() == Settings.IMAGE_SIZE_NORMAL) {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_DOUBLE);
+			} else {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_NORMAL);
+			}	
+		}
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's new FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
+	}
+	
 }
 
 /**
@@ -389,5 +416,21 @@ class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
 		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down"))
 		this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
 	}
+}
+
+/**
+ * An ImageView handler class for mouse events.
+ */
+class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
+
+	private MainViewController controller;
 	
+	// Constructor.
+	public ImageViewMouseEventHandler(MainViewController controller) {
+		this.controller = controller;
+	}
+	@Override
+	public void handle(MouseEvent event) {
+		this.controller.setImageSize(0);
+	}
 }

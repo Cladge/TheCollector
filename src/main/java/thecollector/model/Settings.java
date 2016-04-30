@@ -27,4 +27,7 @@ public final class Settings {
 	
 	public static final String LOADING_IMAGE = "thecollector/view/loading.jpg";
 	public static final String ERROR_IMAGE = "thecollector/view/error.jpg";
+	
+	public static final double IMAGE_SIZE_NORMAL = 223;
+	public static final double IMAGE_SIZE_DOUBLE = 446;
 }
