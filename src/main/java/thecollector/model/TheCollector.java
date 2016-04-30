@@ -9,7 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import thecollector.controller.MainViewController;
 import thecollector.utils.FileUtil;
@@ -35,7 +35,7 @@ public class TheCollector extends Application {
 	
 	private Stage stage;
 	private Scene scene;
-	private AnchorPane mainLayout;
+	private VBox mainLayout;
 
 	private MainViewController controller;
 
@@ -164,7 +164,7 @@ public class TheCollector extends Application {
 		try {
 			// Load the root layout from the "start" view fxml file.
 			FXMLLoader loader = new FXMLLoader(FileUtil.getResourceUrl("thecollector.model.TheCollector", Settings.MAIN_VIEW));
-			this.mainLayout = (AnchorPane)loader.load();
+			this.mainLayout = (VBox)loader.load();
 			this.scene = new Scene(mainLayout);
 			this.stage.setScene(scene);
 

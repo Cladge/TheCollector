@@ -1,14 +1,12 @@
 package thecollector.controller;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,15 +14,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import thecollector.model.ImageHandler;
 import thecollector.model.Settings;
 import thecollector.model.TheCollector;
@@ -32,6 +31,9 @@ import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
 import thecollector.model.mtg.card.MtgCardDisplay;
 import thecollector.utils.LoggerUtil;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * The controller for the main application layout.
@@ -43,8 +45,10 @@ public class MainViewController extends BaseViewController {
 	private static TheCollector theCollector;
 
 	@FXML
-	// private VBox mainView;
-	private AnchorPane mainView;
+	private VBox mainView;
+	
+	@FXML
+	private MenuBar topMenu;
 	
 	@FXML
 	private SplitPane mainSplitView;
@@ -110,11 +114,11 @@ public class MainViewController extends BaseViewController {
     }
     
 	/**
-	 * Return reference to the main AnchorPane.
+	 * Return reference to the main view.
 	 * 
-	 * @return Entity AnchorPane.
+	 * @return Entity VBox.
 	 */
-	public AnchorPane getEntityPane () {
+	public VBox getEntityPane () {
 		return this.mainView;
 	}
 	
@@ -128,7 +132,8 @@ public class MainViewController extends BaseViewController {
 		theCollector = (TheCollector) mainApp;
 		
 		this.setStatus("Loading card database...");
-		String statusMessage = String.format("Number of cards found: %s", this.loadCards());
+		DecimalFormat decimalFormat = new DecimalFormat("Number of cards found: ###,###,##0");
+		String statusMessage = decimalFormat.format(this.loadCards());
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 
