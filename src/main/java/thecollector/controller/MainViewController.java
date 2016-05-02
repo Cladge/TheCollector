@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -73,12 +74,18 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardMultiverseIdColumn;
+
+	@FXML
+	private TableColumn<MtgCardDisplay, String> cardFlavourTextColumn;
 	
 	@FXML
 	private TextField textStatus;
 	
 	@FXML
 	private ImageView cardImageView;
+	
+	@FXML
+	private ListView<String> cardDetails;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -106,6 +113,7 @@ public class MainViewController extends BaseViewController {
 		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
 		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
+		this.cardFlavourTextColumn.setCellValueFactory(cellData -> cellData.getValue().getFlavourTextProperty());
 
 		// Associate handler classes with controls.
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
@@ -194,6 +202,8 @@ public class MainViewController extends BaseViewController {
 		        	mtgCardRow.setMultiverseId(mtgCard.getMultiverseid().toString());
 	        	}
 	        	
+	        	mtgCardRow.setFlavourText(mtgCard.getFlavor());
+	        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
 	        		mtgCardRow.setName("-");
@@ -212,6 +222,9 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	if (mtgCardRow.getMultiverseId() == null || mtgCardRow.getMultiverseId().isEmpty()) {
 	        		mtgCardRow.setMultiverseId("0");
+	        	}
+	        	if (mtgCardRow.getFlavourText() == null || mtgCardRow.getFlavourText().isEmpty()) {
+	        		mtgCardRow.setFlavourText("-");
 	        	}
 	        	
 	        	// Added the display row to the display data list.
@@ -277,6 +290,15 @@ public class MainViewController extends BaseViewController {
 					int multiverseId = Integer.valueOf(multiverseIdData);
 					this.setCurrentImage(multiverseId);
 					this.currentCardData = currentCardData;
+					
+					// Populate the list View.
+					ObservableList<String> cardItems = FXCollections.observableArrayList (
+						    String.format("Name: %s", this.currentCardData.getName()),
+						    String.format("Type: %s", this.currentCardData.getType()),
+						    String.format("Colour: %s", this.currentCardData.getColour()),
+						    String.format("Expansion: %s", this.currentCardData.getExpansion()),
+						    String.format("Flavour Text: %s", this.currentCardData.getFlavourText()));
+					this.cardDetails.setItems(cardItems);	
 
 					// TODO: DEBUG - Show card info for debug purposes.
 					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());

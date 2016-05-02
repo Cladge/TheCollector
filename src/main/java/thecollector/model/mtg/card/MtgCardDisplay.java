@@ -16,6 +16,7 @@ public class MtgCardDisplay {
 	private final StringProperty colour;
 	private final StringProperty rarity;
 	private final StringProperty multiverseId;
+	private final StringProperty flavourText;
 	
 	// Constructor.
 	// Initialise the member properties.
@@ -26,6 +27,7 @@ public class MtgCardDisplay {
 		this.colour = new SimpleStringProperty("");
 		this.rarity = new SimpleStringProperty("");
 		this.multiverseId = new SimpleStringProperty("");
+		this.flavourText = new SimpleStringProperty("");
 	}
 
 	// Getter and setter methods.
@@ -103,7 +105,19 @@ public class MtgCardDisplay {
 	public void setMultiverseId(String multiverseId) {
 		this.multiverseId.set(multiverseId);
 	}
-	
+
+	public String getFlavourText() {
+		return this.flavourText.get();
+	}
+
+	public StringProperty getFlavourTextProperty() {
+		return this.flavourText;
+	}
+
+	public void setFlavourText(String flavourText) {
+		this.flavourText.set(flavourText);
+	}
+
 	// Overrides
 	public String toString() {
 		return this.getName() + ", " + this.getExpansion() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
