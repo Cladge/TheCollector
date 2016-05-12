@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -75,7 +76,10 @@
                <right>
                   <VBox>
                      <children>
-                        <ImageView fx:id="cardImageView" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER" />
+                        <ImageView fx:id="cardImageView" fitHeight="310.0" fitWidth="223.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
+                           <viewport>
+                              <Rectangle2D height="310.0" width="223.0" />
+                           </viewport></ImageView>
                         <ListView fx:id="cardDetails" maxWidth="446.0" minWidth="223.0" prefWidth="223.0" VBox.vgrow="ALWAYS" />
                      </children>
                   </VBox>
