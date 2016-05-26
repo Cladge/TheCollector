@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import thecollector.model.mtg.card.MtgCard;
 import thecollector.model.mtg.card.MtgCardDisplay;
 
 /**
@@ -75,7 +74,7 @@ public class TestMtgCardDisplay {
 		assertTrue(this.testCardDisplay01.equals(this.testCardDisplay03));
 		
 		Object nullObject = null;
-		MtgCard wrongObject = new MtgCard();
+		MtgCardDisplay wrongObject = new MtgCardDisplay();
 		assertFalse(this.testCardDisplay01.equals(nullObject));
 		assertFalse(this.testCardDisplay01.equals(wrongObject));
 		
