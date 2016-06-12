@@ -50,10 +50,25 @@ public class TestMtgCardDetailsHtmlGenerator {
 
 	@Test
 	public void testHtmlContent() {
-		String htmlContent01 = "test";
+		String htmlContent01 = "<table border='0'><tr><th>Column One</th><th>Column Two</th></tr><tr><td>Row 1, Column 1</td><td>Row 1, Column 2</td></tr><tr><td>Row 2, Column 1</td><td>Row 2, Column 2</td></tr></table>";
 		String htmlContent02 = "test";
 		
+		this.mtgCardDetailsHtmlGenerator01.addContent("<table border='0'>");
+		this.mtgCardDetailsHtmlGenerator01.addContent("<tr>");
+		this.mtgCardDetailsHtmlGenerator01.addContent("<th>Column One</th>");
+		this.mtgCardDetailsHtmlGenerator01.addContent("<th>Column Two</th>");
+		this.mtgCardDetailsHtmlGenerator01.addContent("</tr>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<tr>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<td>Row 1, Column 1</td>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<td>Row 1, Column 2</td>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("</tr>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<tr>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<td>Row 2, Column 1</td>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("<td>Row 2, Column 2</td>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("</tr>");
+        this.mtgCardDetailsHtmlGenerator01.addContent("</table>");
+
 		assertEquals(htmlContent01, this.mtgCardDetailsHtmlGenerator01.getContent());
-		assertEquals(htmlContent02, this.mtgCardDetailsHtmlGenerator02.getContent());
+		//assertEquals(htmlContent02, this.mtgCardDetailsHtmlGenerator02.getContent());
 	}
 }

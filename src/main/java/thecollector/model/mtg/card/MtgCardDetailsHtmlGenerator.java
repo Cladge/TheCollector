@@ -20,6 +20,15 @@ public class MtgCardDetailsHtmlGenerator {
 	}
 	
 	/**
+	 * Add content to the HTML content.
+	 * 
+	 * @param content - String
+	 */
+	public void addContent(String content) {
+		this.htmlContent.append(content);
+	}
+	
+	/**
 	 * Return the formatted HTML content.
 	 * 
 	 * @return String
