@@ -11,10 +11,13 @@ import javafx.beans.property.StringProperty;
  */
 public class MtgCardDisplay {
 	private final StringProperty name;
-	private final StringProperty expansion;
+	private final StringProperty manaCost;
 	private final StringProperty type;
-	private final StringProperty colour;
+	private final StringProperty cardText;
+	private final StringProperty powerToughness;
+	private final StringProperty expansion;
 	private final StringProperty rarity;
+	private final StringProperty colour;
 	private final StringProperty multiverseId;
 	private final StringProperty flavourText;
 	
@@ -22,10 +25,13 @@ public class MtgCardDisplay {
 	// Initialise the member properties.
 	public MtgCardDisplay() {
 		this.name = new SimpleStringProperty("");
-		this.expansion = new SimpleStringProperty("");
+		this.manaCost = new SimpleStringProperty("");
 		this.type = new SimpleStringProperty("");
-		this.colour = new SimpleStringProperty("");
+		this.cardText = new SimpleStringProperty("");
+		this.powerToughness = new SimpleStringProperty("");
+		this.expansion = new SimpleStringProperty("");
 		this.rarity = new SimpleStringProperty("");
+		this.colour = new SimpleStringProperty("");
 		this.multiverseId = new SimpleStringProperty("");
 		this.flavourText = new SimpleStringProperty("");
 	}
@@ -44,6 +50,18 @@ public class MtgCardDisplay {
 
 	public void setName(String name) {
 		this.name.set(name);
+	}
+
+	public String getManaCost() {
+		return this.manaCost.get();
+	}
+
+	public StringProperty getManaCostProperty() {
+		return this.manaCost;
+	}
+
+	public void setManaCost(String manaCost) {
+		this.manaCost.set(manaCost);
 	}
 
 	public String getExpansion() {
@@ -68,6 +86,30 @@ public class MtgCardDisplay {
 
 	public void setType(String type) {
 		this.type.set(type);
+	}
+
+	public String getCardText() {
+		return this.cardText.get();
+	}
+
+	public StringProperty getCardTextProperty() {
+		return this.cardText;
+	}
+
+	public void setCardText(String text) {
+		this.cardText.set(text);
+	}
+
+	public String getPowerToughness() {
+		return this.powerToughness.get();
+	}
+
+	public StringProperty getPowerToughnessProperty() {
+		return this.powerToughness;
+	}
+
+	public void setPowerToughness(String powerToughness) {
+		this.powerToughness.set(powerToughness);
 	}
 
 	public String getColour() {

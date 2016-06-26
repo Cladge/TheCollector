@@ -203,6 +203,18 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	
 	        	mtgCardRow.setFlavourText(mtgCard.getFlavor());
+	        	mtgCardRow.setManaCost(mtgCard.getManaCost());
+	        	mtgCardRow.setCardText(mtgCard.getText());
+	        	
+	        	String power = mtgCard.getPower();
+	        	String toughness = mtgCard.getToughness();
+	        	if (power == null || power.isEmpty()) {
+	        		power = "-";
+	        	}
+	        	if (toughness == null || toughness.isEmpty()) {
+	        		toughness = "-";
+	        	}
+	        	mtgCardRow.setPowerToughness(String.format("%s/%s", power, toughness));
 	        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
@@ -225,6 +237,12 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	if (mtgCardRow.getFlavourText() == null || mtgCardRow.getFlavourText().isEmpty()) {
 	        		mtgCardRow.setFlavourText("-");
+	        	}
+	        	if (mtgCardRow.getManaCost() == null || mtgCardRow.getManaCost().isEmpty()) {
+	        		mtgCardRow.setManaCost("-");
+	        	}
+	        	if (mtgCardRow.getCardText() == null || mtgCardRow.getCardText().isEmpty()) {
+	        		mtgCardRow.setCardText("-");
 	        	}
 	        	
 	        	// Added the display row to the display data list.
@@ -294,7 +312,10 @@ public class MainViewController extends BaseViewController {
 					// Populate the list View.
 					ObservableList<String> cardItems = FXCollections.observableArrayList (
 						    String.format("Name: %s", this.currentCardData.getName()),
+						    String.format("Mana Cost: %s", this.currentCardData.getManaCost()),
 						    String.format("Type: %s", this.currentCardData.getType()),
+						    String.format("Text: %s", this.currentCardData.getCardText()),
+						    String.format("Power/Toughness: %s", this.currentCardData.getPowerToughness()),
 						    String.format("Colour: %s", this.currentCardData.getColour()),
 						    String.format("Expansion: %s", this.currentCardData.getExpansion()),
 						    String.format("Flavour Text: %s", this.currentCardData.getFlavourText()));

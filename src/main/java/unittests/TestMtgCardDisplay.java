@@ -27,6 +27,9 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay01.setColour("Blue");
 		this.testCardDisplay01.setRarity("Rare");
 		this.testCardDisplay01.setMultiverseId("10002000");
+		this.testCardDisplay01.setCardText("Flying");
+		this.testCardDisplay01.setManaCost("{3}{U}{U}");
+		this.testCardDisplay01.setPowerToughness("4/4");
 
 		this.testCardDisplay02.setName("Paradise Plume");
 		this.testCardDisplay02.setExpansion("Time Spiral");
@@ -34,6 +37,9 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay02.setColour("-");
 		this.testCardDisplay02.setRarity("Uncommon");
 		this.testCardDisplay02.setMultiverseId("20003000");
+		this.testCardDisplay02.setCardText("Flying");
+		this.testCardDisplay02.setManaCost("{4}");
+		this.testCardDisplay02.setPowerToughness("1/2");
 		
 		// Duplicate of card 01 - to test equality and hash overrides.
 		this.testCardDisplay03.setName("Air Elemental");
@@ -42,6 +48,9 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay03.setColour("Blue");
 		this.testCardDisplay03.setRarity("Rare");
 		this.testCardDisplay03.setMultiverseId("10002000");
+		this.testCardDisplay03.setCardText("Flying");
+		this.testCardDisplay03.setManaCost("{3}{U}{U}");
+		this.testCardDisplay03.setPowerToughness("4/4");
 
 	}
 
