@@ -14,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.ListView;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -25,11 +24,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import thecollector.model.ImageHandler;
 import thecollector.model.Settings;
 import thecollector.model.TheCollector;
 import thecollector.model.mtg.CardLoader;
 import thecollector.model.mtg.card.MtgCard;
+import thecollector.model.mtg.card.MtgCardDetailsHtmlGenerator;
 import thecollector.model.mtg.card.MtgCardDisplay;
 import thecollector.utils.LoggerUtil;
 
@@ -85,7 +87,7 @@ public class MainViewController extends BaseViewController {
 	private ImageView cardImageView;
 	
 	@FXML
-	private ListView<String> cardDetails;
+	private WebView cardDetails;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -119,6 +121,9 @@ public class MainViewController extends BaseViewController {
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
 		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
 		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
+		
+		// No need for context menu on Web View control.
+		this.cardDetails.setContextMenuEnabled(false);
     }
     
 	/**
@@ -309,17 +314,9 @@ public class MainViewController extends BaseViewController {
 					this.setCurrentImage(multiverseId);
 					this.currentCardData = currentCardData;
 					
-					// Populate the list View.
-					ObservableList<String> cardItems = FXCollections.observableArrayList (
-						    String.format("Name: %s", this.currentCardData.getName()),
-						    String.format("Mana Cost: %s", this.currentCardData.getManaCost()),
-						    String.format("Type: %s", this.currentCardData.getType()),
-						    String.format("Text: %s", this.currentCardData.getCardText()),
-						    String.format("Power/Toughness: %s", this.currentCardData.getPowerToughness()),
-						    String.format("Colour: %s", this.currentCardData.getColour()),
-						    String.format("Expansion: %s", this.currentCardData.getExpansion()),
-						    String.format("Flavour Text: %s", this.currentCardData.getFlavourText()));
-					this.cardDetails.setItems(cardItems);	
+					// Populate the Web View.
+					MtgCardDetailsHtmlGenerator htmlDetails = new MtgCardDetailsHtmlGenerator(this.currentCardData);
+			        this.cardDetails.getEngine().loadContent(htmlDetails.getContent());
 
 					// TODO: DEBUG - Show card info for debug purposes.
 					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
