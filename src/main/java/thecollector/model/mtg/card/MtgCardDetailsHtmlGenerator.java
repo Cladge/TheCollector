@@ -1,11 +1,39 @@
 package thecollector.model.mtg.card;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A class to generate the HTML for an MTG card details.
  * 
  * @author Ian Claridge
  */
 public class MtgCardDetailsHtmlGenerator {
+
+	private static final String QUERY_DATA = "?size=small&name=%s&type=symbol";
+	private static final Map<String, String> SYMBOL_MAPPINGS = Collections.unmodifiableMap(
+			new HashMap<String, String>() {
+				private static final long serialVersionUID = 7762009681861411625L;
+			{
+				put("{W}", "W");
+				put("{U}", "U");
+				put("{B}", "B");
+				put("{R}", "R");
+				put("{G}", "G");
+				put("{T}", "tap");
+				put("{0}", "0");
+				put("{1}", "1");
+				put("{2}", "2");
+				put("{3}", "3");
+				put("{4}", "4");
+				put("{5}", "5");
+				put("{6}", "6");
+				put("{7}", "7");
+				put("{8}", "8");
+				put("{9}", "9");
+			}});
+	
 	private MtgCardDisplay mtgCardDisplay;
 	private StringBuilder htmlContent;
 
@@ -24,29 +52,6 @@ public class MtgCardDetailsHtmlGenerator {
 	 * Create HTML content based on the given card details.
 	 */
 	private void createContent() {
-		/**
-		 * <title></title>
-<h2>Card Details</h2>
-
-<p><span style="font-size:14px;"><strong>Name:</strong> &lt;name&gt;</span><br style="line-height: 20.8px;" />
-<strong style="line-height: 20.8px; font-size: 14px;">Expansion:</strong><span style="line-height: 20.8px; font-size: 14px;">&nbsp;&lt;expansion&gt;</span><br style="line-height: 20.8px;" />
-<strong style="line-height: 20.8px; font-size: 14px;">Card Type:</strong><span style="line-height: 20.8px; font-size: 14px;">&nbsp;&lt;type&gt; - &lt;sub type&gt;<br />
-<strong style="line-height: 20.8px; font-size: 14px;">Colour:</strong><span style="line-height: 20.8px; font-size: 14px;">&nbsp;&lt;colour&gt;</span></span><br style="font-size: 14px; line-height: 20.8px;" />
-<strong style="font-size: 14px; line-height: 20.8px;">Rarity:</strong><span style="line-height: 20.8px; font-size: 14px;">&nbsp;&lt;rarity&gt;​<br />
-<span style="line-height: 20.8px; font-size: 14px;"><strong style="font-size: 14px; line-height: 20.8px;">Mana Cost:</strong><span style="font-size: 14px; line-height: 20.8px;">&nbsp;&lt;mana&gt;</span><br />
-<span style="font-size: 14px; line-height: 20.8px;">​</span><strong style="font-size: 14px; line-height: 20.8px;">Card Text:</strong><span style="font-size: 14px; line-height: 20.8px;">&nbsp;&lt;text&gt;</span><br />
-<strong style="line-height: 20.8px; font-size: 14px;">Power/Toughness:</strong><span style="line-height: 20.8px; font-size: 14px;">&nbsp;&lt;power&gt;&lt;toughness&gt;</span><br />
-<strong style="line-height: 20.8px; font-size: 14px;">Flavour Text:</strong></span></span></p>
-
-<table align="left" border="1" cellpadding="1" cellspacing="1" width="100%">
-	<tbody>
-		<tr>
-			<td>&lt;Flavour Text&gt;</td>
-		</tr>
-	</tbody>
-</table>
-
-		 */
 		this.htmlContent.append("<h3>Card Details</h3>");
 		this.htmlContent.append("<p><span style='font-size:14px;'>");
 		this.htmlContent.append(String.format("<strong>Name:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getName()));
@@ -65,12 +70,17 @@ public class MtgCardDetailsHtmlGenerator {
 	}
 	
 	/**
-	 * Add content to the HTML content.
+	 * Parse the passed text, looking for symbols that can be translated
+	 * to correct parameters to pass to the Gatherer URL.
 	 * 
-	 * @param content - String
+	 * @param textToParse - String
+	 * 
+	 * @return String
 	 */
-	public void addContent(String content) {
-		this.htmlContent.append(content);
+	private String parseSymbols(String textToParse) {
+		String parsedText = null;
+		
+		return parsedText;
 	}
 	
 	/**
