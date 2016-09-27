@@ -59,6 +59,9 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append(String.format("<strong>Card Type:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getType()));
 		this.htmlContent.append(String.format("<strong>Colour:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getColour()));
 		this.htmlContent.append(String.format("<strong>Rarity:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getRarity()));
+		// TODO: IJC - DEBUG
+		String manaCostParsed = this.parseSymbols(this.mtgCardDisplay.getManaCost());
+		// TODO: IJC - DEBUG
 		this.htmlContent.append(String.format("<strong>Mana Cost:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getManaCost()));
 		this.htmlContent.append("<strong>Card Text:</strong><br/>");
 		this.htmlContent.append("</span>");
