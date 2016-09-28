@@ -1,8 +1,12 @@
 package thecollector.model.mtg.card;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import sun.security.util.Length;
+import thecollector.utils.PatternMatcher;
 
 /**
  * A class to generate the HTML for an MTG card details.
@@ -32,10 +36,13 @@ public class MtgCardDetailsHtmlGenerator {
 				put("{7}", "7");
 				put("{8}", "8");
 				put("{9}", "9");
+				put("{X}", "X");
+				put("{C}", "C");
 			}});
 	
 	private MtgCardDisplay mtgCardDisplay;
 	private StringBuilder htmlContent;
+	private PatternMatcher patternMatcher;
 
 	/**
 	 * Constructor.
@@ -45,6 +52,7 @@ public class MtgCardDetailsHtmlGenerator {
 	public MtgCardDetailsHtmlGenerator(MtgCardDisplay mtgCardDisplay) {
 		this.mtgCardDisplay = mtgCardDisplay;
 		this.htmlContent = new StringBuilder("");
+		this.patternMatcher = new PatternMatcher("\\{[A-Z,a-z,0-9]\\}");
 		this.createContent();
 	}
 	
@@ -66,6 +74,9 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append("<strong>Card Text:</strong><br/>");
 		this.htmlContent.append("</span>");
 		this.htmlContent.append("<table align='left' border='1' cellpadding='1' cellspacing='1' width='100%'><tbody>");
+		// TODO: IJC - DEBUG
+		String cardTextParsed = this.parseSymbols(this.mtgCardDisplay.getCardText());
+		// TODO: IJC - DEBUG
 		this.htmlContent.append(String.format("<tr><td style='font-size:14px;'>%s</td></tr>", this.mtgCardDisplay.getCardText()));
 		this.htmlContent.append("</tbody></table></p>");
 		this.htmlContent.append("<p><span style='font-size:14px;'>");
@@ -88,7 +99,21 @@ public class MtgCardDetailsHtmlGenerator {
 	private String parseSymbols(String textToParse) {
 		String parsedText = null;
 		
-		return parsedText;
+		ArrayList<ArrayList<Integer>> matches = this.patternMatcher.getMatches(textToParse);
+		
+		if (!matches.isEmpty()) {
+			for (ArrayList<Integer> startEndPair : matches) {
+				String extractedText = textToParse.substring(startEndPair.get(0), startEndPair.get(1));
+				// TODO: IJC - DEBUG
+				System.out.println(extractedText);
+				// TODO: IJC - DEBUG
+			}
+			// TODO: IJC - DEBUG
+			System.out.println("");
+			// TODO: IJC - DEBUG
+		}
+		
+		return textToParse;
 	}
 	
 	/**

@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * A pattern matching utility.
+ * 
+ * @author Ian Claridge
+ *
+ */
 public class PatternMatcher {
 	
 	private String patternString;
