@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import sun.security.util.Length;
 import thecollector.utils.PatternMatcher;
 
 /**
