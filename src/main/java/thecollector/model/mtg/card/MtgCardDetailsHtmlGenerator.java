@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import thecollector.model.ImageHandler;
+import thecollector.model.Settings;
 import thecollector.utils.PatternMatcher;
 
 /**
@@ -67,14 +69,14 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append(String.format("<strong>Colour:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getColour()));
 		this.htmlContent.append(String.format("<strong>Rarity:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getRarity()));
 		// TODO: IJC - DEBUG
-		String manaCostParsed = this.parseSymbols(this.mtgCardDisplay.getManaCost());
+		String manaCostParsed = this.parseForSymbols(this.mtgCardDisplay.getManaCost());
 		// TODO: IJC - DEBUG
 		this.htmlContent.append(String.format("<strong>Mana Cost:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getManaCost()));
 		this.htmlContent.append("<strong>Card Text:</strong><br/>");
 		this.htmlContent.append("</span>");
 		this.htmlContent.append("<table align='left' border='1' cellpadding='1' cellspacing='1' width='100%'><tbody>");
 		// TODO: IJC - DEBUG
-		String cardTextParsed = this.parseSymbols(this.mtgCardDisplay.getCardText());
+		String cardTextParsed = this.parseForSymbols(this.mtgCardDisplay.getCardText());
 		// TODO: IJC - DEBUG
 		this.htmlContent.append(String.format("<tr><td style='font-size:14px;'>%s</td></tr>", this.mtgCardDisplay.getCardText()));
 		this.htmlContent.append("</tbody></table></p>");
@@ -95,24 +97,40 @@ public class MtgCardDetailsHtmlGenerator {
 	 * 
 	 * @return String
 	 */
-	private String parseSymbols(String textToParse) {
-		String parsedText = null;
+	private String parseForSymbols(String textToParse) {
+		StringBuilder parsedText = new StringBuilder();
+		int startingIndex = 0;
 		
 		ArrayList<ArrayList<Integer>> matches = this.patternMatcher.getMatches(textToParse);
 		
 		if (!matches.isEmpty()) {
 			for (ArrayList<Integer> startEndPair : matches) {
 				String extractedText = textToParse.substring(startEndPair.get(0), startEndPair.get(1));
+				String matchingSymbol = SYMBOL_MAPPINGS.get(extractedText);
+				if (!matchingSymbol.isEmpty()) {
+					parsedText.append(textToParse.substring(startingIndex, startEndPair.get(0)));
+					String replaceText = String.format("<img src='" + Settings.GATHERER_URL + MtgCardDetailsHtmlGenerator.QUERY_DATA + "'>", matchingSymbol);
+					parsedText.append(replaceText);
+					startingIndex = startEndPair.get(1);
+				}
 				// TODO: IJC - DEBUG
-				System.out.println(extractedText);
+				//System.out.println(extractedText);
+				//System.out.println(matchingSymbol);
 				// TODO: IJC - DEBUG
 			}
-			// TODO: IJC - DEBUG
-			System.out.println("");
-			// TODO: IJC - DEBUG
+			if (startingIndex < textToParse.length()) {
+				parsedText.append(textToParse.substring(startingIndex));
+			}
+		}
+		else {
+			parsedText = new StringBuilder(textToParse);
 		}
 		
-		return textToParse;
+		// TODO: IJC - DEBUG
+		System.out.println(String.format("Text to parse: %s", textToParse));
+		System.out.println(String.format("Parsed text: %s", parsedText.toString()));
+		// TODO: IJC - DEBUG
+		return parsedText.toString();
 	}
 	
 	/**
