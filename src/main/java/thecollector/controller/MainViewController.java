@@ -461,8 +461,10 @@ class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
 	
 	@Override
 	public void handle(KeyEvent event) {
-		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down"))
-		this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
+		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down") ||
+				event.getCode().getName().equalsIgnoreCase("page up") || event.getCode().getName().equalsIgnoreCase("page down") ||
+				event.getCode().getName().equalsIgnoreCase("end") || event.getCode().getName().equalsIgnoreCase("home"))
+			this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
 	}
 }
 
