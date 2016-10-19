@@ -24,7 +24,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import thecollector.model.ImageHandler;
 import thecollector.model.Settings;
@@ -88,6 +87,9 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private WebView cardDetails;
+	
+	@FXML
+	private TextField quickSearch;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -145,7 +147,7 @@ public class MainViewController extends BaseViewController {
 		theCollector = (TheCollector) mainApp;
 		
 		this.setStatus("Loading card database...");
-		DecimalFormat decimalFormat = new DecimalFormat("Number of cards found: ###,###,##0");
+		DecimalFormat decimalFormat = new DecimalFormat("Total cards in database: ###,###,##0");
 		String statusMessage = decimalFormat.format(this.loadCards());
 		this.setStatus(statusMessage);
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
