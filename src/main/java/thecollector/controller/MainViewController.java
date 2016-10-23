@@ -12,6 +12,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuBar;
@@ -156,10 +158,8 @@ public class MainViewController extends BaseViewController {
 		
 		// If there is at least one card to display, select it and set the image.
 		if (this.mtgCardList.size() > 0) {
-			MtgCard mtgCard = this.mtgCardList.get(0);
 			this.allCardsTableView.getSelectionModel().selectFirst();
 			this.setCurrentCard(this.allCardsTableView.getSelectionModel().getSelectedItem());
-			this.setCurrentImage(mtgCard.getMultiverseid());
 		}
 	}
 	
@@ -258,9 +258,41 @@ public class MainViewController extends BaseViewController {
 	        
 	        // Populate the List View.
 	        if (!this.displayData.isEmpty()) {
+	    		// Wrap the ObservableList in a FilteredList (initially display all data).
+	    		FilteredList<MtgCardDisplay> filteredData = new FilteredList<>(this.displayData, mtgCardDisplay -> true);
+
+	    		// Set the filter Predicate whenever the filter changes.
+	    		this.quickSearch.textProperty().addListener(
+	    				(observable, oldValue, newValue) -> {
+	    					filteredData.setPredicate(mtgCardDisplay -> {
+	    						boolean matchFound = false;
+	    						
+	    						// If filter text is empty, display all cards.
+	    						if (newValue == null || newValue.isEmpty()) {
+    								matchFound = true;
+    							}
+
+    							// Compare card name of every card with filter text.
+    							String lowerCaseFilter = newValue.toLowerCase();
+
+    							if (mtgCardDisplay.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
+    								matchFound = true; // Filter matches card name.
+    							}
+    							
+    							return matchFound;
+    						});
+	    				});
+
+	    		// Wrap the FilteredList in a SortedList.
+	    		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
+
+	    		// Bind the SortedList comparator to the TableView comparator.
+	    		// Otherwise, sorting the TableView would have no effect.
+	    		sortedData.comparatorProperty().bind(this.allCardsTableView.comparatorProperty());
+	    		
 	    		// Populate the Table View.
-	        	this.allCardsTableView.setItems(this.displayData);
-	        	cardCount = this.displayData.size();
+	        	this.allCardsTableView.setItems(sortedData);
+	        	cardCount = this.allCardsTableView.getItems().size();
 	        }
 	        
 		} catch (JsonParseException e) {
