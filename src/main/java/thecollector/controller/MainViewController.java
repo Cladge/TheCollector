@@ -6,8 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Level;
 
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -97,7 +101,7 @@ public class MainViewController extends BaseViewController {
 	private List<MtgCard> mtgCardList;
 	
 	// An observable array list for populating the main TableView control.
-	private ObservableList<MtgCardDisplay> displayData = FXCollections.observableArrayList();
+	private ObservableList<MtgCardDisplay> cardCollectionData = FXCollections.observableArrayList();
 	
 	// The currently selected row data.
 	private MtgCardDisplay currentCardData;
@@ -105,6 +109,12 @@ public class MainViewController extends BaseViewController {
 	// A collection of viewed images. Can be used to "cache" image objects for rows that
 	// have been previously selected.
 	private Map<Integer, ImageHandler> imageMap = new HashMap<Integer, ImageHandler>();
+	
+	// Used for controlling timed update of card count (when filtering data).
+	private boolean cardCountScheduled = false;
+	private boolean cardsCurrentlyFiltered = false;
+	private Timer cardCountTimer;
+	private TimerTask timerTask;
 	
     /**
      * Initializes the controller class. This method is automatically called
@@ -125,6 +135,7 @@ public class MainViewController extends BaseViewController {
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
 		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
 		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
+		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this));
 		
 		// No need for context menu on Web View control.
 		this.cardDetails.setContextMenuEnabled(false);
@@ -149,11 +160,7 @@ public class MainViewController extends BaseViewController {
 		theCollector = (TheCollector) mainApp;
 		
 		this.setStatus("Loading card database...");
-		DecimalFormat decimalFormat = new DecimalFormat("Total cards in database: ###,###,##0");
-		String statusMessage = decimalFormat.format(this.loadCards());
-		this.setStatus(statusMessage);
-		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
-
+		this.setCardCountMessage(this.loadCards(), false);
 		this.setImageSize(Settings.IMAGE_SIZE_WIDTH_NORMAL, Settings.IMAGE_SIZE_HEIGHT_NORMAL);
 		
 		// If there is at least one card to display, select it and set the image.
@@ -161,6 +168,23 @@ public class MainViewController extends BaseViewController {
 			this.allCardsTableView.getSelectionModel().selectFirst();
 			this.setCurrentCard(this.allCardsTableView.getSelectionModel().getSelectedItem());
 		}
+		
+		// Instantiate the Timer Task which can be used by controls to initiate a current card count.
+		this.cardCountTimer = new Timer();
+		this.timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				getCardCount();
+			}
+		};
+	}
+	
+	/**
+	 * Perform any clean-up tasks required. For example, closing down threads.
+	 */
+	public void shutdown() {
+		this.timerTask.cancel();
+		this.cardCountTimer.cancel();
 	}
 	
 	/**
@@ -253,45 +277,12 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	
 	        	// Added the display row to the display data list.
-	        	this.displayData.add(mtgCardRow);
+	        	this.cardCollectionData.add(mtgCardRow);
 			}
 	        
 	        // Populate the List View.
-	        if (!this.displayData.isEmpty()) {
-	    		// Wrap the ObservableList in a FilteredList (initially display all data).
-	    		FilteredList<MtgCardDisplay> filteredData = new FilteredList<>(this.displayData, mtgCardDisplay -> true);
-
-	    		// Set the filter Predicate whenever the filter changes.
-	    		this.quickSearch.textProperty().addListener(
-	    				(observable, oldValue, newValue) -> {
-	    					filteredData.setPredicate(mtgCardDisplay -> {
-	    						boolean matchFound = false;
-	    						
-	    						// If filter text is empty, display all cards.
-	    						if (newValue == null || newValue.isEmpty()) {
-    								matchFound = true;
-    							}
-
-    							// Compare card name of every card with filter text.
-    							String lowerCaseFilter = newValue.toLowerCase();
-
-    							if (mtgCardDisplay.getName().toLowerCase().indexOf(lowerCaseFilter) != -1) {
-    								matchFound = true; // Filter matches card name.
-    							}
-    							
-    							return matchFound;
-    						});
-	    				});
-
-	    		// Wrap the FilteredList in a SortedList.
-	    		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
-
-	    		// Bind the SortedList comparator to the TableView comparator.
-	    		// Otherwise, sorting the TableView would have no effect.
-	    		sortedData.comparatorProperty().bind(this.allCardsTableView.comparatorProperty());
-	    		
-	    		// Populate the Table View.
-	        	this.allCardsTableView.setItems(sortedData);
+	        if (!this.cardCollectionData.isEmpty()) {
+	        	this.setDataFilter();
 	        	cardCount = this.allCardsTableView.getItems().size();
 	        }
 	        
@@ -309,12 +300,112 @@ public class MainViewController extends BaseViewController {
 	}
 	
 	/**
+	 * Set the filter to be used on the card data. More than one control can be used as a filter candidate.
+	 */
+	private void setDataFilter() {
+		// Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<MtgCardDisplay> filteredData = new FilteredList<>(this.cardCollectionData, mtgCardDisplay -> true);
+
+		// Set the filter predicate whenever the filter conditions change.
+		// The filter changes based on the following controls:
+		//	1. quickSearch (TextField)
+		//
+		// The following approach allows multiple bindings (that is, multiple filtering) by listing the conditions
+		// and properties of the controls that you want to use to filter the data.
+		filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
+			mtgCardDisplay ->
+				(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+				|| mtgCardDisplay.getCardText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+				|| mtgCardDisplay.getFlavourText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())),
+			
+			this.quickSearch.textProperty())
+			
+		);
+		
+		// Wrap the FilteredList in a SortedList.
+		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
+
+		// Bind the SortedList comparator to the TableView comparator.
+		// Otherwise, sorting the TableView would have no effect.
+		sortedData.comparatorProperty().bind(this.allCardsTableView.comparatorProperty());
+		
+		// Populate the Table View.
+    	this.allCardsTableView.setItems(sortedData);
+	}
+	
+	/**
 	 * Set the status bar text.
 	 * 
 	 * @param message - String
 	 */
 	private void setStatus(String message) {
 		this.textStatus.setText(message);
+	}
+	
+	/**
+	 * Use the passed value to set the status message to display a card count.
+	 * 
+	 * @param cardCount - int
+	 * @param filtered - boolean
+	 */
+	private void setCardCountMessage(int cardCount, boolean filtered) {
+		String messageFormat = "";
+		if (filtered) {
+			messageFormat = "Cards found: ###,###,##0";
+		} else {
+			messageFormat = "Total cards in database: ###,###,##0";
+		}
+		DecimalFormat decimalFormat = new DecimalFormat(messageFormat);
+		String statusMessage = decimalFormat.format(cardCount);
+		this.setStatus(statusMessage);
+		
+		// TODO: IJC - DEBUG
+		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
+		// TODO: IJC - DEBUG
+	}
+	
+	/**
+	 * Get the current card count based on the number of items in the Table View.
+	 * 
+	 * @param filtered - boolean
+	 */
+	private void getCardCount() {
+		boolean cardsCurrentlyFiltered = this.cardsCurrentlyFiltered;
+		int cardCount = this.allCardsTableView.getItems().size();
+		if (cardCount == this.cardCollectionData.size()) {
+			cardsCurrentlyFiltered = false;
+		}
+		
+		this.setCardCountMessage(cardCount, cardsCurrentlyFiltered);
+		this.cardCountScheduled = false;
+		
+		if (!cardsCurrentlyFiltered && this.currentCardData != null) {
+			this.allCardsTableView.scrollTo(this.currentCardData);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param filtered - boolean
+	 */
+	public void updateCardCount(boolean filtered) {
+		if (!this.cardCountScheduled) {
+			this.cardsCurrentlyFiltered = filtered;
+			this.cardCountScheduled = true;
+			this.cardCountTimer.purge();
+			this.timerTask.cancel();
+			this.timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					Platform.runLater(new Runnable() {
+				        public void run() {
+				        	getCardCount();
+				        }
+					});
+				}
+			};
+			this.cardCountTimer.schedule(this.timerTask, 500);	
+		}
 	}
 	
 	/**
@@ -397,11 +488,6 @@ public class MainViewController extends BaseViewController {
 			cardImage.progressProperty().addListener(new ChangeListener<Number>() {
 				@Override
 				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-					// TODO: DEBUG
-					//LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image progress: %s", multiverseId, String.valueOf(newValue)));
-					//LoggerUtil.logger(this).log(Level.INFO, String.format("Multiverse ID %d: Image error: %b", multiverseId, cardImage.isError()));
-					// TODO: DEBUG
-					
 					double cardProgress = (double) newValue;
 					if (cardProgress == 1.0) {
 						if (cardImage.isError()) {
@@ -451,6 +537,10 @@ public class MainViewController extends BaseViewController {
 	}
 	
 }
+
+/**
+ * The following classes are Event Handler classes for different JavaFX controls.
+ */
 
 /**
  * A TableView handler class for mouse events.
@@ -517,4 +607,23 @@ class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
 	public void handle(MouseEvent event) {
 		this.controller.setImageSize(0, 0);
 	}
+}
+
+/**
+ * A TextField handler class for key (input) events.
+ */
+class TextFieldKeyEventHandler implements EventHandler<KeyEvent> {
+
+	private MainViewController controller;
+	
+	// Constructor.
+	public TextFieldKeyEventHandler(MainViewController controller) {
+		this.controller = controller;
+	}
+	
+	@Override
+	public void handle(KeyEvent event) {
+		this.controller.updateCardCount(true);
+	}
+	
 }

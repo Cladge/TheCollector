@@ -189,6 +189,8 @@ public class TheCollector extends Application {
 		if (this.applicationStatus != StatusCodes.SETTINGS_ERROR) {
 			this.settingsFile.save(Settings.SETTINGS_COMMENT);
 		}
+		
+		this.controller.shutdown();
     }
 
 	public static void main(String[] args) {
