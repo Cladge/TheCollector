@@ -117,37 +117,89 @@ public class MainViewController extends BaseViewController {
 	private TimerTask timerTask;
 	
     /**
-     * Initializes the controller class. This method is automatically called
-     * after the fxml file has been loaded.
-     */
-    @FXML
-    private void initialize() {
-		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
-		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-		this.expansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
-		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
-		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
-		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
-		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
-		this.cardFlavourTextColumn.setCellValueFactory(cellData -> cellData.getValue().getFlavourTextProperty());
-
-		// Associate handler classes with controls.
-		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
-		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
-		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
-		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this));
-		
-		// No need for context menu on Web View control.
-		this.cardDetails.setContextMenuEnabled(false);
-    }
-    
-	/**
 	 * Return reference to the main view.
 	 * 
 	 * @return Entity VBox.
 	 */
 	public VBox getEntityPane () {
 		return this.mainView;
+	}
+    
+	/**
+	 * Opens an about dialog.
+	 */
+	public void handleAbout() {
+		System.out.println("\nGUI not implemented yet!");
+		System.out.println("\nAuthor:\nIan Claridge\n\nWebsite:\nhttp://www.cladge.com");
+		System.out.println("\nTheCollector v0.1 (beta)");
+	}
+
+	/**
+	 * Scroll the table view to the row containing the current card.
+	 */
+	public void scrollToCurrentCard() {
+		if (this.currentCardData != null) {
+			this.allCardsTableView.scrollTo(this.currentCardData);
+		}
+	}
+	
+	/**
+	 * From a TableView event (e.g. mouse event, key event, etc.) set the currently selected card
+	 * and display the relevant image.
+	 * 
+	 * @param currentCardData - MtgCardDisplay
+	 */
+	public void setCurrentCard(MtgCardDisplay currentCardData) {
+		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
+		// In this case, assuming there is a current row (card data), scroll to that current row.
+		if (currentCardData == null) {
+			this.scrollToCurrentCard();
+		} else {
+			if (currentCardData != null && (!currentCardData.equals(this.currentCardData))) {
+				String multiverseIdData = currentCardData.getMultiverseId();
+				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
+					int multiverseId = Integer.valueOf(multiverseIdData);
+					this.setCurrentImage(multiverseId);
+					this.currentCardData = currentCardData;
+					
+					// Populate the Web View.
+					MtgCardDetailsHtmlGenerator htmlDetails = new MtgCardDetailsHtmlGenerator(this.currentCardData);
+			        this.cardDetails.getEngine().loadContent(htmlDetails.getContent());
+
+					// TODO: DEBUG - Show card info for debug purposes.
+					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+					// TODO: DEBUG - Show card info for debug purposes.	
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Resize the card image, either by passing a new width value, or letting the method
+	 * determine the new size based on the image view's current size (i.e. switching between "normal"
+	 * and "double" size).
+	 * 
+	 * @param newWidth - double
+	 */
+	public void setImageSize(double newWidth, double newHeight) {
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's current FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
+		if (newWidth > 0) {
+			this.cardImageView.setFitWidth(newWidth);
+			this.cardImageView.setFitHeight(newHeight);
+		} else {
+			if (this.cardImageView.getFitWidth() == Settings.IMAGE_SIZE_WIDTH_NORMAL) {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_DOUBLE);
+				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_DOUBLE);
+			} else {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_NORMAL);
+				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_NORMAL);
+			}	
+		}
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's new FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
 	}
 	
 	/**
@@ -174,7 +226,11 @@ public class MainViewController extends BaseViewController {
 		this.timerTask = new TimerTask() {
 			@Override
 			public void run() {
-				getCardCount();
+				Platform.runLater(new Runnable() {
+			        public void run() {
+			        	getCardCount();
+			        }
+				});
 			}
 		};
 	}
@@ -186,6 +242,71 @@ public class MainViewController extends BaseViewController {
 		this.timerTask.cancel();
 		this.cardCountTimer.cancel();
 	}
+	
+	/**
+	 * 
+	 * @param filtered - boolean
+	 */
+	public void updateCardCount(boolean filtered) {
+		if (!this.cardCountScheduled) {
+			this.cardsCurrentlyFiltered = filtered;
+			this.cardCountScheduled = true;
+			this.cardCountTimer.purge();
+			this.timerTask.cancel();
+			this.timerTask = new TimerTask() {
+				@Override
+				public void run() {
+					Platform.runLater(new Runnable() {
+				        public void run() {
+				        	getCardCount();
+				        }
+					});
+				}
+			};
+			this.cardCountTimer.schedule(this.timerTask, 320);	
+		}
+	}
+	
+	/**
+	 * Get the current card count based on the number of items in the Table View.
+	 * 
+	 * @param filtered - boolean
+	 */
+	private void getCardCount() {
+		boolean cardsCurrentlyFiltered = this.cardsCurrentlyFiltered;
+		int cardCount = this.allCardsTableView.getItems().size();
+		if (cardCount == this.cardCollectionData.size()) {
+			cardsCurrentlyFiltered = false;
+		}
+		
+		this.setCardCountMessage(cardCount, cardsCurrentlyFiltered);
+		this.cardCountScheduled = false;
+	}
+	
+	/**
+     * Initializes the controller class. This method is automatically called
+     * after the fxml file has been loaded.
+     */
+    @FXML
+    private void initialize() {
+		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
+		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+		this.expansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
+		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
+		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
+		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
+		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
+		this.cardFlavourTextColumn.setCellValueFactory(cellData -> cellData.getValue().getFlavourTextProperty());
+
+		// Associate handler classes with controls.
+		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
+		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
+		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
+		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this.quickSearch, this));
+		
+		// No need for context menu on Web View control.
+		this.cardDetails.setContextMenuEnabled(false);
+    }
 	
 	/**
 	 * Load the main card set.
@@ -300,49 +421,6 @@ public class MainViewController extends BaseViewController {
 	}
 	
 	/**
-	 * Set the filter to be used on the card data. More than one control can be used as a filter candidate.
-	 */
-	private void setDataFilter() {
-		// Wrap the ObservableList in a FilteredList (initially display all data).
-		FilteredList<MtgCardDisplay> filteredData = new FilteredList<>(this.cardCollectionData, mtgCardDisplay -> true);
-
-		// Set the filter predicate whenever the filter conditions change.
-		// The filter changes based on the following controls:
-		//	1. quickSearch (TextField)
-		//
-		// The following approach allows multiple bindings (that is, multiple filtering) by listing the conditions
-		// and properties of the controls that you want to use to filter the data.
-		filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-			mtgCardDisplay ->
-				(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
-				|| mtgCardDisplay.getCardText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
-				|| mtgCardDisplay.getFlavourText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())),
-			
-			this.quickSearch.textProperty())
-			
-		);
-		
-		// Wrap the FilteredList in a SortedList.
-		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
-
-		// Bind the SortedList comparator to the TableView comparator.
-		// Otherwise, sorting the TableView would have no effect.
-		sortedData.comparatorProperty().bind(this.allCardsTableView.comparatorProperty());
-		
-		// Populate the Table View.
-    	this.allCardsTableView.setItems(sortedData);
-	}
-	
-	/**
-	 * Set the status bar text.
-	 * 
-	 * @param message - String
-	 */
-	private void setStatus(String message) {
-		this.textStatus.setText(message);
-	}
-	
-	/**
 	 * Use the passed value to set the status message to display a card count.
 	 * 
 	 * @param cardCount - int
@@ -362,93 +440,6 @@ public class MainViewController extends BaseViewController {
 		// TODO: IJC - DEBUG
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 		// TODO: IJC - DEBUG
-	}
-	
-	/**
-	 * Get the current card count based on the number of items in the Table View.
-	 * 
-	 * @param filtered - boolean
-	 */
-	private void getCardCount() {
-		boolean cardsCurrentlyFiltered = this.cardsCurrentlyFiltered;
-		int cardCount = this.allCardsTableView.getItems().size();
-		if (cardCount == this.cardCollectionData.size()) {
-			cardsCurrentlyFiltered = false;
-		}
-		
-		this.setCardCountMessage(cardCount, cardsCurrentlyFiltered);
-		this.cardCountScheduled = false;
-		
-		if (!cardsCurrentlyFiltered && this.currentCardData != null) {
-			this.allCardsTableView.scrollTo(this.currentCardData);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param filtered - boolean
-	 */
-	public void updateCardCount(boolean filtered) {
-		if (!this.cardCountScheduled) {
-			this.cardsCurrentlyFiltered = filtered;
-			this.cardCountScheduled = true;
-			this.cardCountTimer.purge();
-			this.timerTask.cancel();
-			this.timerTask = new TimerTask() {
-				@Override
-				public void run() {
-					Platform.runLater(new Runnable() {
-				        public void run() {
-				        	getCardCount();
-				        }
-					});
-				}
-			};
-			this.cardCountTimer.schedule(this.timerTask, 500);	
-		}
-	}
-	
-	/**
-	 * Opens an about dialog.
-	 */
-	public void handleAbout() {
-		System.out.println("\nGUI not implemented yet!");
-		System.out.println("\nAuthor:\nIan Claridge\n\nWebsite:\nhttp://www.cladge.com");
-		System.out.println("\nTheCollector v0.1 (beta)");
-	}
-	
-	/**
-	 * From a TableView event (e.g. mouse event, key event, etc.) set the currently selected card
-	 * and display the relevant image.
-	 * 
-	 * @param currentCardData - MtgCardDisplay
-	 */
-	public void setCurrentCard(MtgCardDisplay currentCardData) {
-		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
-		// In this case, assuming there is a current row (card data), scroll to that current row.
-		if (currentCardData == null) {
-			if (this.currentCardData != null) {
-				this.allCardsTableView.scrollTo(this.currentCardData);	
-			}
-			
-		} else {
-			if (currentCardData != null && (!currentCardData.equals(this.currentCardData))) {
-				String multiverseIdData = currentCardData.getMultiverseId();
-				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
-					int multiverseId = Integer.valueOf(multiverseIdData);
-					this.setCurrentImage(multiverseId);
-					this.currentCardData = currentCardData;
-					
-					// Populate the Web View.
-					MtgCardDetailsHtmlGenerator htmlDetails = new MtgCardDetailsHtmlGenerator(this.currentCardData);
-			        this.cardDetails.getEngine().loadContent(htmlDetails.getContent());
-
-					// TODO: DEBUG - Show card info for debug purposes.
-					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
-					// TODO: DEBUG - Show card info for debug purposes.	
-				}
-			}
-		}
 	}
 	
 	/**
@@ -509,31 +500,46 @@ public class MainViewController extends BaseViewController {
 	}
 	
 	/**
-	 * Resize the card image, either by passing a new width value, or letting the method
-	 * determine the new size based on the image view's current size (i.e. switching between "normal"
-	 * and "double" size).
-	 * 
-	 * @param newWidth - double
+	 * Set the filter to be used on the card data. More than one control can be used as a filter candidate.
 	 */
-	public void setImageSize(double newWidth, double newHeight) {
-		// TODO: DEBUG - Show image info for debug purposes.
-		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's current FitWidth: %s", this.cardImageView.getFitWidth()));
-		// TODO: DEBUG - Show image info for debug purposes.
-		if (newWidth > 0) {
-			this.cardImageView.setFitWidth(newWidth);
-			this.cardImageView.setFitHeight(newHeight);
-		} else {
-			if (this.cardImageView.getFitWidth() == Settings.IMAGE_SIZE_WIDTH_NORMAL) {
-				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_DOUBLE);
-				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_DOUBLE);
-			} else {
-				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_NORMAL);
-				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_NORMAL);
-			}	
-		}
-		// TODO: DEBUG - Show image info for debug purposes.
-		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's new FitWidth: %s", this.cardImageView.getFitWidth()));
-		// TODO: DEBUG - Show image info for debug purposes.
+	private void setDataFilter() {
+		// Wrap the ObservableList in a FilteredList (initially display all data).
+		FilteredList<MtgCardDisplay> filteredData = new FilteredList<>(this.cardCollectionData, mtgCardDisplay -> true);
+
+		// Set the filter predicate whenever the filter conditions change.
+		// The filter changes based on the following controls:
+		//	1. quickSearch (TextField)
+		//
+		// The following approach allows multiple bindings (that is, multiple filtering) by listing the conditions
+		// and properties of the controls that you want to use to filter the data.
+		filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
+			mtgCardDisplay ->
+				(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+				|| mtgCardDisplay.getCardText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+				|| mtgCardDisplay.getFlavourText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())),
+			
+			this.quickSearch.textProperty())
+			
+		);
+		
+		// Wrap the FilteredList in a SortedList.
+		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
+
+		// Bind the SortedList comparator to the TableView comparator.
+		// Otherwise, sorting the TableView would have no effect.
+		sortedData.comparatorProperty().bind(this.allCardsTableView.comparatorProperty());
+		
+		// Populate the Table View.
+    	this.allCardsTableView.setItems(sortedData);
+	}
+	
+	/**
+	 * Set the status bar text.
+	 * 
+	 * @param message - String
+	 */
+	private void setStatus(String message) {
+		this.textStatus.setText(message);
 	}
 	
 }
@@ -541,6 +547,46 @@ public class MainViewController extends BaseViewController {
 /**
  * The following classes are Event Handler classes for different JavaFX controls.
  */
+
+/**
+ * An ImageView handler class for mouse events.
+ */
+class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
+
+	private MainViewController controller;
+	
+	// Constructor.
+	public ImageViewMouseEventHandler(MainViewController controller) {
+		this.controller = controller;
+	}
+	@Override
+	public void handle(MouseEvent event) {
+		this.controller.setImageSize(0, 0);
+	}
+}
+
+/**
+ * A TableView handler class for key (input) events.
+ */
+class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
+
+	private TableView<MtgCardDisplay> cardsTableView;
+	private MainViewController controller;
+	
+	// Constructor.
+	public TableViewKeyEventHandler(TableView<MtgCardDisplay> tableview, MainViewController controller) {
+		this.cardsTableView = tableview;
+		this.controller = controller;
+	}
+	
+	@Override
+	public void handle(KeyEvent event) {
+		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down") ||
+				event.getCode().getName().equalsIgnoreCase("page up") || event.getCode().getName().equalsIgnoreCase("page down") ||
+				event.getCode().getName().equalsIgnoreCase("end") || event.getCode().getName().equalsIgnoreCase("home"))
+			this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
+	}
+}
 
 /**
  * A TableView handler class for mouse events.
@@ -570,60 +616,24 @@ class TableViewMouseEventHandler implements EventHandler<MouseEvent> {
 }
 
 /**
- * A TableView handler class for key (input) events.
- */
-class TableViewKeyEventHandler implements EventHandler<KeyEvent> {
-
-	private TableView<MtgCardDisplay> cardsTableView;
-	private MainViewController controller;
-	
-	// Constructor.
-	public TableViewKeyEventHandler(TableView<MtgCardDisplay> tableview, MainViewController controller) {
-		this.cardsTableView = tableview;
-		this.controller = controller;
-	}
-	
-	@Override
-	public void handle(KeyEvent event) {
-		if (event.getCode().getName().equalsIgnoreCase("up") || event.getCode().getName().equalsIgnoreCase("down") ||
-				event.getCode().getName().equalsIgnoreCase("page up") || event.getCode().getName().equalsIgnoreCase("page down") ||
-				event.getCode().getName().equalsIgnoreCase("end") || event.getCode().getName().equalsIgnoreCase("home"))
-			this.controller.setCurrentCard(this.cardsTableView.getSelectionModel().getSelectedItem());
-	}
-}
-
-/**
- * An ImageView handler class for mouse events.
- */
-class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
-
-	private MainViewController controller;
-	
-	// Constructor.
-	public ImageViewMouseEventHandler(MainViewController controller) {
-		this.controller = controller;
-	}
-	@Override
-	public void handle(MouseEvent event) {
-		this.controller.setImageSize(0, 0);
-	}
-}
-
-/**
  * A TextField handler class for key (input) events.
  */
 class TextFieldKeyEventHandler implements EventHandler<KeyEvent> {
 
+	private TextField textField;
 	private MainViewController controller;
 	
 	// Constructor.
-	public TextFieldKeyEventHandler(MainViewController controller) {
+	public TextFieldKeyEventHandler(TextField textField, MainViewController controller) {
+		this.textField = textField;
 		this.controller = controller;
 	}
 	
 	@Override
 	public void handle(KeyEvent event) {
 		this.controller.updateCardCount(true);
+		if (this.textField.getText().isEmpty()) {
+			this.controller.scrollToCurrentCard();	
+		}
 	}
-	
 }
