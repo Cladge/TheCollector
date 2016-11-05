@@ -25,6 +25,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -140,6 +141,7 @@ public class MainViewController extends BaseViewController {
 	public void scrollToCurrentCard() {
 		if (this.currentCardData != null) {
 			this.allCardsTableView.scrollTo(this.currentCardData);
+			this.allCardsTableView.getSelectionModel().select(this.currentCardData);
 		}
 	}
 	
@@ -223,16 +225,10 @@ public class MainViewController extends BaseViewController {
 		
 		// Instantiate the Timer Task which can be used by controls to initiate a current card count.
 		this.cardCountTimer = new Timer();
-		this.timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				Platform.runLater(new Runnable() {
-			        public void run() {
-			        	getCardCount();
-			        }
-				});
-			}
-		};
+		this.createNewTimerTask();
+		
+		// Tooltips.
+		this.createTooltips();
 	}
 	
 	/**
@@ -253,18 +249,36 @@ public class MainViewController extends BaseViewController {
 			this.cardCountScheduled = true;
 			this.cardCountTimer.purge();
 			this.timerTask.cancel();
-			this.timerTask = new TimerTask() {
-				@Override
-				public void run() {
-					Platform.runLater(new Runnable() {
-				        public void run() {
-				        	getCardCount();
-				        }
-					});
-				}
-			};
+			this.createNewTimerTask();
 			this.cardCountTimer.schedule(this.timerTask, 320);	
 		}
+	}
+	
+	/**
+	 * Set (or reset) the Timer Task used for getting the current (displayed) Card Count.
+	 */
+	private void createNewTimerTask() {
+		this.timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(new Runnable() {
+			        public void run() {
+			        	getCardCount();
+			        }
+				});
+			}
+		};
+	}
+	
+	/**
+	 * Set up required control tooltips.
+	 */
+	private void createTooltips() {
+		Tooltip imageViewTooltip = new Tooltip("Click image to enlarge or reduce");
+		Tooltip.install(this.cardImageView, imageViewTooltip);
+
+		Tooltip quickSearchTooltip = new Tooltip("Use this to search for values in Card Names, Rules Text or Flavor Text");
+		Tooltip.install(this.quickSearch, quickSearchTooltip);
 	}
 	
 	/**
