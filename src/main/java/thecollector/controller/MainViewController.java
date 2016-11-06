@@ -18,8 +18,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -30,6 +32,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebView;
 import thecollector.model.ImageHandler;
@@ -97,6 +100,12 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private TextField quickSearch;
+	
+	@FXML
+	private Button buttonCloseQuickSearch;
+	
+	@FXML
+	private HBox quickSearchContainer;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -154,6 +163,7 @@ public class MainViewController extends BaseViewController {
 	public void setCurrentCard(MtgCardDisplay currentCardData) {
 		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
 		// In this case, assuming there is a current row (card data), scroll to that current row.
+		
 		if (currentCardData == null) {
 			this.scrollToCurrentCard();
 		} else {
@@ -277,7 +287,7 @@ public class MainViewController extends BaseViewController {
 		Tooltip imageViewTooltip = new Tooltip("Click image to enlarge or reduce");
 		Tooltip.install(this.cardImageView, imageViewTooltip);
 
-		Tooltip quickSearchTooltip = new Tooltip("Use this to search for values in Card Names, Rules Text or Flavor Text");
+		Tooltip quickSearchTooltip = new Tooltip("Use Quick Search to look for values in Card Names, Rules Text or Flavor Text");
 		Tooltip.install(this.quickSearch, quickSearchTooltip);
 	}
 	
@@ -463,6 +473,8 @@ public class MainViewController extends BaseViewController {
 	 */
 	private void setCurrentImage(int multiverseId) {
 		ImageHandler imageHandler;
+
+		theCollector.setCursor("WAIT");
 		
 		// See if the image handler has already been created for this Multiverse ID. If not,
 		// create it and add an entry to the image map.
@@ -511,6 +523,8 @@ public class MainViewController extends BaseViewController {
 				}
 			});	
 		}
+
+		theCollector.setCursor("DEFAULT");
 	}
 	
 	/**
@@ -556,6 +570,19 @@ public class MainViewController extends BaseViewController {
 		this.textStatus.setText(message);
 	}
 	
+
+	@FXML
+	protected void handleButtonCloseQuickSearchAction(ActionEvent event) {
+		this.quickSearchContainer.setManaged(false);
+		this.quickSearchContainer.setVisible(false);
+    }
+	
+	@FXML
+	protected void handleCardImageViewAction() {
+		this.quickSearchContainer.setManaged(true);
+		this.quickSearchContainer.setVisible(true);
+	}
+	
 }
 
 /**
@@ -576,6 +603,7 @@ class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		this.controller.setImageSize(0, 0);
+		this.controller.handleCardImageViewAction();
 	}
 }
 
