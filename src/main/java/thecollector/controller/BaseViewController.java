@@ -1,5 +1,6 @@
 package thecollector.controller;
 
+import javafx.fxml.FXML;
 import thecollector.controller.BaseController;
 
 /**
@@ -25,6 +26,9 @@ public class BaseViewController implements BaseController {
 	 */
 	public void setup() {
 	}
+
+	public void shutdown() {
+	}
 	
 	/**
 	 * Opens an about dialog.
@@ -35,7 +39,9 @@ public class BaseViewController implements BaseController {
 	/**
 	 * Closes the application.
 	 */
+	@FXML
 	public void handleExit() {
+		this.shutdown();
 		System.exit(0);
 	}
 

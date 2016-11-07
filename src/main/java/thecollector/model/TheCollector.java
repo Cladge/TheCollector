@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import thecollector.controller.MainViewController;
@@ -167,14 +169,21 @@ public class TheCollector extends Application {
 			this.mainLayout = (VBox)loader.load();
 			this.scene = new Scene(mainLayout);
 			this.stage.setScene(scene);
-
+			
 			// Give the controller access to the main app.
 			this.controller = (MainViewController) loader.getController();
 			this.controller.setMainApp(theCollector);
 
 			// Show the Stage.
 			this.stage.show();
-			
+
+			// Add a key listener to the scene.
+			this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+	            public void handle(KeyEvent keyEvent) {
+	            	controller.handleKeyEvents(keyEvent);
+	            }
+	        });
+
 			// Let the controller perform its setup routines.
 			this.controller.setup();
 

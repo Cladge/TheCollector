@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.input.*?>
 <?import javafx.scene.web.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
@@ -14,39 +15,25 @@
   <children>
     <MenuBar fx:id="topMenu" VBox.vgrow="NEVER">
       <menus>
-        <Menu mnemonicParsing="false" text="File">
+        <Menu fx:id="menuFile" mnemonicParsing="false" text="File">
           <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
+            <MenuItem fx:id="menuItemQuit" mnemonicParsing="false" onAction="#handleExit" text="Quit">
+                     <accelerator>
+                        <KeyCodeCombination alt="DOWN" code="F4" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
+        <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
+            <MenuItem fx:id="menuItemQuickSearch" mnemonicParsing="false" text="Quick search">
+                     <accelerator>
+                        <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                     </accelerator></MenuItem>
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="Help">
+        <Menu fx:id="menuHelp" mnemonicParsing="false" text="Help">
           <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+            <MenuItem fx:id="menuItemAbout" mnemonicParsing="false" onAction="#handleAbout" text="About The Collector" />
           </items>
         </Menu>
       </menus>
@@ -60,7 +47,7 @@
                         <HBox fx:id="quickSearchContainer" fillHeight="false">
                            <children>
                               <TextField fx:id="quickSearch" promptText="Quick search..." HBox.hgrow="ALWAYS" />
-                              <Button fx:id="buttonCloseQuickSearch" mnemonicParsing="false" onAction="#handleButtonCloseQuickSearchAction" text="X" />
+                              <Button fx:id="buttonClearQuickSearch" disable="true" mnemonicParsing="false" onAction="#handleButtonClearQuickSearchAction" text="X" />
                            </children>
                         </HBox>
                         <TableView fx:id="allCardsTableView" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">

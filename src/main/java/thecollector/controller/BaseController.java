@@ -15,6 +15,11 @@ public interface BaseController {
 	public void setup();
 	
 	/**
+	 * Method for performing clean-up before the application closes.
+	 */
+	public void shutdown();
+	
+	/**
 	 * Opens an about dialog.
 	 */
 	@FXML public void handleAbout();

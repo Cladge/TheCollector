@@ -102,7 +102,7 @@ public class MainViewController extends BaseViewController {
 	private TextField quickSearch;
 	
 	@FXML
-	private Button buttonCloseQuickSearch;
+	private Button buttonClearQuickSearch;
 	
 	@FXML
 	private HBox quickSearchContainer;
@@ -126,7 +126,7 @@ public class MainViewController extends BaseViewController {
 	private Timer cardCountTimer;
 	private TimerTask timerTask;
 	
-    /**
+	/**
 	 * Return reference to the main view.
 	 * 
 	 * @return Entity VBox.
@@ -134,14 +134,30 @@ public class MainViewController extends BaseViewController {
 	public VBox getEntityPane () {
 		return this.mainView;
 	}
-    
-	/**
+	
+    /**
 	 * Opens an about dialog.
 	 */
 	public void handleAbout() {
 		System.out.println("\nGUI not implemented yet!");
 		System.out.println("\nAuthor:\nIan Claridge\n\nWebsite:\nhttp://www.cladge.com");
 		System.out.println("\nTheCollector v0.1 (beta)");
+	}
+    
+	/**
+	 * Handles general key press events, unless specifically handled by a control's own listener.
+	 * 
+	 * @param keyEvent - KeyEvent
+	 */
+	public void handleKeyEvents(KeyEvent keyEvent) {
+		if (keyEvent.isControlDown()) {
+			if (keyEvent.getText().equalsIgnoreCase("f")) {
+				// TODO: DEBUG
+		        LoggerUtil.logger(this).log(Level.INFO, String.format("DEBUG - Key pressed: <ctrl> %s", keyEvent.getText()));
+		        this.showOrHideQuickSearch();
+		        // TODO: DEBUG
+			}	
+		}
 	}
 
 	/**
@@ -250,6 +266,7 @@ public class MainViewController extends BaseViewController {
 	}
 	
 	/**
+	 * Schedule a timer task to display the current card count.
 	 * 
 	 * @param filtered - boolean
 	 */
@@ -261,6 +278,13 @@ public class MainViewController extends BaseViewController {
 			this.timerTask.cancel();
 			this.createNewTimerTask();
 			this.cardCountTimer.schedule(this.timerTask, 320);	
+		}
+
+		if (this.quickSearch.getText().isEmpty()) {
+			this.scrollToCurrentCard();
+			this.buttonClearQuickSearch.setDisable(true);
+		} else {
+			this.buttonClearQuickSearch.setDisable(false);
 		}
 	}
 	
@@ -326,10 +350,14 @@ public class MainViewController extends BaseViewController {
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
 		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
 		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
-		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this.quickSearch, this));
+		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this));
 		
 		// No need for context menu on Web View control.
 		this.cardDetails.setContextMenuEnabled(false);
+		
+		// Hide the Quick Search controls.
+		this.quickSearchContainer.setManaged(false);
+		this.quickSearchContainer.setVisible(false);
     }
 	
 	/**
@@ -571,18 +599,36 @@ public class MainViewController extends BaseViewController {
 	}
 	
 
-	@FXML
-	protected void handleButtonCloseQuickSearchAction(ActionEvent event) {
-		this.quickSearchContainer.setManaged(false);
-		this.quickSearchContainer.setVisible(false);
-    }
-	
-	@FXML
-	protected void handleCardImageViewAction() {
-		this.quickSearchContainer.setManaged(true);
-		this.quickSearchContainer.setVisible(true);
+	/**
+	 * Show or hide the Quick Search control.
+	 */
+	private void showOrHideQuickSearch() {
+		if (this.quickSearchContainer.isVisible()) {
+			this.quickSearchContainer.setManaged(false);
+			this.quickSearchContainer.setVisible(false);
+		} else {
+			this.quickSearchContainer.setManaged(true);
+			this.quickSearchContainer.setVisible(true);
+			this.quickSearch.requestFocus();
+		}
 	}
-	
+
+	/**
+	 * The following methods are annotated FXML handlers for different JavaFX controls
+	 * (usually referenced by the UI FXML file).
+	 */
+
+	/**
+	 * Handler for the Clear Quick Search button.
+	 * 
+	 * @param event - ActionEvent
+	 */
+	@FXML
+	protected void handleButtonClearQuickSearchAction(ActionEvent event) {
+		this.quickSearch.clear();
+		this.updateCardCount(false);
+		this.quickSearch.requestFocus();
+    }
 }
 
 /**
@@ -603,7 +649,6 @@ class ImageViewMouseEventHandler implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		this.controller.setImageSize(0, 0);
-		this.controller.handleCardImageViewAction();
 	}
 }
 
@@ -662,20 +707,20 @@ class TableViewMouseEventHandler implements EventHandler<MouseEvent> {
  */
 class TextFieldKeyEventHandler implements EventHandler<KeyEvent> {
 
-	private TextField textField;
 	private MainViewController controller;
 	
 	// Constructor.
-	public TextFieldKeyEventHandler(TextField textField, MainViewController controller) {
-		this.textField = textField;
+	public TextFieldKeyEventHandler(MainViewController controller) {
 		this.controller = controller;
 	}
 	
 	@Override
 	public void handle(KeyEvent event) {
-		this.controller.updateCardCount(true);
-		if (this.textField.getText().isEmpty()) {
-			this.controller.scrollToCurrentCard();	
+		if (!event.isAltDown() && !event.isControlDown()) {
+			// TODO: DEBUG
+	        LoggerUtil.logger(this).log(Level.INFO, String.format("DEBUG - Key pressed: %s", event.getText()));
+	        // TODO: DEBUG
+			this.controller.updateCardCount(true);
 		}
 	}
 }
