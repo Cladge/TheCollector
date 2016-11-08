@@ -134,16 +134,52 @@ public class MainViewController extends BaseViewController {
 	public VBox getEntityPane () {
 		return this.mainView;
 	}
-	
+
+	/**
+	 *********************************************************************************
+	 * The following methods are annotated FXML handlers for different JavaFX controls
+	 * (usually referenced by the UI FXML file).
+	 */
+
     /**
 	 * Opens an about dialog.
 	 */
+	@FXML
 	public void handleAbout() {
 		System.out.println("\nGUI not implemented yet!");
 		System.out.println("\nAuthor:\nIan Claridge\n\nWebsite:\nhttp://www.cladge.com");
 		System.out.println("\nTheCollector v0.1 (beta)");
 	}
     
+	/**
+	 * Handler for the Clear Quick Search button.
+	 * 
+	 * @param event - ActionEvent
+	 */
+	@FXML
+	public void handleButtonClearQuickSearchAction(ActionEvent event) {
+		this.quickSearch.clear();
+		this.updateCardCount(false);
+		this.quickSearch.requestFocus();
+    }
+	
+	/**
+	 * Handler for the Quick Search menu item.
+	 * 
+	 * @param event - ActionEvent
+	 */
+	@FXML
+	public void handleMenuItemQuickSearchAction(ActionEvent event) {
+		this.showOrHideQuickSearch();
+	}
+
+	/**
+	 * The above methods are annotated FXML handlers for different JavaFX controls
+	 * (usually referenced by the UI FXML file).
+	 * 
+	 *********************************************************************************
+	 */
+
 	/**
 	 * Handles general key press events, unless specifically handled by a control's own listener.
 	 * 
@@ -159,7 +195,7 @@ public class MainViewController extends BaseViewController {
 			}	
 		}
 	}
-
+	
 	/**
 	 * Scroll the table view to the row containing the current card.
 	 */
@@ -589,6 +625,7 @@ public class MainViewController extends BaseViewController {
     	this.allCardsTableView.setItems(sortedData);
 	}
 	
+
 	/**
 	 * Set the status bar text.
 	 * 
@@ -597,7 +634,6 @@ public class MainViewController extends BaseViewController {
 	private void setStatus(String message) {
 		this.textStatus.setText(message);
 	}
-	
 
 	/**
 	 * Show or hide the Quick Search control.
@@ -612,23 +648,6 @@ public class MainViewController extends BaseViewController {
 			this.quickSearch.requestFocus();
 		}
 	}
-
-	/**
-	 * The following methods are annotated FXML handlers for different JavaFX controls
-	 * (usually referenced by the UI FXML file).
-	 */
-
-	/**
-	 * Handler for the Clear Quick Search button.
-	 * 
-	 * @param event - ActionEvent
-	 */
-	@FXML
-	protected void handleButtonClearQuickSearchAction(ActionEvent event) {
-		this.quickSearch.clear();
-		this.updateCardCount(false);
-		this.quickSearch.requestFocus();
-    }
 }
 
 /**

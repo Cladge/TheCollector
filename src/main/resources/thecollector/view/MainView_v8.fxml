@@ -25,7 +25,7 @@
         </Menu>
         <Menu fx:id="menuEdit" mnemonicParsing="false" text="Edit">
           <items>
-            <MenuItem fx:id="menuItemQuickSearch" mnemonicParsing="false" text="Quick search">
+            <MenuItem fx:id="menuItemQuickSearch" mnemonicParsing="false" onAction="#handleMenuItemQuickSearchAction" text="Quick search">
                      <accelerator>
                         <KeyCodeCombination alt="UP" code="F" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                      </accelerator></MenuItem>
