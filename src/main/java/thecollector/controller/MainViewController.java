@@ -127,12 +127,19 @@ public class MainViewController extends BaseViewController {
 	private TimerTask timerTask;
 	
 	/**
-	 * Return reference to the main view.
-	 * 
-	 * @return Entity VBox.
+	 * Set (or reset) the Timer Task used for getting the current (displayed) Card Count.
 	 */
-	public VBox getEntityPane () {
-		return this.mainView;
+	private void createNewTimerTask() {
+		this.timerTask = new TimerTask() {
+			@Override
+			public void run() {
+				Platform.runLater(new Runnable() {
+			        public void run() {
+			        	getCardCount();
+			        }
+				});
+			}
+		};
 	}
 
 	/**
@@ -142,6 +149,53 @@ public class MainViewController extends BaseViewController {
 	 */
 
     /**
+	 * Set up required control tooltips.
+	 */
+	private void createTooltips() {
+		Tooltip imageViewTooltip = new Tooltip("Click image to enlarge or reduce");
+		Tooltip.install(this.cardImageView, imageViewTooltip);
+
+		Tooltip quickSearchTooltip = new Tooltip("Use Quick Search to look for values in Card Names, Rules Text or Flavor Text");
+		Tooltip.install(this.quickSearch, quickSearchTooltip);
+		
+		Tooltip clearQuickSearchTooltip = new Tooltip("Use this button to clear the current Quick Search text");
+		Tooltip.install(this.buttonClearQuickSearch, clearQuickSearchTooltip);
+	}
+    
+	/**
+	 * Get the current card count based on the number of items in the Table View.
+	 * 
+	 * @param filtered - boolean
+	 */
+	private void getCardCount() {
+		boolean cardsCurrentlyFiltered = this.cardsCurrentlyFiltered;
+		int cardCount = this.allCardsTableView.getItems().size();
+		if (cardCount == this.cardCollectionData.size()) {
+			cardsCurrentlyFiltered = false;
+		}
+		
+		this.setCardCountMessage(cardCount, cardsCurrentlyFiltered);
+		this.cardCountScheduled = false;
+	}
+	
+	/**
+	 * Return reference to the main view.
+	 * 
+	 * @return Entity VBox.
+	 */
+	public VBox getEntityPane () {
+		return this.mainView;
+	}
+
+	/**
+	 * The above methods are annotated FXML handlers for different JavaFX controls
+	 * (usually referenced by the UI FXML file).
+	 * 
+	 *********************************************************************************
+	 */
+
+	
+	/**
 	 * Opens an about dialog.
 	 */
 	@FXML
@@ -150,7 +204,7 @@ public class MainViewController extends BaseViewController {
 		System.out.println("\nAuthor:\nIan Claridge\n\nWebsite:\nhttp://www.cladge.com");
 		System.out.println("\nTheCollector v0.1 (beta)");
 	}
-    
+	
 	/**
 	 * Handler for the Clear Quick Search button.
 	 * 
@@ -171,185 +225,6 @@ public class MainViewController extends BaseViewController {
 	@FXML
 	public void handleMenuItemQuickSearchAction(ActionEvent event) {
 		this.showOrHideQuickSearch();
-	}
-
-	/**
-	 * The above methods are annotated FXML handlers for different JavaFX controls
-	 * (usually referenced by the UI FXML file).
-	 * 
-	 *********************************************************************************
-	 */
-
-	
-	/**
-	 * Scroll the table view to the row containing the current card.
-	 */
-	public void scrollToCurrentCard() {
-		if (this.currentCardData != null) {
-			this.allCardsTableView.scrollTo(this.currentCardData);
-			this.allCardsTableView.getSelectionModel().select(this.currentCardData);
-		}
-	}
-	
-	/**
-	 * From a TableView event (e.g. mouse event, key event, etc.) set the currently selected card
-	 * and display the relevant image.
-	 * 
-	 * @param currentCardData - MtgCardDisplay
-	 */
-	public void setCurrentCard(MtgCardDisplay currentCardData) {
-		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
-		// In this case, assuming there is a current row (card data), scroll to that current row.
-		
-		if (currentCardData == null) {
-			this.scrollToCurrentCard();
-		} else {
-			if (currentCardData != null && (!currentCardData.equals(this.currentCardData))) {
-				String multiverseIdData = currentCardData.getMultiverseId();
-				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
-					int multiverseId = Integer.valueOf(multiverseIdData);
-					this.setCurrentImage(multiverseId);
-					this.currentCardData = currentCardData;
-					
-					// Populate the Web View.
-					MtgCardDetailsHtmlGenerator htmlDetails = new MtgCardDetailsHtmlGenerator(this.currentCardData);
-			        this.cardDetails.getEngine().loadContent(htmlDetails.getContent());
-
-					// TODO: DEBUG - Show card info for debug purposes.
-					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
-					// TODO: DEBUG - Show card info for debug purposes.	
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Resize the card image, either by passing a new width value, or letting the method
-	 * determine the new size based on the image view's current size (i.e. switching between "normal"
-	 * and "double" size).
-	 * 
-	 * @param newWidth - double
-	 */
-	public void setImageSize(double newWidth, double newHeight) {
-		// TODO: DEBUG - Show image info for debug purposes.
-		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's current FitWidth: %s", this.cardImageView.getFitWidth()));
-		// TODO: DEBUG - Show image info for debug purposes.
-		if (newWidth > 0) {
-			this.cardImageView.setFitWidth(newWidth);
-			this.cardImageView.setFitHeight(newHeight);
-		} else {
-			if (this.cardImageView.getFitWidth() == Settings.IMAGE_SIZE_WIDTH_NORMAL) {
-				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_DOUBLE);
-				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_DOUBLE);
-			} else {
-				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_NORMAL);
-				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_NORMAL);
-			}	
-		}
-		// TODO: DEBUG - Show image info for debug purposes.
-		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's new FitWidth: %s", this.cardImageView.getFitWidth()));
-		// TODO: DEBUG - Show image info for debug purposes.
-	}
-	
-	/**
-	 * Main initialisation method (not to be confused with initialize() method used
-	 * by FXML loading process).
-	 * 
-	 * Load all the cards from the JSON file into a TableView.
-	 */
-	public void setup() {
-		theCollector = (TheCollector) mainApp;
-		
-		this.setStatus("Loading card database...");
-		this.setCardCountMessage(this.loadCards(), false);
-		this.setImageSize(Settings.IMAGE_SIZE_WIDTH_NORMAL, Settings.IMAGE_SIZE_HEIGHT_NORMAL);
-		
-		// If there is at least one card to display, select it and set the image.
-		if (this.mtgCardList.size() > 0) {
-			this.allCardsTableView.getSelectionModel().selectFirst();
-			this.setCurrentCard(this.allCardsTableView.getSelectionModel().getSelectedItem());
-		}
-		
-		// Instantiate the Timer Task which can be used by controls to initiate a current card count.
-		this.cardCountTimer = new Timer();
-		this.createNewTimerTask();
-		
-		// Tooltips.
-		this.createTooltips();
-	}
-	
-	/**
-	 * Perform any clean-up tasks required. For example, closing down threads.
-	 */
-	public void shutdown() {
-		this.timerTask.cancel();
-		this.cardCountTimer.cancel();
-	}
-	
-	/**
-	 * Schedule a timer task to display the current card count.
-	 * 
-	 * @param filtered - boolean
-	 */
-	public void updateCardCount(boolean filtered) {
-		if (!this.cardCountScheduled) {
-			this.cardsCurrentlyFiltered = filtered;
-			this.cardCountScheduled = true;
-			this.cardCountTimer.purge();
-			this.timerTask.cancel();
-			this.createNewTimerTask();
-			this.cardCountTimer.schedule(this.timerTask, 320);	
-		}
-
-		if (this.quickSearch.getText().isEmpty()) {
-			this.scrollToCurrentCard();
-			this.buttonClearQuickSearch.setDisable(true);
-		} else {
-			this.buttonClearQuickSearch.setDisable(false);
-		}
-	}
-	
-	/**
-	 * Set (or reset) the Timer Task used for getting the current (displayed) Card Count.
-	 */
-	private void createNewTimerTask() {
-		this.timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				Platform.runLater(new Runnable() {
-			        public void run() {
-			        	getCardCount();
-			        }
-				});
-			}
-		};
-	}
-	
-	/**
-	 * Set up required control tooltips.
-	 */
-	private void createTooltips() {
-		Tooltip imageViewTooltip = new Tooltip("Click image to enlarge or reduce");
-		Tooltip.install(this.cardImageView, imageViewTooltip);
-
-		Tooltip quickSearchTooltip = new Tooltip("Use Quick Search to look for values in Card Names, Rules Text or Flavor Text");
-		Tooltip.install(this.quickSearch, quickSearchTooltip);
-	}
-	
-	/**
-	 * Get the current card count based on the number of items in the Table View.
-	 * 
-	 * @param filtered - boolean
-	 */
-	private void getCardCount() {
-		boolean cardsCurrentlyFiltered = this.cardsCurrentlyFiltered;
-		int cardCount = this.allCardsTableView.getItems().size();
-		if (cardCount == this.cardCollectionData.size()) {
-			cardsCurrentlyFiltered = false;
-		}
-		
-		this.setCardCountMessage(cardCount, cardsCurrentlyFiltered);
-		this.cardCountScheduled = false;
 	}
 	
 	/**
@@ -494,6 +369,16 @@ public class MainViewController extends BaseViewController {
 	}
 	
 	/**
+	 * Scroll the table view to the row containing the current card.
+	 */
+	public void scrollToCurrentCard() {
+		if (this.currentCardData != null) {
+			this.allCardsTableView.scrollTo(this.currentCardData);
+			this.allCardsTableView.getSelectionModel().select(this.currentCardData);
+		}
+	}
+	
+	/**
 	 * Use the passed value to set the status message to display a card count.
 	 * 
 	 * @param cardCount - int
@@ -513,6 +398,38 @@ public class MainViewController extends BaseViewController {
 		// TODO: IJC - DEBUG
 		LoggerUtil.logger(this).log(Level.INFO, statusMessage);
 		// TODO: IJC - DEBUG
+	}
+	
+	/**
+	 * From a TableView event (e.g. mouse event, key event, etc.) set the currently selected card
+	 * and display the relevant image.
+	 * 
+	 * @param currentCardData - MtgCardDisplay
+	 */
+	public void setCurrentCard(MtgCardDisplay currentCardData) {
+		// If the card data passed is null, this generally happens if the user has clicked one of the header columns.
+		// In this case, assuming there is a current row (card data), scroll to that current row.
+		
+		if (currentCardData == null) {
+			this.scrollToCurrentCard();
+		} else {
+			if (currentCardData != null && (!currentCardData.equals(this.currentCardData))) {
+				String multiverseIdData = currentCardData.getMultiverseId();
+				if (multiverseIdData != null && !multiverseIdData.isEmpty()) {
+					int multiverseId = Integer.valueOf(multiverseIdData);
+					this.setCurrentImage(multiverseId);
+					this.currentCardData = currentCardData;
+					
+					// Populate the Web View.
+					MtgCardDetailsHtmlGenerator htmlDetails = new MtgCardDetailsHtmlGenerator(this.currentCardData);
+			        this.cardDetails.getEngine().loadContent(htmlDetails.getContent());
+
+					// TODO: DEBUG - Show card info for debug purposes.
+					LoggerUtil.logger(this).log(Level.INFO, this.currentCardData.toString());
+					// TODO: DEBUG - Show card info for debug purposes.	
+				}
+			}
+		}
 	}
 	
 	/**
@@ -610,7 +527,34 @@ public class MainViewController extends BaseViewController {
     	this.allCardsTableView.setItems(sortedData);
 	}
 	
-
+	/**
+	 * Resize the card image, either by passing a new width value, or letting the method
+	 * determine the new size based on the image view's current size (i.e. switching between "normal"
+	 * and "double" size).
+	 * 
+	 * @param newWidth - double
+	 */
+	public void setImageSize(double newWidth, double newHeight) {
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's current FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
+		if (newWidth > 0) {
+			this.cardImageView.setFitWidth(newWidth);
+			this.cardImageView.setFitHeight(newHeight);
+		} else {
+			if (this.cardImageView.getFitWidth() == Settings.IMAGE_SIZE_WIDTH_NORMAL) {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_DOUBLE);
+				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_DOUBLE);
+			} else {
+				this.cardImageView.setFitWidth(Settings.IMAGE_SIZE_WIDTH_NORMAL);
+				this.cardImageView.setFitHeight(Settings.IMAGE_SIZE_HEIGHT_NORMAL);
+			}	
+		}
+		// TODO: DEBUG - Show image info for debug purposes.
+		LoggerUtil.logger(this).log(Level.INFO, String.format("Image's new FitWidth: %s", this.cardImageView.getFitWidth()));
+		// TODO: DEBUG - Show image info for debug purposes.
+	}
+	
 	/**
 	 * Set the status bar text.
 	 * 
@@ -619,7 +563,34 @@ public class MainViewController extends BaseViewController {
 	private void setStatus(String message) {
 		this.textStatus.setText(message);
 	}
-
+	
+	/**
+	 * Main initialisation method (not to be confused with initialize() method used
+	 * by FXML loading process).
+	 * 
+	 * Load all the cards from the JSON file into a TableView.
+	 */
+	public void setup() {
+		theCollector = (TheCollector) mainApp;
+		
+		this.setStatus("Loading card database...");
+		this.setCardCountMessage(this.loadCards(), false);
+		this.setImageSize(Settings.IMAGE_SIZE_WIDTH_NORMAL, Settings.IMAGE_SIZE_HEIGHT_NORMAL);
+		
+		// If there is at least one card to display, select it and set the image.
+		if (this.mtgCardList.size() > 0) {
+			this.allCardsTableView.getSelectionModel().selectFirst();
+			this.setCurrentCard(this.allCardsTableView.getSelectionModel().getSelectedItem());
+		}
+		
+		// Instantiate the Timer Task which can be used by controls to initiate a current card count.
+		this.cardCountTimer = new Timer();
+		this.createNewTimerTask();
+		
+		// Tooltips.
+		this.createTooltips();
+	}
+	
 	/**
 	 * Show or hide the Quick Search control.
 	 */
@@ -633,7 +604,41 @@ public class MainViewController extends BaseViewController {
 			this.quickSearch.requestFocus();
 		}
 	}
+	
+
+	/**
+	 * Perform any clean-up tasks required. For example, closing down threads.
+	 */
+	public void shutdown() {
+		this.timerTask.cancel();
+		this.cardCountTimer.cancel();
+	}
+
+	/**
+	 * Schedule a timer task to display the current card count.
+	 * 
+	 * @param filtered - boolean
+	 */
+	public void updateCardCount(boolean filtered) {
+		if (!this.cardCountScheduled) {
+			this.cardsCurrentlyFiltered = filtered;
+			this.cardCountScheduled = true;
+			this.cardCountTimer.purge();
+			this.timerTask.cancel();
+			this.createNewTimerTask();
+			this.cardCountTimer.schedule(this.timerTask, 320);	
+		}
+
+		if (this.quickSearch.getText().isEmpty()) {
+			this.scrollToCurrentCard();
+			this.buttonClearQuickSearch.setDisable(true);
+		} else {
+			this.buttonClearQuickSearch.setDisable(false);
+		}
+	}
 }
+
+
 
 /**
  * The following classes are Event Handler classes for different JavaFX controls.
