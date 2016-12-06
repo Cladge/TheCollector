@@ -177,13 +177,6 @@ public class TheCollector extends Application {
 			// Show the Stage.
 			this.stage.show();
 
-			// Add a key listener to the scene.
-			this.scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-	            public void handle(KeyEvent keyEvent) {
-	            	controller.handleKeyEvents(keyEvent);
-	            }
-	        });
-
 			// Let the controller perform its setup routines.
 			this.controller.setup();
 

@@ -180,21 +180,6 @@ public class MainViewController extends BaseViewController {
 	 *********************************************************************************
 	 */
 
-	/**
-	 * Handles general key press events, unless specifically handled by a control's own listener.
-	 * 
-	 * @param keyEvent - KeyEvent
-	 */
-	public void handleKeyEvents(KeyEvent keyEvent) {
-		if (keyEvent.isControlDown()) {
-			if (keyEvent.getText().equalsIgnoreCase("f")) {
-				// TODO: DEBUG
-		        LoggerUtil.logger(this).log(Level.INFO, String.format("DEBUG - Key pressed: <ctrl> %s", keyEvent.getText()));
-		        this.showOrHideQuickSearch();
-		        // TODO: DEBUG
-			}	
-		}
-	}
 	
 	/**
 	 * Scroll the table view to the row containing the current card.
