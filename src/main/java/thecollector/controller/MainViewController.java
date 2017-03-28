@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import javafx.application.Platform;
@@ -22,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
@@ -106,6 +109,12 @@ public class MainViewController extends BaseViewController {
 	
 	@FXML
 	private HBox quickSearchContainer;
+	
+	@FXML
+	private HBox filterContainer;
+	
+	@FXML
+	private ComboBox<String> comboBoxFilterExpansion;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -188,7 +197,7 @@ public class MainViewController extends BaseViewController {
 	}
 
 	/**
-	 * The above methods are annotated FXML handlers for different JavaFX controls
+	 * The below methods are annotated FXML handlers for different JavaFX controls
 	 * (usually referenced by the UI FXML file).
 	 * 
 	 *********************************************************************************
@@ -226,6 +235,16 @@ public class MainViewController extends BaseViewController {
 	public void handleMenuItemQuickSearchAction(ActionEvent event) {
 		this.showOrHideQuickSearch();
 	}
+
+	/**
+	 * Handler for the Card Filter menu item.
+	 * 
+	 * @param event - ActionEvent
+	 */
+	@FXML
+	public void handleMenuItemFilterAction(ActionEvent event) {
+		this.showOrHideFilter();
+	}
 	
 	/**
      * Initializes the controller class. This method is automatically called
@@ -251,9 +270,9 @@ public class MainViewController extends BaseViewController {
 		// No need for context menu on Web View control.
 		this.cardDetails.setContextMenuEnabled(false);
 		
-		// Hide the Quick Search controls.
-		this.quickSearchContainer.setManaged(false);
-		this.quickSearchContainer.setVisible(false);
+		// Hide the Quick Search and Filter controls.
+		this.showOrHideQuickSearch();
+		this.showOrHideFilter();
     }
 	
 	/**
@@ -264,6 +283,9 @@ public class MainViewController extends BaseViewController {
 	private int loadCards() {
 		int cardCount = 0;
 
+		Set<String> expansionSet = new TreeSet<String>();
+		ObservableList<String> expansionFilterData = FXCollections.observableArrayList();
+		
 		theCollector.setCursor("WAIT");
 		
         // Load the latest MTG collection.
@@ -347,10 +369,16 @@ public class MainViewController extends BaseViewController {
 	        	
 	        	// Added the display row to the display data list.
 	        	this.cardCollectionData.add(mtgCardRow);
+	        	
+	        	// Add the relevant values to the Filter control lists.
+	        	expansionSet.add(mtgCard.getExpansion());
 			}
 	        
 	        // Populate the List View.
 	        if (!this.cardCollectionData.isEmpty()) {
+	        	expansionFilterData.addAll(expansionSet);
+	    		this.comboBoxFilterExpansion.setItems(expansionFilterData);
+	    		this.comboBoxFilterExpansion.getItems().add(0, "");
 	        	this.setDataFilter();
 	        	cardCount = this.allCardsTableView.getItems().size();
 	        }
@@ -503,18 +531,37 @@ public class MainViewController extends BaseViewController {
 		// Set the filter predicate whenever the filter conditions change.
 		// The filter changes based on the following controls:
 		//	1. quickSearch (TextField)
+		//	2. comoBoxFilterExpansion (ComboBox)
 		//
 		// The following approach allows multiple bindings (that is, multiple filtering) by listing the conditions
 		// and properties of the controls that you want to use to filter the data.
-		filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
-			mtgCardDisplay ->
-				(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
-				|| mtgCardDisplay.getCardText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
-				|| mtgCardDisplay.getFlavourText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())),
+
+		// 2. Set the filter Predicate whenever the filters change.
+		this.quickSearch.textProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					filteredData.setPredicate(mtgCard -> {
+						return lookForMatch(mtgCard);
+					});
+				});
+		
+		this.comboBoxFilterExpansion.valueProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					filteredData.setPredicate(mtgCard -> {
+						return lookForMatch(mtgCard);
+					});
+				});
+		
+		//filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
+		//	mtgCardDisplay ->
+		//		(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+		//		|| mtgCardDisplay.getCardText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
+		//		|| mtgCardDisplay.getFlavourText().toLowerCase().contains(this.quickSearch.getText().toLowerCase())),
+				//|| mtgCardDisplay.getExpansion().toLowerCase().contains(this.comoBoxFilterExpansion.getValue().toLowerCase())),
 			
-			this.quickSearch.textProperty())
+			//this.quickSearch.textProperty())
+			//this.comoBoxFilterExpansion.valueProperty())
 			
-		);
+		//);
 		
 		// Wrap the FilteredList in a SortedList.
 		SortedList<MtgCardDisplay> sortedData = new SortedList<>(filteredData);
@@ -525,6 +572,36 @@ public class MainViewController extends BaseViewController {
 		
 		// Populate the Table View.
     	this.allCardsTableView.setItems(sortedData);
+	}
+
+	/**
+	 * Method used by the data filter. Various controls will filter the MTG Card data: tbd
+	 * 
+	 * @param mtgCard - MtgCardDisplay
+	 * 
+	 * @return boolean - Criteria matches
+	 */
+	private boolean lookForMatch(MtgCardDisplay mtgCard) {
+		boolean match = false;
+		
+		String quickSearchText = this.quickSearch.getText().toLowerCase();
+		String expansionSearchText = this.comboBoxFilterExpansion.getValue().toLowerCase();
+		
+		match = (mtgCard.getName().toLowerCase().contains(quickSearchText) ||
+				 mtgCard.getCardText().toLowerCase().contains(quickSearchText) ||
+				 mtgCard.getFlavourText().toLowerCase().contains(quickSearchText));
+		
+		match = match &&
+				(mtgCard.getExpansion().toLowerCase().contains(expansionSearchText));
+		
+		//String lowerCaseFilterName = filterField.getText().toLowerCase();
+		//String lowerCaseFilterExpansion = filterField2.getText().toLowerCase();
+		
+		//match = ((mtgCard.getName().toLowerCase().indexOf(lowerCaseFilterName) != -1) &&
+		//		(mtgCard.getExpansion().toLowerCase().indexOf(lowerCaseFilterExpansion) != -1) &&
+		//		(mtgCard.getManaCost().indexOf(filterCombo.getValue()) != -1));
+		
+		return match;
 	}
 	
 	/**
@@ -602,6 +679,20 @@ public class MainViewController extends BaseViewController {
 			this.quickSearchContainer.setManaged(true);
 			this.quickSearchContainer.setVisible(true);
 			this.quickSearch.requestFocus();
+		}
+	}
+
+	/**
+	 * Show or hide the Card Filter control.
+	 */
+	private void showOrHideFilter() {
+		if (this.filterContainer.isVisible()) {
+			this.filterContainer.setManaged(false);
+			this.filterContainer.setVisible(false);
+		} else {
+			this.filterContainer.setManaged(true);
+			this.filterContainer.setVisible(true);
+			this.filterContainer.requestFocus();
 		}
 	}
 	
