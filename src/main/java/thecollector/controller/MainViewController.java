@@ -111,7 +111,7 @@ public class MainViewController extends BaseViewController {
 	private HBox quickSearchContainer;
 	
 	@FXML
-	private HBox filterContainer;
+	private VBox filterContainer;
 	
 	@FXML
 	private ComboBox<String> comboBoxFilterExpansion;
@@ -265,7 +265,7 @@ public class MainViewController extends BaseViewController {
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
 		this.allCardsTableView.setOnKeyReleased(new TableViewKeyEventHandler(this.allCardsTableView, this));
 		this.cardImageView.setOnMouseClicked(new ImageViewMouseEventHandler(this));
-		this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this));
+		//this.quickSearch.setOnKeyReleased(new TextFieldKeyEventHandler(this));
 		
 		// No need for context menu on Web View control.
 		this.cardDetails.setContextMenuEnabled(false);
@@ -583,9 +583,21 @@ public class MainViewController extends BaseViewController {
 	 */
 	private boolean lookForMatch(MtgCardDisplay mtgCard) {
 		boolean match = false;
+		boolean filterValuesExist = true;
 		
 		String quickSearchText = this.quickSearch.getText().toLowerCase();
-		String expansionSearchText = this.comboBoxFilterExpansion.getValue().toLowerCase();
+		String expansionSearchText = this.comboBoxFilterExpansion.getValue();
+		if (expansionSearchText == null) {
+			expansionSearchText = "";
+		} else {
+			expansionSearchText = expansionSearchText.toLowerCase();
+		}
+		
+		// If there are no values in the filter controls, then it can be
+		// considered that the data is no longer filtered.
+		if (quickSearchText.isEmpty() && expansionSearchText.isEmpty()) {
+			filterValuesExist = false;
+		}
 		
 		match = (mtgCard.getName().toLowerCase().contains(quickSearchText) ||
 				 mtgCard.getCardText().toLowerCase().contains(quickSearchText) ||
@@ -593,6 +605,8 @@ public class MainViewController extends BaseViewController {
 		
 		match = match &&
 				(mtgCard.getExpansion().toLowerCase().contains(expansionSearchText));
+		
+		this.updateCardCount(filterValuesExist);
 		
 		//String lowerCaseFilterName = filterField.getText().toLowerCase();
 		//String lowerCaseFilterExpansion = filterField2.getText().toLowerCase();
@@ -820,7 +834,7 @@ class TextFieldKeyEventHandler implements EventHandler<KeyEvent> {
 			// TODO: DEBUG
 	        LoggerUtil.logger(this).log(Level.INFO, String.format("DEBUG - Key pressed: %s", event.getText()));
 	        // TODO: DEBUG
-			this.controller.updateCardCount(true);
+			//this.controller.updateCardCount(true);
 		}
 	}
 }

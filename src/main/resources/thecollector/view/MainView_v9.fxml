@@ -55,19 +55,38 @@
                               <Button fx:id="buttonClearQuickSearch" disable="true" mnemonicParsing="false" onAction="#handleButtonClearQuickSearchAction" text="X" />
                            </children>
                         </HBox>
-                        <HBox fx:id="filterContainer">
+                        <VBox fx:id="filterContainer">
                            <children>
-                              <Label fx:id="labelExpansion" minWidth="63.0" prefHeight="24.0" prefWidth="63.0" text="Expansion:">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ComboBox fx:id="comboBoxFilterExpansion" editable="true" minWidth="150.0" prefWidth="150.0" />
+                              <HBox>
+                                 <padding>
+                                    <Insets top="4.0" />
+                                 </padding>
+                                 <children>
+                                    <Label fx:id="labelFilterOptionsTitle" text="Filter options:">
+                                       <font>
+                                          <Font name="System Bold Italic" size="12.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <HBox fx:id="filterExpansion">
+                                 <children>
+                                    <Label fx:id="labelExpansion" minWidth="63.0" prefHeight="24.0" prefWidth="63.0" text="Expansion:">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="comboBoxFilterExpansion" editable="true" minWidth="150.0" prefWidth="150.0" />
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="4.0" top="4.0" />
+                                 </padding>
+                              </HBox>
                            </children>
                            <padding>
-                              <Insets bottom="4.0" top="4.0" />
+                              <Insets left="4.0" />
                            </padding>
-                        </HBox>
+                        </VBox>
                         <TableView fx:id="allCardsTableView" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
                           <columns>
                             <TableColumn fx:id="cardNameColumn" prefWidth="200.0" text="Name" />
