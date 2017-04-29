@@ -75,7 +75,7 @@ public class MainViewController extends BaseViewController {
 	private TableColumn<MtgCardDisplay, String> cardNameColumn;
 	
 	@FXML
-	private TableColumn<MtgCardDisplay, String> expansionColumn;
+	private TableColumn<MtgCardDisplay, String> cardExpansionColumn;
 	
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardTypeColumn;
@@ -91,6 +91,12 @@ public class MainViewController extends BaseViewController {
 
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardFlavourTextColumn;
+	
+	@FXML
+	private TableColumn<MtgCardDisplay, Number> cardCmc;
+	
+	@FXML
+	private TableColumn<MtgCardDisplay, String> cardPowerToughness;
 	
 	@FXML
 	private TextField textStatus;
@@ -145,6 +151,7 @@ public class MainViewController extends BaseViewController {
 				Platform.runLater(new Runnable() {
 			        public void run() {
 			        	getCardCount();
+						scrollToCurrentCard();
 			        }
 				});
 			}
@@ -222,7 +229,6 @@ public class MainViewController extends BaseViewController {
 	@FXML
 	public void handleButtonClearQuickSearchAction(ActionEvent event) {
 		this.quickSearch.clear();
-		this.updateCardCount(false);
 		this.quickSearch.requestFocus();
     }
 	
@@ -254,12 +260,14 @@ public class MainViewController extends BaseViewController {
     private void initialize() {
 		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
 		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-		this.expansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
+		this.cardExpansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
 		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
 		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
 		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
 		this.cardFlavourTextColumn.setCellValueFactory(cellData -> cellData.getValue().getFlavourTextProperty());
+		this.cardCmc.setCellValueFactory(cellData -> cellData.getValue().getCmcProperty());
+		this.cardPowerToughness.setCellValueFactory(cellData -> cellData.getValue().getPowerToughnessProperty());
 
 		// Associate handler classes with controls.
 		this.allCardsTableView.setOnMouseClicked(new TableViewMouseEventHandler(this.allCardsTableView, this));
@@ -338,6 +346,12 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	mtgCardRow.setPowerToughness(String.format("%s/%s", power, toughness));
 	        	
+	        	if (mtgCard.getCmc() == null) {
+	        		mtgCardRow.setCmc(0);
+	        	} else {
+	        		mtgCardRow.setCmc(mtgCard.getCmc());
+	        	}
+	    			        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {
 	        		mtgCardRow.setName("-");
@@ -366,7 +380,7 @@ public class MainViewController extends BaseViewController {
 	        	if (mtgCardRow.getCardText() == null || mtgCardRow.getCardText().isEmpty()) {
 	        		mtgCardRow.setCardText("-");
 	        	}
-	        	
+
 	        	// Added the display row to the display data list.
 	        	this.cardCollectionData.add(mtgCardRow);
 	        	
@@ -735,7 +749,6 @@ public class MainViewController extends BaseViewController {
 		}
 
 		if (this.quickSearch.getText().isEmpty()) {
-			this.scrollToCurrentCard();
 			this.buttonClearQuickSearch.setDisable(true);
 		} else {
 			this.buttonClearQuickSearch.setDisable(false);

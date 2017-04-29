@@ -30,6 +30,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay01.setCardText("Flying");
 		this.testCardDisplay01.setManaCost("{3}{U}{U}");
 		this.testCardDisplay01.setPowerToughness("4/4");
+		this.testCardDisplay01.setCmc(5);
 
 		this.testCardDisplay02.setName("Paradise Plume");
 		this.testCardDisplay02.setExpansion("Time Spiral");
@@ -40,6 +41,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay02.setCardText("Flying");
 		this.testCardDisplay02.setManaCost("{4}");
 		this.testCardDisplay02.setPowerToughness("1/2");
+		this.testCardDisplay02.setCmc(4);
 		
 		// Duplicate of card 01 - to test equality and hash overrides.
 		this.testCardDisplay03.setName("Air Elemental");
@@ -51,6 +53,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay03.setCardText("Flying");
 		this.testCardDisplay03.setManaCost("{3}{U}{U}");
 		this.testCardDisplay03.setPowerToughness("4/4");
+		this.testCardDisplay03.setCmc(5);
 
 	}
 
@@ -62,6 +65,10 @@ public class TestMtgCardDisplay {
 		assertEquals("Get Type", "Blue", this.testCardDisplay01.getColour());
 		assertEquals("Get Rarity", "Rare", this.testCardDisplay01.getRarity());
 		assertEquals("Get Multiverse ID", "10002000", this.testCardDisplay01.getMultiverseId());
+		assertEquals("Get Card Text", "Flying", this.testCardDisplay01.getCardText());
+		assertEquals("Get Mana Cost", "{3}{U}{U}", this.testCardDisplay01.getManaCost());
+		assertEquals("Get Power/Toughness", "4/4", this.testCardDisplay01.getPowerToughness());
+		assertEquals("Get CMC", 5, this.testCardDisplay01.getCmc());
 
 		assertEquals("Get Card Name", "Paradise Plume", this.testCardDisplay02.getName());
 		assertEquals("Get Expansion", "Time Spiral", this.testCardDisplay02.getExpansion());
@@ -69,6 +76,10 @@ public class TestMtgCardDisplay {
 		assertEquals("Get Type", "-", this.testCardDisplay02.getColour());
 		assertEquals("Get Rarity", "Uncommon", this.testCardDisplay02.getRarity());
 		assertEquals("Get Multiverse ID", "20003000", this.testCardDisplay02.getMultiverseId());
+		assertEquals("Get Card Text", "Flying", this.testCardDisplay02.getCardText());
+		assertEquals("Get Mana Cost", "{4}", this.testCardDisplay02.getManaCost());
+		assertEquals("Get Power/Toughness", "1/2", this.testCardDisplay02.getPowerToughness());
+		assertEquals("Get CMC", 4, this.testCardDisplay02.getCmc());
 	}
 	
 	@Test

@@ -1,5 +1,7 @@
 package thecollector.model.mtg.card;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -20,6 +22,7 @@ public class MtgCardDisplay {
 	private final StringProperty colour;
 	private final StringProperty multiverseId;
 	private final StringProperty flavourText;
+	private final IntegerProperty cmc;
 	
 	// Constructor.
 	// Initialise the member properties.
@@ -34,6 +37,7 @@ public class MtgCardDisplay {
 		this.colour = new SimpleStringProperty("");
 		this.multiverseId = new SimpleStringProperty("");
 		this.flavourText = new SimpleStringProperty("");
+		this.cmc = new SimpleIntegerProperty(0);
 	}
 
 	// Getter and setter methods.
@@ -158,6 +162,18 @@ public class MtgCardDisplay {
 
 	public void setFlavourText(String flavourText) {
 		this.flavourText.set(flavourText);
+	}
+
+	public int getCmc() {
+		return this.cmc.get();
+	}
+
+	public IntegerProperty getCmcProperty() {
+		return this.cmc;
+	}
+
+	public void setCmc(int cmc) {
+		this.cmc.set(cmc);
 	}
 
 	// Overrides
