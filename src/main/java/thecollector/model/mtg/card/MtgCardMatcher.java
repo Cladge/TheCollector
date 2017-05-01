@@ -30,9 +30,12 @@ public class MtgCardMatcher {
 	private String colour;
 	private String rarity;
 	private Integer cmc;
+	private MtgOperator cmcOperator;
 	private String powerToughness;
 	private Integer power;
+	private MtgOperator powerOperator;
 	private Integer toughness;
+	private MtgOperator toughnessOperator;
 	private MtgCardDisplay mtgCard;
 
 	// Constructor.
@@ -45,12 +48,17 @@ public class MtgCardMatcher {
 	 * @param colour - String
 	 * @param rarity - String
 	 * @param cmc - Integer
+	 * @param cmcOperator - MtgOperator
 	 * @param powerToughness - String
+	 * @param powerOperator - MtgOperator
+	 * @param toughnessOperator - MtgOperator
 	 * @param mtgCard - MtgCardDisplay
 	 */
 	public MtgCardMatcher(String quickSearchText, String expansion,
 			String cardType, String cardSubType, String colour, String rarity,
-			Integer cmc, String powerToughness, MtgCardDisplay mtgCard) {
+			Integer cmc, MtgOperator cmcOperator,
+			String powerToughness, MtgOperator powerOperator, MtgOperator toughnessOperator,
+			MtgCardDisplay mtgCard) {
 		this.quickSearchText = quickSearchText;
 		this.expansion = expansion;
 		this.cardType = cardType;
@@ -58,7 +66,10 @@ public class MtgCardMatcher {
 		this.colour = colour;
 		this.rarity = rarity;
 		this.cmc = cmc;
+		this.cmcOperator = cmcOperator;
 		this.powerToughness = powerToughness;
+		this.powerOperator = powerOperator;
+		this.toughnessOperator = toughnessOperator;
 		this.mtgCard = mtgCard;
 		
 		// Set up individual Power and Toughness values.
@@ -80,7 +91,7 @@ public class MtgCardMatcher {
 	}
 	
 	/**
-	 * Check if the card matches some or all of the criteria values.
+	 * Check if the card matches one, some or all of the criteria values.
 	 * 
 	 * @return boolean - card matches criteria
 	 */
@@ -110,12 +121,71 @@ public class MtgCardMatcher {
 			cardSubTypeLower = this.cardSubType.toLowerCase();
 		}
 		
+		if (this.colourHasValue()) {
+			colourLower = this.colour.toLowerCase();
+		}
+		
+		if (this.rarityHasValue()) {
+			rarityLower = this.rarity.toLowerCase();
+		}
+		
+		// Match on Quick Search: Name or Text (rules) or Flavour Text.
 		match = (this.mtgCard.getName().toLowerCase().contains(quickSearchTextLower) ||
 				 this.mtgCard.getCardText().toLowerCase().contains(quickSearchTextLower) ||
 				 this.mtgCard.getFlavourText().toLowerCase().contains(quickSearchTextLower));
 		
+		// Match on Expansion.
 		match = match &&
 				(this.mtgCard.getExpansion().toLowerCase().contains(expansionSearchTextLower));
+		
+		// Match on Card Type and/or Sub Type.
+		// Split the card's type into its constituent parts.
+		String[] cardTypeItems = this.mtgCard.getType().split(" - ");
+		boolean matchOnFirstType = false;
+		if (cardTypeItems.length == 1) {
+			matchOnFirstType = true;
+		}
+		
+		if (matchOnFirstType) {
+			match = match &&
+					(cardTypeItems[0].toLowerCase().contains(cardTypeLower));
+		} else {
+			match = match &&
+					(cardTypeItems[0].toLowerCase().contains(cardTypeLower) &&
+					 cardTypeItems[1].toLowerCase().contains(cardSubTypeLower));
+		}
+		
+		// Match on Colour.
+		match = match &&
+				(this.mtgCard.getColour().toLowerCase().contains(colourLower));
+		
+		// Match on Rarity.
+		match = match &&
+				(this.mtgCard.getRarity().toLowerCase().contains(rarityLower));
+		
+		// Match on CMC.
+		if (this.cmcHasValue()) {
+			if (this.cmcOperator.equals(MtgOperator.EQUALS)) {
+				match = match &&
+						(this.mtgCard.getCmc() == this.cmc.intValue());	
+			}
+			if (this.cmcOperator.equals(MtgOperator.LESS_THAN)) {
+				match = match &&
+						(this.mtgCard.getCmc() < this.cmc.intValue());	
+			}
+			if (this.cmcOperator.equals(MtgOperator.GREATER_THAN)) {
+				match = match &&
+						(this.mtgCard.getCmc() > this.cmc.intValue());	
+			}
+			if (this.cmcOperator.equals(MtgOperator.LESS_THAN_OR_EQUAL_TO)) {
+				match = match &&
+						(this.mtgCard.getCmc() <= this.cmc.intValue());	
+			}
+			if (this.cmcOperator.equals(MtgOperator.GREATER_THAN_OR_EQUAL_TO)) {
+				match = match &&
+						(this.mtgCard.getCmc() >= this.cmc.intValue());	
+			}
+		}
 		
 		return match;
 	}
