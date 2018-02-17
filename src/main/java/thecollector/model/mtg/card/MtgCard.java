@@ -103,6 +103,19 @@ public class MtgCard {
 	public ArrayList<String> getTypes() {
 		return types;
 	}
+	
+	/**
+	 * Special helper method to retrieve just the first element in the types array.
+	 * 
+	 * @return String
+	 */
+	public String getMainType() {
+		if (this.types != null && this.types.size() > 0) {
+			return this.types.get(0);
+		} else {
+			return "";
+		}	
+	}
 
 	public void setTypes(ArrayList<String> types) {
 		this.types = types;

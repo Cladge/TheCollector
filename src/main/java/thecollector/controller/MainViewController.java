@@ -122,6 +122,9 @@ public class MainViewController extends BaseViewController {
 	@FXML
 	private ComboBox<String> comboBoxFilterExpansion;
 
+	@FXML
+	private ComboBox<String> comboBoxFilterType;
+
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
 	
@@ -292,7 +295,9 @@ public class MainViewController extends BaseViewController {
 		int cardCount = 0;
 
 		Set<String> expansionSet = new TreeSet<String>();
+		Set<String> typeSet = new TreeSet<String>();
 		ObservableList<String> expansionFilterData = FXCollections.observableArrayList();
+		ObservableList<String> typeFilterData = FXCollections.observableArrayList();
 		
 		theCollector.setCursor("WAIT");
 		
@@ -386,13 +391,21 @@ public class MainViewController extends BaseViewController {
 	        	
 	        	// Add the relevant values to the Filter control lists.
 	        	expansionSet.add(mtgCard.getExpansion());
+	        	typeSet.add(mtgCard.getMainType());
 			}
 	        
-	        // Populate the List View.
+	        // Populate the List View and the combo boxes filters.
 	        if (!this.cardCollectionData.isEmpty()) {
 	        	expansionFilterData.addAll(expansionSet);
+	        	typeFilterData.addAll(typeSet);
+	        	if (!expansionFilterData.contains("")) {
+	        		expansionFilterData.add(0, "");
+	        	}
+	        	if (!typeFilterData.contains("")) {
+	        		typeFilterData.add(0, "");
+	        	}
 	    		this.comboBoxFilterExpansion.setItems(expansionFilterData);
-	    		this.comboBoxFilterExpansion.getItems().add(0, "");
+	    		this.comboBoxFilterType.setItems(typeFilterData);
 	        	this.setDataFilter();
 	        	cardCount = this.allCardsTableView.getItems().size();
 	        }
@@ -564,6 +577,13 @@ public class MainViewController extends BaseViewController {
 						return lookForMatch(mtgCard);
 					});
 				});
+
+		this.comboBoxFilterType.valueProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					filteredData.setPredicate(mtgCard -> {
+						return lookForMatch(mtgCard);
+					});
+				});
 		
 		//filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
 		//	mtgCardDisplay ->
@@ -601,10 +621,17 @@ public class MainViewController extends BaseViewController {
 		
 		String quickSearchText = this.quickSearch.getText().toLowerCase();
 		String expansionSearchText = this.comboBoxFilterExpansion.getValue();
+		String typeSearchText = this.comboBoxFilterType.getValue();
+		
 		if (expansionSearchText == null) {
 			expansionSearchText = "";
 		} else {
 			expansionSearchText = expansionSearchText.toLowerCase();
+		}
+		if (typeSearchText == null) {
+			typeSearchText = "";
+		} else {
+			typeSearchText = typeSearchText.toLowerCase();
 		}
 		
 		// If there are no values in the filter controls, then it can be
@@ -619,6 +646,15 @@ public class MainViewController extends BaseViewController {
 		
 		match = match &&
 				(mtgCard.getExpansion().toLowerCase().contains(expansionSearchText));
+		
+		match = match &&
+				(mtgCard.getType().toLowerCase().contains(typeSearchText));
+		
+		/*
+		if (!typeSearchText.isEmpty()) {
+			System.out.println(String.format("typeSearchText: %s", typeSearchText));
+			System.out.println(String.format("Card type: %s", mtgCard.getType()));
+		}*/
 		
 		this.updateCardCount(filterValuesExist);
 		
