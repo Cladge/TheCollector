@@ -24,6 +24,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay01.setName("Air Elemental");
 		this.testCardDisplay01.setExpansion("Limited Edition Alpha");
 		this.testCardDisplay01.setType("Creature - Elemental");
+		this.testCardDisplay01.setSubtype("Elemental");
 		this.testCardDisplay01.setColour("Blue");
 		this.testCardDisplay01.setRarity("Rare");
 		this.testCardDisplay01.setMultiverseId("10002000");
@@ -35,6 +36,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay02.setName("Paradise Plume");
 		this.testCardDisplay02.setExpansion("Time Spiral");
 		this.testCardDisplay02.setType("Artifact");
+		this.testCardDisplay02.setSubtype("-");
 		this.testCardDisplay02.setColour("-");
 		this.testCardDisplay02.setRarity("Uncommon");
 		this.testCardDisplay02.setMultiverseId("20003000");
@@ -47,6 +49,7 @@ public class TestMtgCardDisplay {
 		this.testCardDisplay03.setName("Air Elemental");
 		this.testCardDisplay03.setExpansion("Limited Edition Alpha");
 		this.testCardDisplay03.setType("Creature - Elemental");
+		this.testCardDisplay03.setSubtype("Elemental");
 		this.testCardDisplay03.setColour("Blue");
 		this.testCardDisplay03.setRarity("Rare");
 		this.testCardDisplay03.setMultiverseId("10002000");
@@ -62,7 +65,8 @@ public class TestMtgCardDisplay {
 		assertEquals("Get Card Name", "Air Elemental", this.testCardDisplay01.getName());
 		assertEquals("Get Expansion", "Limited Edition Alpha", this.testCardDisplay01.getExpansion());
 		assertEquals("Get Type", "Creature - Elemental", this.testCardDisplay01.getType());
-		assertEquals("Get Type", "Blue", this.testCardDisplay01.getColour());
+		assertEquals("Get Subtype", "Elemental", this.testCardDisplay01.getSubtype());
+		assertEquals("Get Colour", "Blue", this.testCardDisplay01.getColour());
 		assertEquals("Get Rarity", "Rare", this.testCardDisplay01.getRarity());
 		assertEquals("Get Multiverse ID", "10002000", this.testCardDisplay01.getMultiverseId());
 		assertEquals("Get Card Text", "Flying", this.testCardDisplay01.getCardText());
@@ -73,7 +77,8 @@ public class TestMtgCardDisplay {
 		assertEquals("Get Card Name", "Paradise Plume", this.testCardDisplay02.getName());
 		assertEquals("Get Expansion", "Time Spiral", this.testCardDisplay02.getExpansion());
 		assertEquals("Get Type", "Artifact", this.testCardDisplay02.getType());
-		assertEquals("Get Type", "-", this.testCardDisplay02.getColour());
+		assertEquals("Get Subtype", "-", this.testCardDisplay02.getSubtype());
+		assertEquals("Get Colour", "-", this.testCardDisplay02.getColour());
 		assertEquals("Get Rarity", "Uncommon", this.testCardDisplay02.getRarity());
 		assertEquals("Get Multiverse ID", "20003000", this.testCardDisplay02.getMultiverseId());
 		assertEquals("Get Card Text", "Flying", this.testCardDisplay02.getCardText());

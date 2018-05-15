@@ -13,7 +13,6 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -124,6 +123,9 @@ public class MainViewController extends BaseViewController {
 
 	@FXML
 	private ComboBox<String> comboBoxFilterType;
+
+	@FXML
+	private ComboBox<String> comboBoxFilterSubtype;
 
 	// A list of ALL current cards in the collection.
 	private List<MtgCard> mtgCardList;
@@ -296,8 +298,10 @@ public class MainViewController extends BaseViewController {
 
 		Set<String> expansionSet = new TreeSet<String>();
 		Set<String> typeSet = new TreeSet<String>();
+		Set<String> subtypeSet = new TreeSet<String>();
 		ObservableList<String> expansionFilterData = FXCollections.observableArrayList();
 		ObservableList<String> typeFilterData = FXCollections.observableArrayList();
+		ObservableList<String> subtypeFilterData = FXCollections.observableArrayList();
 		
 		theCollector.setCursor("WAIT");
 		
@@ -318,8 +322,11 @@ public class MainViewController extends BaseViewController {
 	        	}
 
 	        	ArrayList<String> subtypes = mtgCard.getSubtypes();
-	        	if (subtypes != null && !subtypes.isEmpty()) {
+	        	if (subtypes == null || subtypes.isEmpty()) {
+	        		mtgCardRow.setSubtype("-");
+	        	} else {
 	        		mtgCardRow.setType(mtgCardRow.getType() + " - " + subtypes.get(0));
+	        		mtgCardRow.setSubtype(subtypes.get(0));
 	        	}
 	        	
 	        	ArrayList<String> colours = mtgCard.getColors();
@@ -367,6 +374,9 @@ public class MainViewController extends BaseViewController {
 	        	if (mtgCardRow.getType() == null || mtgCardRow.getType().isEmpty()) {
 	        		mtgCardRow.setType("-");
 	        	}
+	        	if (mtgCardRow.getSubtype() == null || mtgCardRow.getSubtype().isEmpty()) {
+	        		mtgCardRow.setSubtype("-");
+	        	}
 	        	if (mtgCardRow.getColour() == null || mtgCardRow.getColour().isEmpty()) {
 	        		mtgCardRow.setColour("-");
 	        	}
@@ -392,20 +402,26 @@ public class MainViewController extends BaseViewController {
 	        	// Add the relevant values to the Filter control lists.
 	        	expansionSet.add(mtgCard.getExpansion());
 	        	typeSet.add(mtgCard.getMainType());
+	        	subtypeSet.add(mtgCard.getMainSubtype());
 			}
 	        
 	        // Populate the List View and the combo boxes filters.
 	        if (!this.cardCollectionData.isEmpty()) {
 	        	expansionFilterData.addAll(expansionSet);
 	        	typeFilterData.addAll(typeSet);
+	        	subtypeFilterData.addAll(subtypeSet);
 	        	if (!expansionFilterData.contains("")) {
 	        		expansionFilterData.add(0, "");
 	        	}
 	        	if (!typeFilterData.contains("")) {
 	        		typeFilterData.add(0, "");
 	        	}
+	        	if (!subtypeFilterData.contains("")) {
+	        		subtypeFilterData.add(0, "");
+	        	}
 	    		this.comboBoxFilterExpansion.setItems(expansionFilterData);
 	    		this.comboBoxFilterType.setItems(typeFilterData);
+	    		this.comboBoxFilterSubtype.setItems(subtypeFilterData);
 	        	this.setDataFilter();
 	        	cardCount = this.allCardsTableView.getItems().size();
 	        }
@@ -442,7 +458,7 @@ public class MainViewController extends BaseViewController {
 	private void setCardCountMessage(int cardCount, boolean filtered) {
 		String messageFormat = "";
 		if (filtered) {
-			messageFormat = "Cards found: ###,###,##0";
+			messageFormat = "Cards found: ###,###,##0 (filtered)";
 		} else {
 			messageFormat = "Total cards in database: ###,###,##0";
 		}
@@ -584,7 +600,14 @@ public class MainViewController extends BaseViewController {
 						return lookForMatch(mtgCard);
 					});
 				});
-		
+
+		this.comboBoxFilterSubtype.valueProperty().addListener(
+				(observable, oldValue, newValue) -> {
+					filteredData.setPredicate(mtgCard -> {
+						return lookForMatch(mtgCard);
+					});
+				});
+
 		//filteredData.predicateProperty().bind(Bindings.createObjectBinding(() ->
 		//	mtgCardDisplay ->
 		//		(  mtgCardDisplay.getName().toLowerCase().contains(this.quickSearch.getText().toLowerCase())
@@ -622,6 +645,7 @@ public class MainViewController extends BaseViewController {
 		String quickSearchText = this.quickSearch.getText().toLowerCase();
 		String expansionSearchText = this.comboBoxFilterExpansion.getValue();
 		String typeSearchText = this.comboBoxFilterType.getValue();
+		String subtypeSearchText = this.comboBoxFilterSubtype.getValue();
 		
 		if (expansionSearchText == null) {
 			expansionSearchText = "";
@@ -633,10 +657,15 @@ public class MainViewController extends BaseViewController {
 		} else {
 			typeSearchText = typeSearchText.toLowerCase();
 		}
+		if (subtypeSearchText == null) {
+			subtypeSearchText = "";
+		} else {
+			subtypeSearchText = subtypeSearchText.toLowerCase();
+		}
 		
 		// If there are no values in the filter controls, then it can be
 		// considered that the data is no longer filtered.
-		if (quickSearchText.isEmpty() && expansionSearchText.isEmpty()) {
+		if (quickSearchText.isEmpty() && expansionSearchText.isEmpty() && typeSearchText.isEmpty() && subtypeSearchText.isEmpty()) {
 			filterValuesExist = false;
 		}
 		
@@ -649,6 +678,9 @@ public class MainViewController extends BaseViewController {
 		
 		match = match &&
 				(mtgCard.getType().toLowerCase().contains(typeSearchText));
+		
+		match = match &&
+				(mtgCard.getSubtype().toLowerCase().contains(subtypeSearchText));
 		
 		/*
 		if (!typeSearchText.isEmpty()) {

@@ -125,6 +125,19 @@ public class MtgCard {
 		return subtypes;
 	}
 
+	/**
+	 * Special helper method to retrieve just the first element in the subtypes array.
+	 * 
+	 * @return String
+	 */
+	public String getMainSubtype() {
+		if (this.subtypes != null && this.subtypes.size() > 0) {
+			return this.subtypes.get(0);
+		} else {
+			return "";
+		}
+	}
+	
 	public void setSubtypes(ArrayList<String> subtypes) {
 		this.subtypes = subtypes;
 	}

@@ -15,6 +15,7 @@ public class MtgCardDisplay {
 	private final StringProperty name;
 	private final StringProperty manaCost;
 	private final StringProperty type;
+	private final StringProperty subtype;
 	private final StringProperty cardText;
 	private final StringProperty powerToughness;
 	private final StringProperty expansion;
@@ -30,6 +31,7 @@ public class MtgCardDisplay {
 		this.name = new SimpleStringProperty("");
 		this.manaCost = new SimpleStringProperty("");
 		this.type = new SimpleStringProperty("");
+		this.subtype = new SimpleStringProperty("");
 		this.cardText = new SimpleStringProperty("");
 		this.powerToughness = new SimpleStringProperty("");
 		this.expansion = new SimpleStringProperty("");
@@ -92,6 +94,18 @@ public class MtgCardDisplay {
 		this.type.set(type);
 	}
 
+	public String getSubtype() {
+		return this.subtype.get();
+	}
+
+	public StringProperty getSubtypeProperty() {
+		return this.subtype;
+	}
+
+	public void setSubtype(String subtype) {
+		this.subtype.set(subtype);
+	}
+	
 	public String getCardText() {
 		return this.cardText.get();
 	}
