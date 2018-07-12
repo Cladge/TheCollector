@@ -310,6 +310,31 @@ public class MainViewController extends BaseViewController {
 			this.mtgCardList = CardLoader.loadCards(theCollector.getDatabasePath());
 
 	        for (MtgCard mtgCard : this.mtgCardList) {
+	        	// TODO: IJC - dump out card type and types.
+	        	String debugMessage = String.format("%d;%s;MAIN_TYPE: %s", mtgCard.getMultiverseid(), mtgCard.getName(), mtgCard.getType());
+	        	String typesDebugMessage = "";
+	        	String finalDebugMessage = "";
+	        	ArrayList<String> debugTypes = mtgCard.getTypes();
+	        	if (debugTypes != null) {
+		        	for (int i = 0; i < debugTypes.size(); i++) {
+		        		typesDebugMessage += String.format(";TYPE_FROM_ARRAY: %s", debugTypes.get(i));
+					}	
+	        	}
+	        	finalDebugMessage += String.format("%s%s", debugMessage, typesDebugMessage);
+	        	
+	        	debugMessage = finalDebugMessage;
+	        	typesDebugMessage = "";
+	        	finalDebugMessage = "";
+	        	debugTypes = mtgCard.getSubtypes();
+	        	if (debugTypes != null) {
+		        	for (int i = 0; i < debugTypes.size(); i++) {
+		        		typesDebugMessage += String.format(";SUB_TYPE: %s", debugTypes.get(i));
+					}	
+	        	}
+	        	finalDebugMessage += String.format("%s%s", debugMessage, typesDebugMessage);
+	        	LoggerUtil.logger(this).log(Level.INFO, finalDebugMessage);
+	        	// TODO: IJC - dump out card type and types.
+	        	
 	        	MtgCardDisplay mtgCardRow = new MtgCardDisplay();
 	        	mtgCardRow.setName(mtgCard.getName());
 	        	mtgCardRow.setExpansion(mtgCard.getExpansion());
