@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -310,53 +311,18 @@ public class MainViewController extends BaseViewController {
 			this.mtgCardList = CardLoader.loadCards(theCollector.getDatabasePath());
 
 	        for (MtgCard mtgCard : this.mtgCardList) {
-	        	// TODO: IJC - dump out card type and types.
-	        	String debugMessage = String.format("%d;%s;MAIN_TYPE: %s", mtgCard.getMultiverseid(), mtgCard.getName(), mtgCard.getType());
-	        	String typesDebugMessage = "";
-	        	String finalDebugMessage = "";
-	        	ArrayList<String> debugTypes = mtgCard.getTypes();
-	        	if (debugTypes != null) {
-		        	for (int i = 0; i < debugTypes.size(); i++) {
-		        		typesDebugMessage += String.format(";TYPE_FROM_ARRAY: %s", debugTypes.get(i));
-					}	
-	        	}
-	        	finalDebugMessage += String.format("%s%s", debugMessage, typesDebugMessage);
-	        	
-	        	debugMessage = finalDebugMessage;
-	        	typesDebugMessage = "";
-	        	finalDebugMessage = "";
-	        	debugTypes = mtgCard.getSubtypes();
-	        	if (debugTypes != null) {
-		        	for (int i = 0; i < debugTypes.size(); i++) {
-		        		typesDebugMessage += String.format(";SUB_TYPE: %s", debugTypes.get(i));
-					}	
-	        	}
-	        	finalDebugMessage += String.format("%s%s", debugMessage, typesDebugMessage);
-	        	LoggerUtil.logger(this).log(Level.INFO, finalDebugMessage);
-	        	// TODO: IJC - dump out card type and types.
 	        	
 	        	MtgCardDisplay mtgCardRow = new MtgCardDisplay();
 	        	mtgCardRow.setName(mtgCard.getName());
 	        	mtgCardRow.setExpansion(mtgCard.getExpansion());
 	        	
-	        	mtgCardRow.setTypes(mtgCard.getType());
-	        	
-	        	/*
-	        	ArrayList<String> types = mtgCard.getTypes();
-	        	if (types == null || types.isEmpty()) {
-	        		mtgCardRow.setType("-");
-	        	} else {
-		        	mtgCardRow.setType(types.get(0));	
-	        	}
-
-	        	ArrayList<String> subtypes = mtgCard.getSubtypes();
-	        	if (subtypes == null || subtypes.isEmpty()) {
-	        		mtgCardRow.setSubtype("-");
-	        	} else {
-	        		mtgCardRow.setType(mtgCardRow.getType() + " - " + subtypes.get(0));
-	        		mtgCardRow.setSubtype(subtypes.get(0));
-	        	}
-	        	*/
+	        	// Explanation of the following Type/Subtype setters:
+	        	// setTypes()   - The card's "Types" AND "Subtypes" which come from a formatted string of the card's Types and Subtypes, e.g. "Artifact Creature - Cat Ally".
+	        	// setType()    - The card's "Types" which come from a formatted string of the card's Types, e.g. "Artifact Creature" (each Type separated by a space).
+	        	// setSubtype() - The card's "Subtypes" comes from a formatted string of the card's Subtypes, e.g. "Cat Ally"  (each Subtype separated by a space).
+	        	mtgCardRow.setTypes(mtgCard.getAllTypesFormatted());
+	        	mtgCardRow.setType(mtgCard.getTypesFormatted());
+	        	mtgCardRow.setSubtype(mtgCard.getSubtypesFormatted());
 	        	
 	        	ArrayList<String> colours = mtgCard.getColors();
 	        	if (colours == null || colours.isEmpty()) {
@@ -400,6 +366,9 @@ public class MainViewController extends BaseViewController {
 	        	if (mtgCardRow.getExpansion() == null || mtgCardRow.getExpansion().isEmpty()) {
 	        		mtgCardRow.setExpansion("-");
 	        	}
+	        	if (mtgCardRow.getTypes() == null || mtgCardRow.getTypes().isEmpty()) {
+	        		mtgCardRow.setTypes("-");
+	        	}
 	        	if (mtgCardRow.getType() == null || mtgCardRow.getType().isEmpty()) {
 	        		mtgCardRow.setType("-");
 	        	}
@@ -429,9 +398,9 @@ public class MainViewController extends BaseViewController {
 	        	this.cardCollectionData.add(mtgCardRow);
 	        	
 	        	// Add the relevant values to the Filter control lists.
-	        	expansionSet.add(mtgCard.getExpansion());
-	        	typeSet.add(mtgCard.getMainType());
-	        	subtypeSet.add(mtgCard.getMainSubtype());
+	        	expansionSet.add(mtgCardRow.getExpansion());
+	        	typeSet.add(mtgCardRow.getType());
+	        	subtypeSet.add(mtgCardRow.getSubtype());
 			}
 	        
 	        // Populate the List View and the combo boxes filters.

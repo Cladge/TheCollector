@@ -64,7 +64,7 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append("<p><span style='font-size:14px;'>");
 		this.htmlContent.append(String.format("<strong>Name:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getName()));
 		this.htmlContent.append(String.format("<strong>Expansion:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getExpansion()));
-		this.htmlContent.append(String.format("<strong>Card Type:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getType()));
+		this.htmlContent.append(String.format("<strong>Types:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getTypes()));
 		this.htmlContent.append(String.format("<strong>Colour:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getColour()));
 		this.htmlContent.append(String.format("<strong>Rarity:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getRarity()));
 		this.htmlContent.append(String.format("<strong>Mana Cost:</strong>&nbsp;%s<br/>", this.parseForSymbols(this.mtgCardDisplay.getManaCost())));

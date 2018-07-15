@@ -84,8 +84,46 @@ public class MtgCard {
 		this.colors = colors;
 	}
 
-	public String getType() {
+	/**
+	 * NB: This method returns a formatted string of the card's Types AND Subtypes, e.g.:
+	 * <br>
+	 * <br>
+	 * <b>"Artifact Creature - Cat Ally"</b>
+	 * 
+	 * @return String
+	 */
+	public String getAllTypesFormatted() {
 		return type;
+	}
+
+	/**
+	 * Special helper method to retrieve all elements in the types array, each separated by a space.
+	 * 
+	 * @return String
+	 */
+	public String getTypesFormatted() {
+		StringBuilder types = new StringBuilder("");
+		if (this.types != null && this.types.size() > 0) {
+			for (String type : this.types) {
+				types.append(type);
+				types.append(" ");
+			}
+		}
+		
+		return types.toString().trim();
+	}
+
+	/**
+	 * Special helper method to retrieve just the first element in the types array.
+	 * 
+	 * @return String
+	 */
+	public String getMainType() {
+		if (this.types != null && this.types.size() > 0) {
+			return this.types.get(0);
+		} else {
+			return "";
+		}	
 	}
 
 	public void setType(String type) {
@@ -104,25 +142,29 @@ public class MtgCard {
 		return types;
 	}
 	
-	/**
-	 * Special helper method to retrieve just the first element in the types array.
-	 * 
-	 * @return String
-	 */
-	public String getMainType() {
-		if (this.types != null && this.types.size() > 0) {
-			return this.types.get(0);
-		} else {
-			return "";
-		}	
-	}
-
 	public void setTypes(ArrayList<String> types) {
 		this.types = types;
 	}
 
 	public ArrayList<String> getSubtypes() {
 		return subtypes;
+	}
+
+	/**
+	 * Special helper method to retrieve all elements in the subtypes array, each separated by a space.
+	 * 
+	 * @return String
+	 */
+	public String getSubtypesFormatted() {
+		StringBuilder subtypes = new StringBuilder("");
+		if (this.subtypes != null && this.subtypes.size() > 0) {
+			for (String subtype : this.subtypes) {
+				subtypes.append(subtype);
+				subtypes.append(" ");
+			}
+		}
+		
+		return subtypes.toString().trim();
 	}
 
 	/**

@@ -114,7 +114,7 @@
                                     <ComboBox fx:id="comboBoxFilterSubtype" minWidth="200.0" prefWidth="200.0" />
                                  </children>
                                  <padding>
-                                    <Insets top="4.0" />
+                                    <Insets bottom="4.0" top="4.0" />
                                  </padding>
                               </HBox>
                            </children>
