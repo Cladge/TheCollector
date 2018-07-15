@@ -16,6 +16,7 @@ public class MtgCardDisplay {
 	private final StringProperty manaCost;
 	private final StringProperty type;
 	private final StringProperty subtype;
+	private final StringProperty types;
 	private final StringProperty cardText;
 	private final StringProperty powerToughness;
 	private final StringProperty expansion;
@@ -32,6 +33,7 @@ public class MtgCardDisplay {
 		this.manaCost = new SimpleStringProperty("");
 		this.type = new SimpleStringProperty("");
 		this.subtype = new SimpleStringProperty("");
+		this.types = new SimpleStringProperty("");
 		this.cardText = new SimpleStringProperty("");
 		this.powerToughness = new SimpleStringProperty("");
 		this.expansion = new SimpleStringProperty("");
@@ -106,6 +108,18 @@ public class MtgCardDisplay {
 		this.subtype.set(subtype);
 	}
 	
+	public String getTypes() {
+		return this.types.get();
+	}
+
+	public StringProperty getTypesProperty() {
+		return this.types;
+	}
+
+	public void setTypes(String types) {
+		this.types.set(types);
+	}
+
 	public String getCardText() {
 		return this.cardText.get();
 	}
@@ -192,7 +206,7 @@ public class MtgCardDisplay {
 
 	// Overrides
 	public String toString() {
-		return this.getName() + ", " + this.getExpansion() + ", " + this.getType() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
+		return this.getName() + ", " + this.getExpansion() + ", " + this.getTypes() + ", " + this.getColour() + ", " + this.getRarity() + ", " + this.getMultiverseId();
 	}
 	
 	/**

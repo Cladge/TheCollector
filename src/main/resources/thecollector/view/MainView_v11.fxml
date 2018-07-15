@@ -126,7 +126,7 @@
                           <columns>
                             <TableColumn fx:id="cardNameColumn" prefWidth="200.0" text="Name" />
                             <TableColumn fx:id="cardExpansionColumn" prefWidth="240.0" text="Expansion" />
-                              <TableColumn fx:id="cardTypeColumn" prefWidth="160.0" text="Type" />
+                              <TableColumn fx:id="cardTypesColumn" prefWidth="160.0" text="Types" />
                               <TableColumn fx:id="cardColourColumn" prefWidth="120.0" text="Colour" />
                               <TableColumn fx:id="cardRarityColumn" prefWidth="150.0" text="Rarity" />
                               <TableColumn fx:id="cardMultiverseIdColumn" prefWidth="75.0" text="MultiverseId" visible="false" />

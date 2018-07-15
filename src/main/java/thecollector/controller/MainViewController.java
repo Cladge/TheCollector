@@ -77,7 +77,7 @@ public class MainViewController extends BaseViewController {
 	private TableColumn<MtgCardDisplay, String> cardExpansionColumn;
 	
 	@FXML
-	private TableColumn<MtgCardDisplay, String> cardTypeColumn;
+	private TableColumn<MtgCardDisplay, String> cardTypesColumn;
 	
 	@FXML
 	private TableColumn<MtgCardDisplay, String> cardColourColumn;
@@ -266,7 +266,7 @@ public class MainViewController extends BaseViewController {
 		// Initialise the tableview columns with the appropriate column properties from the MtgCardDisplay class.
 		this.cardNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
 		this.cardExpansionColumn.setCellValueFactory(cellData -> cellData.getValue().getExpansionProperty());
-		this.cardTypeColumn.setCellValueFactory(cellData -> cellData.getValue().getTypeProperty());
+		this.cardTypesColumn.setCellValueFactory(cellData -> cellData.getValue().getTypesProperty());
 		this.cardColourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
 		this.cardRarityColumn.setCellValueFactory(cellData -> cellData.getValue().getRarityProperty());
 		this.cardMultiverseIdColumn.setCellValueFactory(cellData -> cellData.getValue().getMultiverseIdProperty());
@@ -339,6 +339,9 @@ public class MainViewController extends BaseViewController {
 	        	mtgCardRow.setName(mtgCard.getName());
 	        	mtgCardRow.setExpansion(mtgCard.getExpansion());
 	        	
+	        	mtgCardRow.setTypes(mtgCard.getType());
+	        	
+	        	/*
 	        	ArrayList<String> types = mtgCard.getTypes();
 	        	if (types == null || types.isEmpty()) {
 	        		mtgCardRow.setType("-");
@@ -353,6 +356,7 @@ public class MainViewController extends BaseViewController {
 	        		mtgCardRow.setType(mtgCardRow.getType() + " - " + subtypes.get(0));
 	        		mtgCardRow.setSubtype(subtypes.get(0));
 	        	}
+	        	*/
 	        	
 	        	ArrayList<String> colours = mtgCard.getColors();
 	        	if (colours == null || colours.isEmpty()) {
