@@ -10,3 +10,5 @@ ui/native/jna/win32-amd64/jnidispatch.dll
 ui/native/19/windows-amd64/native-platform.dll
 ui/native/19/windows-amd64/native-platform.dll.lock
 *.jar
+src/main/resources/database/AllSets_v4.2.1.json
+src/main/resources/database/AllSets_v4.3.0.json

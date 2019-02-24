@@ -8,6 +8,7 @@ package thecollector.model.mtg.card;
  * 
  * Changelog:
  * 24 Feb 2019 - Now using MTGJSON structures from 4.2.1.
+ * 24 Feb 2019 - Now using MTGJSON structures from 4.3.0.
  * 
  * @author Ian Claridge
  * 
@@ -18,7 +19,6 @@ public class ForeignData {
 	private Integer multiverseId; // Multiverse ID of the card e.g. 447637.
 	private String name; // Name of the card in foreign language e.g. "Palladia-Mors, die Verwüsterin".
 	private String text; // Rules text of the card in foreign language e.g. "Fliegend, Wachsamkeit, verursacht Trampelschaden\nPalladia-Mors, die Verwüsterin, hat Fluchsicherheit, falls sie noch keinen Schaden zugefügt hat.".
-	private String type; // Type in foreign language e.g. "Legendäre Kreatur — Ältester, Drache".
 	 
 	public String getFlavorText() {
 		return flavorText;
@@ -49,11 +49,5 @@ public class ForeignData {
 	}
 	public void setText(String text) {
 		this.text = text;
-	}
-	public String getType() {
-		return type;
-	}
-	public void setType(String type) {
-		this.type = type;
 	}
 }

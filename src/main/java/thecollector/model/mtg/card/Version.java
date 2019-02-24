@@ -8,6 +8,7 @@ package thecollector.model.mtg.card;
  * 
  * Changelog:
  * 24 Feb 2019 - Now using MTGJSON structures from 4.2.1.
+ * 24 Feb 2019 - Now using MTGJSON structures from 4.3.0.
  * 
  * @author Ian Claridge
  * 

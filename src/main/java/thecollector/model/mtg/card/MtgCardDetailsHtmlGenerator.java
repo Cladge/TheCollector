@@ -73,22 +73,14 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append("<strong>Card Text:</strong><br/>");
 		this.htmlContent.append("</span>");
 		this.htmlContent.append("<table align='left' border='1' cellpadding='1' cellspacing='1' width='100%'><tbody>");
-
-    	// TODO: DEBUG
-    	if (this.mtgCardDisplay.getName().equalsIgnoreCase("darksteel citadel")) {
-    		String cardText = this.mtgCardDisplay.getCardText();
-    		LoggerUtil.logger(this).log(Level.INFO, cardText);
-    	}
-    	// TODO: DEBUG
-    	
-		this.htmlContent.append(String.format("<tr><td style='font-size:14px;'>%s</td></tr>", this.parseForSymbols(this.mtgCardDisplay.getCardText())));
+		this.htmlContent.append(String.format("<tr><td style='font-size:14px;'>%s</td></tr>", this.parseForSymbols(this.mtgCardDisplay.getCardText().replace("\n", "<br/><br/>"))));
 		this.htmlContent.append("</tbody></table></p>");
 		this.htmlContent.append("<p><span style='font-size:14px;'>");
 		this.htmlContent.append(String.format("<strong>Power/Toughness:</strong>&nbsp;%s<br/>", this.mtgCardDisplay.getPowerToughness()));
 		this.htmlContent.append("<strong>Flavour Text:</strong><br/>");
 		this.htmlContent.append("</span>");
 		this.htmlContent.append("<table align='left' border='1' cellpadding='1' cellspacing='1' width='100%'><tbody>");
-		this.htmlContent.append(String.format("<tr><td style='font-size:14px; font-style: italic;'>%s</td></tr>", this.mtgCardDisplay.getFlavourText()));
+		this.htmlContent.append(String.format("<tr><td style='font-size:14px; font-style: italic;'>%s</td></tr>", this.mtgCardDisplay.getFlavourText().replace("\n", "<br/><br/>")));
 		this.htmlContent.append("</tbody></table></p>");
 	}
 	

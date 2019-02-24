@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,9 +48,6 @@ import thecollector.utils.LoggerUtil;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
-import io.magicthegathering.javasdk.api.CardAPI;
-import io.magicthegathering.javasdk.resource.Card;
 
 /**
  * The controller for the main application layout.
@@ -311,10 +307,6 @@ public class MainViewController extends BaseViewController {
 		
         // Load the latest MTG collection.
 		try {
-			// TODO: IJC - DEBUG
-			// Try out the io.magicthegathering API.
-			//List<Card> allCards = CardAPI.getAllCards();
-			// TODO: IJC - DEBUG
 			
 			this.mtgCardList = CardLoader.loadCards(theCollector.getDatabasePath());
 
