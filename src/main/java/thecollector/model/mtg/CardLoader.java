@@ -34,6 +34,7 @@ public class CardLoader {
 	 * @throws JsonMappingException
 	 * @throws IOException
 	 */
+
 	public static List<MtgCard> loadCards(String filePath) throws JsonParseException,
 			JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
@@ -60,7 +61,6 @@ public class CardLoader {
 			for (MtgCard card : set.getCards()) {
 				card.setSetCode(set.getCode());
 				card.setExpansion(set.getName());
-
 				allCards.add(card);
 			}
 		}

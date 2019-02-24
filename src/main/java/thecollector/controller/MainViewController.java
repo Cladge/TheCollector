@@ -50,6 +50,9 @@ import thecollector.utils.LoggerUtil;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
+import io.magicthegathering.javasdk.api.CardAPI;
+import io.magicthegathering.javasdk.resource.Card;
+
 /**
  * The controller for the main application layout.
  * 
@@ -308,6 +311,11 @@ public class MainViewController extends BaseViewController {
 		
         // Load the latest MTG collection.
 		try {
+			// TODO: IJC - DEBUG
+			// Try out the io.magicthegathering API.
+			//List<Card> allCards = CardAPI.getAllCards();
+			// TODO: IJC - DEBUG
+			
 			this.mtgCardList = CardLoader.loadCards(theCollector.getDatabasePath());
 
 	        for (MtgCard mtgCard : this.mtgCardList) {
@@ -333,13 +341,13 @@ public class MainViewController extends BaseViewController {
 	        	
 	        	mtgCardRow.setRarity(mtgCard.getRarity());
 	        	
-	        	if (mtgCard.getMultiverseid() == null) {
+	        	if (mtgCard.getMultiverseId() == null) {
 		        	mtgCardRow.setMultiverseId("0");
 	        	} else {
-		        	mtgCardRow.setMultiverseId(mtgCard.getMultiverseid().toString());
+		        	mtgCardRow.setMultiverseId(mtgCard.getMultiverseId().toString());
 	        	}
 	        	
-	        	mtgCardRow.setFlavourText(mtgCard.getFlavor());
+	        	mtgCardRow.setFlavourText(mtgCard.getFlavorText());
 	        	mtgCardRow.setManaCost(mtgCard.getManaCost());
 	        	mtgCardRow.setCardText(mtgCard.getText());
 	        	
@@ -353,11 +361,7 @@ public class MainViewController extends BaseViewController {
 	        	}
 	        	mtgCardRow.setPowerToughness(String.format("%s/%s", power, toughness));
 	        	
-	        	if (mtgCard.getCmc() == null) {
-	        		mtgCardRow.setCmc(0);
-	        	} else {
-	        		mtgCardRow.setCmc(mtgCard.getCmc());
-	        	}
+	        	mtgCardRow.setCmc(Math.round(mtgCard.getConvertedManaCost()));
 	    			        	
 	        	// Check for null or empty values.
 	        	if (mtgCardRow.getName() == null || mtgCardRow.getName().isEmpty()) {

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import thecollector.model.Settings;
+import thecollector.utils.LoggerUtil;
 import thecollector.utils.PatternMatcher;
 
 /**
@@ -71,6 +73,14 @@ public class MtgCardDetailsHtmlGenerator {
 		this.htmlContent.append("<strong>Card Text:</strong><br/>");
 		this.htmlContent.append("</span>");
 		this.htmlContent.append("<table align='left' border='1' cellpadding='1' cellspacing='1' width='100%'><tbody>");
+
+    	// TODO: DEBUG
+    	if (this.mtgCardDisplay.getName().equalsIgnoreCase("darksteel citadel")) {
+    		String cardText = this.mtgCardDisplay.getCardText();
+    		LoggerUtil.logger(this).log(Level.INFO, cardText);
+    	}
+    	// TODO: DEBUG
+    	
 		this.htmlContent.append(String.format("<tr><td style='font-size:14px;'>%s</td></tr>", this.parseForSymbols(this.mtgCardDisplay.getCardText())));
 		this.htmlContent.append("</tbody></table></p>");
 		this.htmlContent.append("<p><span style='font-size:14px;'>");
